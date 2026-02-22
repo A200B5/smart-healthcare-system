@@ -45,6 +45,17 @@ The goal of this project is to build a modern healthcare management system that 
 
 ---
 
+### Ahmed Hany – Frontend Developer
+
+**Responsibilities:**
+
+* Landing page development
+* UI enhancements and responsiveness
+* Reusable components creation
+* Assisting in testing and bug fixing
+
+---
+
 ## 📅 Development Timeline (5 Weeks Plan)
 
 ### Week 1: Planning & Project Setup
