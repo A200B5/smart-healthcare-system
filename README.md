@@ -21,9 +21,10 @@ The platform focuses on improving efficiency, organization, and user experience 
 
 ## 👥 Team Members
 
-* Ahmed Bakr — Frontend Developer (Dashboard & Analytics)
+* Ahmed Bakr — Team Leader & Frontend Developer (Dashboard & Analytics)
 * Ahmed Sabry — Frontend Developer (Authentication & API Integration)
-* Ibrahim Mohamed — Frontend Developer (UI Components & Booking System)
+* Ibrahim Mohamed — Frontend Developer (Booking System & Doctor Features)
+* Ahmed Hany — Frontend Developer (Landing Page & UI/UX Components)
 
 ---
 
