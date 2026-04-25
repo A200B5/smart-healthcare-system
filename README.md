@@ -8,6 +8,24 @@ The platform focuses on improving efficiency, organization, and user experience 
 
 ---
 
+## 🧩 Problem Statement
+Healthcare appointment booking and management is often inefficient due to:
+- Manual or fragmented booking processes that waste time for patients and clinics
+- Difficulty for patients to find the right doctor based on specialty/availability
+- Schedule conflicts and poor visibility for doctors when tracking incoming bookings
+- Limited analytics/visibility for administrators to understand platform usage and performance
+
+---
+
+## ✅ Proposed Solution (How It Works)
+This project provides a role-based web platform with three main experiences:
+
+- **Patient:** Register/Login → Browse doctors → Filter by specialty/rating/availability → Book appointment → View appointment history  
+- **Doctor:** Login → View incoming appointments → Accept/Reject bookings → Manage schedule  
+- **Admin:** Login → View dashboard → Monitor statistics & analytics → Manage doctors and users
+
+---
+
 ## 🎯 Project Objectives
 
 * Provide an easy-to-use interface for patients to book appointments
@@ -28,45 +46,39 @@ The platform focuses on improving efficiency, organization, and user experience 
 
 ---
 
-## 📦 Project Scope
+## ⭐ Key Features
+### Patient Features
+- Register and login
+- Browse doctors
+- Filter doctors by specialty, rating, and availability
+- Book appointments
+- View appointment history
 
-### User Features:
+### Doctor Features
+- View appointments
+- Accept or reject bookings
+- Manage schedule
 
-* Register and login
-* Browse doctors
-* Filter doctors by specialty, rating, and availability
-* Book appointments
-* View appointment history
-
-### Doctor Features:
-
-* View appointments
-* Accept or reject bookings
-* Manage schedule
-
-### Admin Features:
-
-* Dashboard with analytics
-* View system statistics
-* Manage doctors and users
-* Monitor platform performance
+### Admin Features
+- Dashboard with analytics
+- View system statistics
+- Manage doctors and users
+- Monitor platform performance
 
 ---
 
 ## 🛠 Technologies Used
 
-Frontend:
-
-* React
-* TypeScript
-* Bootstrap
-* React Router
-* Context API / Redux Toolkit
+**Frontend**
+- React (Vite)
+- TypeScript
+- React Router DOM
+- Bootstrap
+- Axios
 
 Backend:
 
 * Node.js
-* Express.js
 
 Other Tools:
 
@@ -109,6 +121,14 @@ Other Tools:
 * Fix bugs
 * Documentation
 * Final deployment preparation
+
+---
+
+## ⚠️ Challenges & Difficulties Faced
+- Managing application state cleanly as features and roles expand
+- Implementing role-based access control correctly (route protection + authorization)
+- Integrating with APIs while handling loading/error states in a consistent UI
+- Maintaining clean, scalable component structure and coordination across the team
 
 ---
 
