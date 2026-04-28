@@ -1,5 +1,7 @@
 # 🏥 Smart Healthcare Management & Analytics System
 
+### DEPI Graduation Project – React Frontend Track
+
 ## 📌 Project Overview
 
 Smart Healthcare Management & Analytics System is a modern web application designed to simplify the process of booking medical appointments and managing healthcare data. The system provides an intuitive interface for patients to book appointments, doctors to manage their schedules, and administrators to monitor system performance through advanced analytics dashboards.
@@ -78,13 +80,31 @@ This project provides a role-based web platform with three main experiences:
 
 Backend:
 
-* Node.js
+*  ASP.NET Core
+*  SQL Server
 
 Other Tools:
 
 * Git & GitHub
 * Docker (optional)
 * Chart libraries (Recharts or Chart.js)
+
+---
+
+## 🎨 UI/UX Design
+
+### Figma Make Prototype
+https://www.figma.com/make/TcvVfONZwWwlhTc98y32yA/Refine-Application-Based-on-Code
+
+### UI Preview PDF
+Full UI/UX preview and system screens are available here:
+
+docs/MediCare_Pro_UI.pdf
+
+### Design Specification
+Complete Figma Design System and UI/UX specification:
+
+docs/MediCare-Pro-Figma-Specification.pdf
 
 ---
 
@@ -124,11 +144,65 @@ Other Tools:
 
 ---
 
+## 🧠 System Architecture
+
+The system is built using a role-based architecture with 3 main user roles:
+
+- Patient
+- Doctor
+- Admin
+
+Each role has its own dashboard and permissions.
+
+### Core Modules:
+- Authentication System
+- Doctor Management
+- Appointment Booking System
+- Role-Based Access Control
+- Dashboard & Analytics
+- Admin Monitoring System
+
+---
+
 ## ⚠️ Challenges & Difficulties Faced
 - Managing application state cleanly as features and roles expand
 - Implementing role-based access control correctly (route protection + authorization)
 - Integrating with APIs while handling loading/error states in a consistent UI
 - Maintaining clean, scalable component structure and coordination across the team
+
+---
+
+## 🗂 Database Design (ER Diagram)
+
+The backend system is designed using a scalable ER Diagram structure that supports:
+
+- Users
+- Patients
+- Doctors
+- Admins
+- Appointments
+- Reviews
+- Doctor Availability
+
+This ensures clean backend architecture and supports future scalability.
+
+ER Diagram is included inside:
+
+docs/ER-Diagram.png
+
+---
+
+## 🔗 API Integration Strategy
+
+Frontend development starts using mock data to allow parallel work with backend development.
+
+Once the ASP.NET backend APIs are completed, frontend services will be connected using Axios for real-time data integration.
+
+Main API modules:
+- Authentication APIs
+- Doctors APIs
+- Appointments APIs
+- Dashboard Statistics APIs
 
 ---
 
