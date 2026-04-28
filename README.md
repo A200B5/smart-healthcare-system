@@ -94,7 +94,7 @@ Other Tools:
 ## 🎨 UI/UX Design
 
 ### Figma Make Prototype
-https://www.figma.com/make/TcvVfONZwWwlhTc98y32yA/Refine-Application-Based-on-Code
+[Figma Make Prototype - Fullscreen View](https://www.figma.com/make/TcvVfONZwWwlhTc98y32yA/Refine-Application-Based-on-Code?t=3Z72gN9TKNp9ScwF-20&fullscreen=1)
 
 ### UI Preview PDF
 Full UI/UX preview and system screens are available here:
@@ -188,7 +188,7 @@ This ensures clean backend architecture and supports future scalability.
 
 ER Diagram is included inside:
 
-docs/ER-Diagram.png
+docs/ER-Diagram.pdf
 
 ---
 
