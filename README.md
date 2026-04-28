@@ -73,7 +73,7 @@ This project provides a role-based web platform with three main experiences:
 
 **Frontend**
 - React (Vite)
-- TypeScript
+- JavaScript
 - React Router DOM
 - Bootstrap
 - Axios
