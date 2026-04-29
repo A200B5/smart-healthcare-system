@@ -99,7 +99,7 @@ Other Tools:
 ### UI Preview PDF
 Full UI/UX preview and system screens are available here:
 
-docs/MediCare_Pro_UI.pdf
+docs/MediCare-Pro-UI-Showcase.pdf
 
 ### Design Specification
 Complete Figma Design System and UI/UX specification:
