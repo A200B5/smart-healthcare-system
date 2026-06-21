@@ -1,36 +1,92 @@
-import {useTheme} from "../context/ThemeContext.jsx";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext.jsx";
+import { getCurrentUser, logoutUser } from "../services/authService";
 
 function DoctorNavbar() {
-    const {theme , toggleTheme} = useTheme();
+    const { theme, toggleTheme } = useTheme();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [doctorName, setDoctorName] = useState("Doctor");
+
+    useEffect(() => {
+        const cachedUser = JSON.parse(localStorage.getItem("user") || "null");
+        if (cachedUser?.name) {
+            setDoctorName(cachedUser.name);
+        }
+
+        const loadUser = async () => {
+            try {
+                const data = await getCurrentUser();
+                const user = data?.user || data;
+                if (user?.name) {
+                    setDoctorName(user.name);
+                }
+            } catch {
+                // Keep cached name if request fails.
+            }
+        };
+
+        loadUser();
+    }, []);
+
+    const handleLogout = () => {
+        logoutUser();
+        navigate("/login");
+    };
+
     return (
-        <>
-            <nav className="navbar hidden" id="navbar-doctor">
-                <div className="navbar-logo" >
-                    <span>🏥</span> MediCare Pro
-                </div>
-                <ul className="navbar-links">
-                    <li>
-                        <a  className="active"
-                           data-link="doctor-dashboard">Dashboard</a></li>
-                    <li>
-                        <a  data-link="doctor-profile">My Profile</a></li>
-                </ul>
-                <div className="navbar-actions">
-                    <button className="theme-toggle-nav" onClick={toggleTheme} >
-                        {theme === "light" ? "🌙" : "☀️"}
-                    </button>
-                    <div className="user-badge">
-                        <div className="user-avatar" style={{background: "#3B82F6"}} >👨‍⚕️</div>
-                        <div>
-                            <div className="user-name" id="doctor-name">Dr. Ahmed</div>
-                            <div className="role-tag">Doctor</div>
-                        </div>
+        <nav className="navbar" id="navbar-doctor">
+            <div className="navbar-logo" onClick={() => navigate("/doctordashboard") }>
+                <span>🏥</span> MediCare Pro
+            </div>
+
+            <ul className="navbar-links">
+                <li>
+                    <a
+                        className={
+                            location.pathname === "/doctordashboard" || location.pathname === "/doctor"
+                                ? "active"
+                                : ""
+                        }
+                        onClick={() => navigate("/doctordashboard")}
+                        data-link="doctor-dashboard"
+                    >
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a
+                        className={location.pathname === "/doctorprofile" ? "active" : ""}
+                        onClick={() => navigate("/doctorprofile")}
+                        data-link="doctor-profile"
+                    >
+                        My Profile
+                    </a>
+                </li>
+            </ul>
+
+            <div className="navbar-actions">
+                <button className="theme-toggle-nav" onClick={toggleTheme}>
+                    {theme === "light" ? "🌙" : "☀️"}
+                </button>
+
+                <div className="user-badge">
+                    <div className="user-avatar" style={{ background: "#3B82F6" }}>
+                        👨‍⚕️
                     </div>
-                    <button className="btn-logout" >Logout</button>
+                    <div>
+                        <div className="user-name" id="doctor-name">Dr. {doctorName}</div>
+                        <div className="role-tag">Doctor</div>
+                    </div>
                 </div>
-            </nav>
-        </>
-    )
+
+                <button className="btn-logout" onClick={handleLogout}>
+                    Logout
+                </button>
+            </div>
+        </nav>
+    );
 }
 
 export default DoctorNavbar;
