@@ -269,7 +269,7 @@ BEGIN
         SELECT 1 FROM Appointments
         WHERE doctor_id        = @doctorId
           AND appointment_date = @date
-          AND appointment_time = @time
+          AND appointment_time = @appointmentTime   -- compare against the parsed TIME value
           AND status NOT IN ('rejected')
     )
     BEGIN
@@ -281,7 +281,7 @@ BEGIN
     INSERT INTO Appointments
         (doctor_id, patient_id, appointment_date, appointment_time, status, notes)
     VALUES
-        (@doctorId, @patientId, @date, @time, 'pending', @notes);
+        (@doctorId, @patientId, @date, @appointmentTime, 'pending', @notes);  -- persist the parsed TIME value
 
     SELECT SCOPE_IDENTITY() AS result, 'Appointment booked successfully' AS message;
 END;
