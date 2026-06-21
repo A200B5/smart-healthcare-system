@@ -1,57 +1,58 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import Navigation from "../components/Navigation.jsx";
+import { FcGoogle } from "react-icons/fc"
+import { FaFacebook } from "react-icons/fa"
+function Login(){
+    return(
+        <>
+            <Navigation/>
+            <div className="page" id="page-login">
+                <div className="auth-wrapper">
+                    <div className="auth-card">
+                        <div className="auth-icon">🏥</div>
+                        <h1 className="auth-title">Welcome Back</h1>
+                        <p className="auth-subtitle">Sign in to your MediCare Pro account</p>
 
-const Login = () => {
-  const { login, loading } = useAuth();
-  const navigate = useNavigate();
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
+                        <div className="error-msg" id="loginError">
+                            ⚠️ <span>Invalid email or password. Please try again.</span>
+                        </div>
+                        <div className="success-msg" id="loginSuccess">
+                            ✅ <span id="loginSuccessText">Welcome back!</span>
+                        </div>
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    const ok = await login(form.email, form.password);
-    if (ok) {
-      const user = JSON.parse(localStorage.getItem('depi_user') || '{}');
-      if (user.role === 'admin') navigate('/admin');
-      else if (user.role === 'doctor') navigate('/doctor');
-      else navigate('/doctors');
-    } else {
-      setError('Invalid email or password. Please try again.');
-    }
-  };
+                        <form >
+                            <div className="form-group">
+                                <label className="form-label">Email Address</label>
+                                <input type="email" className="form-input" id="loginEmail" placeholder="you@example.com"
+                                       autoComplete="off"    required/>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Password</label>
+                                <input type="password" className="form-input" id="loginPassword" placeholder="••••••••"
+                                       autoComplete="new-password"    required/>
+                            </div>
+                            <button type="submit" className="btn-auth">Sign In</button>
+                        </form>
 
-  return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <div className="fade-in" style={{ background: 'white', borderRadius: 24, padding: 48, width: '100%', maxWidth: 440, boxShadow: '0 24px 80px rgba(0,0,0,0.2)' }}>
-        <div style={{ textAlign: 'center', marginBottom: 36 }}>
-          <div style={{ fontSize: '3rem', marginBottom: 12 }}>🏥</div>
-          <h2 style={{ fontSize: '2rem', color: 'var(--primary)' }}>Welcome Back</h2>
-          <p style={{ color: 'var(--text-muted)', marginTop: 6 }}>Sign in to your MediCare Pro account</p>
-        </div>
+                        <div className="divider">OR CONTINUE WITH</div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Email Address</label>
-            <input type="email" placeholder="you@example.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required />
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input type="password" placeholder="••••••••" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required />
-          </div>
-          {error && <div style={{ background: '#fee2e2', color: '#991b1b', padding: '12px 16px', borderRadius: 8, marginBottom: 16, fontSize: '0.85rem' }}>{error}</div>}
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '14px', fontSize: '1rem' }} disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
+                        <div className="social-buttons">
+                            <button className="btn-social btn-google">
+                                Continue with Google
+                                <FcGoogle size={22} />
+                            </button>
+                            <button className="btn-social btn-facebook">
+                                Continue with Facebook
+                                <FaFacebook size={22} color="#1877F2" />
+                            </button>
+                        </div>
 
-        <p style={{ textAlign: 'center', marginTop: 24, color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-          Don't have an account? <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 600 }}>Sign up</Link>
-        </p>
-      </div>
-    </div>
-  );
-};
+                        <p className="auth-link">Don't have an account? <a>Sign up</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
 
 export default Login;
