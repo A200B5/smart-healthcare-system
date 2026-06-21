@@ -94,7 +94,7 @@ CREATE TABLE Appointments (
                           CONSTRAINT FK_Appointments_Patients
                           REFERENCES Users(id),
     appointment_date  DATE           NOT NULL,
-    appointment_time  NVARCHAR(20)   NOT NULL,
+    appointment_time  TIME(0)        NOT NULL,  -- store time as TIME so slot comparisons are exact
     status            NVARCHAR(20)   NOT NULL        DEFAULT 'pending'
                           CONSTRAINT CK_Appointments_Status
                           CHECK (status IN ('pending','confirmed','rejected','completed')),
@@ -136,7 +136,7 @@ SELECT
     u_pat.name                                    AS patientName,
     u_pat.email                                   AS patientEmail,
     CONVERT(VARCHAR(10), a.appointment_date, 23)  AS [date],
-    a.appointment_time                            AS [time],
+    CONVERT(VARCHAR(5), a.appointment_time, 108)  AS [time],  -- format TIME(0) as 'HH:mm'
     a.status,
     a.notes,
     CONVERT(VARCHAR(19), a.created_at, 120)       AS createdAt
@@ -319,6 +319,17 @@ BEGIN
     -- (doctor appointments are handled by ON DELETE CASCADE via FK_Appointments_Doctors)
     IF @role = 'patient'
         DELETE FROM Appointments WHERE patient_id = @userId;
+
+    -- Reviews are not cascade-deleted on the doctor relationship, so a doctor's
+    -- received reviews must be removed explicitly before the user row (and its
+    -- cascaded Doctors row) is deleted.
+    IF @role = 'doctor'
+    BEGIN
+        DECLARE @docId INT;
+        SELECT @docId = id FROM Doctors WHERE user_id = @userId;
+        IF @docId IS NOT NULL
+            DELETE FROM Reviews WHERE doctor_id = @docId;
+    END
 
     DELETE FROM Users WHERE id = @userId;
 

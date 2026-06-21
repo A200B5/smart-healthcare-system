@@ -23,7 +23,7 @@ CREATE TABLE Reviews (
                         REFERENCES Users(id) ON DELETE CASCADE,
     doctor_id       INT            NOT NULL
                         CONSTRAINT FK_Reviews_Doctors
-                        REFERENCES Doctors(id) ON DELETE CASCADE,
+                        REFERENCES Doctors(id) ON DELETE NO ACTION,  -- NO ACTION: the user->doctor->reviews path would otherwise create multiple cascade paths
     rating          INT            NOT NULL
                         CONSTRAINT CK_Reviews_Rating CHECK (rating BETWEEN 1 AND 5),
     comment         NVARCHAR(1000) NOT NULL        DEFAULT '',

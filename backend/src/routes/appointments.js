@@ -114,6 +114,24 @@ router.patch(
         return res.status(400).json(validationError('Invalid appointment ID', ['Appointment ID must be a valid integer']));
       }
 
+      // Doctors may only update the status of their own appointments.
+      if (req.user.role === 'doctor') {
+        const owned = await pool.request()
+          .input('appointmentId', sql.Int, appointmentId)
+          .input('userId', sql.Int, req.user.id)
+          .query(`
+            SELECT a.id FROM Appointments a
+            JOIN Doctors d ON a.doctor_id = d.id
+            WHERE a.id = @appointmentId AND d.user_id = @userId
+          `);
+        if (owned.recordset.length === 0) {
+          return res.status(403).json({
+            success: false,
+            message: 'You can only update your own appointments',
+          });
+        }
+      }
+
       const result = await pool.request()
         .input('appointmentId', sql.Int,      appointmentId)
         .input('newStatus',     sql.NVarChar, validatedStatus)
@@ -160,6 +178,24 @@ router.delete('/:id', authMiddleware, async (req, res) => {
         success: false,
         message: 'You can only cancel your own appointments',
       });
+    }
+
+    // Doctors may only cancel appointments in their own schedule.
+    if (req.user.role === 'doctor') {
+      const doctorOwns = await pool.request()
+        .input('appointmentId', sql.Int, appointmentId)
+        .input('userId', sql.Int, req.user.id)
+        .query(`
+          SELECT a.id FROM Appointments a
+          JOIN Doctors d ON a.doctor_id = d.id
+          WHERE a.id = @appointmentId AND d.user_id = @userId
+        `);
+      if (doctorOwns.recordset.length === 0) {
+        return res.status(403).json({
+          success: false,
+          message: 'You can only cancel appointments in your own schedule',
+        });
+      }
     }
 
     await pool.request()
