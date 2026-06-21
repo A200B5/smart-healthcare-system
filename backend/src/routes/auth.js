@@ -17,6 +17,10 @@ const signToken = (user) =>
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   );
 
+// Dummy bcrypt hash compared against when an email is not found, so a login
+// attempt takes the same time whether or not the account exists.
+const DUMMY_HASH = '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy';
+
 // ── POST /api/auth/register ────────────────────────────────────
 // Creates a new patient or doctor account.
 // Admin accounts can only be created directly in the database.
@@ -66,6 +70,11 @@ router.post('/register', async (req, res) => {
       user: newUser,
     });
   } catch (err) {
+    // Handle the unique-constraint violation when two concurrent registrations use
+    // the same email. SQL Server unique-violation error numbers: 2627 and 2601.
+    if (err.number === 2627 || err.number === 2601) {
+      return res.status(409).json({ success: false, message: 'Email already registered' });
+    }
     console.error('Register error:', err);
     res.status(500).json({ success: false, message: 'Server error during registration' });
   }
@@ -96,6 +105,8 @@ router.post('/login', async (req, res) => {
       `);
 
     if (result.recordset.length === 0) {
+      // Compare against a dummy hash so an unknown email takes the same time as a wrong password.
+      await bcrypt.compare(validatedData.password, DUMMY_HASH);
       return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
 

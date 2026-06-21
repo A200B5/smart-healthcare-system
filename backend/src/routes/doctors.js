@@ -65,6 +65,31 @@ router.post('/', authMiddleware, requireRole('admin'), async (req, res) => {
 
   try {
     const pool   = getPool();
+
+    // The target user must exist, be active, and have the 'doctor' role before a
+    // doctor profile can be created for them.
+    const userCheck = await pool.request()
+      .input('user_id', sql.Int, validatedData.user_id)
+      .query("SELECT id, role FROM Users WHERE id = @user_id AND is_active = 1");
+
+    if (userCheck.recordset.length === 0) {
+      return res.status(404).json({ success: false, message: 'User not found or inactive' });
+    }
+    if (userCheck.recordset[0].role !== 'doctor') {
+      return res.status(400).json({
+        success: false,
+        message: 'User must have role "doctor" to create a doctor profile',
+      });
+    }
+
+    // Prevent creating a duplicate doctor profile for the same user.
+    const dupCheck = await pool.request()
+      .input('user_id', sql.Int, validatedData.user_id)
+      .query('SELECT id FROM Doctors WHERE user_id = @user_id');
+    if (dupCheck.recordset.length > 0) {
+      return res.status(409).json({ success: false, message: 'Doctor profile already exists for this user' });
+    }
+
     const result = await pool.request()
       .input('user_id',    sql.Int,           validatedData.user_id)
       .input('specialty',  sql.NVarChar,      validatedData.specialty)
@@ -165,6 +190,12 @@ router.delete('/:id', authMiddleware, requireRole('admin'), async (req, res) => 
     if (check.recordset.length === 0) {
       return res.status(404).json({ success: false, message: 'Doctor not found' });
     }
+
+    // Reviews are not cascade-deleted on the doctor relationship, so remove the
+    // doctor's reviews explicitly before deleting the doctor.
+    await pool.request()
+      .input('id', sql.Int, doctorId)
+      .query('DELETE FROM Reviews WHERE doctor_id = @id');
 
     await pool.request()
       .input('id', sql.Int, doctorId)

@@ -3,9 +3,20 @@
 // Connects to SQL Server, registers all routes, then starts listening.
 
 require('dotenv').config();
-const express = require('express');
-const cors    = require('cors');
+const express   = require('express');
+const cors      = require('cors');
+const rateLimit = require('express-rate-limit');
 const { connectDB } = require('./config/db');
+
+// Validate required environment variables at startup and exit early if any are
+// missing, instead of failing later at runtime.
+const REQUIRED_ENV = ['JWT_SECRET', 'DB_PASSWORD', 'DB_SERVER', 'DB_NAME'];
+const missingEnv = REQUIRED_ENV.filter((key) => !process.env[key]);
+if (missingEnv.length > 0) {
+  console.error('❌  Missing required environment variables:', missingEnv.join(', '));
+  console.error('    Create a .env file from .env.example and fill in all required values.');
+  process.exit(1);
+}
 
 const authRoutes        = require('./routes/auth');
 const doctorRoutes      = require('./routes/doctors');
@@ -24,6 +35,28 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Rate limiting for authentication endpoints to throttle repeated login and
+// registration attempts from the same IP.
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max:      10,             // 10 attempts per window per IP
+  standardHeaders: true,
+  legacyHeaders:   false,
+  message: { success: false, message: 'Too many attempts. Try again in 15 minutes.' },
+});
+
+// Registration: prevent account-creation spam
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max:      5,
+  standardHeaders: true,
+  legacyHeaders:   false,
+  message: { success: false, message: 'Too many accounts created from this IP. Try again later.' },
+});
+
+app.use('/api/auth/login',    authLimiter);
+app.use('/api/auth/register', registerLimiter);
 
 // ── API Routes ─────────────────────────────────────────────────
 app.use('/api/auth',         authRoutes);
