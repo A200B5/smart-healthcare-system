@@ -14,9 +14,9 @@ function PatientNavbar() {
     };
 
     const navItems = [
-        { path: "/patienthome", label: "Home", page: "patient-home" },
-        { path: "/patientfinddoctor", label: "Find Doctors", page: "patient-doctors" },
-        { path: "/patientappointment", label: "My Appointments", page: "patient-appointments" },
+        { path: "/patient/home", label: "Home", page: "patient-home" },
+        { path: "/patient/finddoctor", label: "Find Doctors", page: "patient-doctors" },
+        { path: "/patient/appointment", label: "My Appointments", page: "patient-appointments" },
     ];
 
     const displayName = user?.name || "Patient";
@@ -25,7 +25,7 @@ function PatientNavbar() {
     return (
         <>
             <nav className="navbar" id="navbar-patient">
-                <div className="navbar-logo" onClick={() => navigate("/patienthome")} style={{ cursor: "pointer" }}>
+                <div className="navbar-logo" onClick={() => navigate("/patient/home")} style={{ cursor: "pointer" }}>
                     <span>🏥</span> MediCare Pro
                 </div>
                 <ul className="navbar-links">

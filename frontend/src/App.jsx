@@ -9,6 +9,7 @@ import SignupAdmin from "./pages/signuppages/SignupAdmin.jsx";
 import PatientHome from "./pages/pateintpages/PatientHome.jsx";
 import PatientFindDoctor from "./pages/pateintpages/PatientFindDoctor.jsx";
 import PatientAppointments from "./pages/pateintpages/PatientAppointments.jsx";
+import BookAppointment from "./pages/pateintpages/BookAppointment.jsx";
 import DoctorProfile from "./pages/doctorpages/DoctorProfile.jsx";
 import AdminDashboard from "./pages/adminpages/AdminDashboard.jsx";
 import AdminManageDoctor from "./pages/adminpages/AdminManageDoctor.jsx";
@@ -21,23 +22,25 @@ function App() {
 
   return (
       <>
+
           <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/doctor" element={<DoctorDashboard />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signuprole" element={<SignupRole />} />
-              <Route path="/signuppatient" element={<SignupPatient />} />
-              <Route path="/signupdoctor" element={<SignupDoctor />} />
-              <Route path="/signupadmin" element={<SignupAdmin />} />
-              <Route path="/patienthome" element={<PatientHome />} />
-              <Route path="/patientfinddoctor" element={<PatientFindDoctor />} />
-              <Route path="/patientappointment" element={<PatientAppointments />} />
-              <Route path="/doctordashboard" element={<DoctorDashboard />} />
-              <Route path="/doctorprofile" element={<DoctorProfile />} />
-              <Route path="/admindashboard" element={<AdminDashboard />} />
-              <Route path="/adminmanagedoctor" element={<AdminManageDoctor />} />
-              <Route path="/adminmanageuser" element={<AdminManageUser />} />
-              <Route path="/adminmanageappiontment" element={<AdminManageAppiontment />} />
+              <Route path="/signup/patient" element={<SignupPatient />} />
+              <Route path="/signup/doctor" element={<SignupDoctor />} />
+              <Route path="/signup/admin" element={<SignupAdmin />} />
+              <Route path="/patient/home" element={<PatientHome />} />
+              <Route path="/patient/finddoctor" element={<PatientFindDoctor />} />
+              <Route path="/patient/appointment" element={<PatientAppointments />} />
+              <Route path="/patient/bookappointment/:doctorId" element={<BookAppointment />} />
+              <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+              <Route path="/doctor/profile" element={<DoctorProfile />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/managedoctor" element={<AdminManageDoctor />} />
+              <Route path="/admin/manageuser" element={<AdminManageUser />} />
+              <Route path="/admin/manageappiontment" element={<AdminManageAppiontment />} />
               <Route path="*" element={<NotFound />} />
           </Routes>
       </>

@@ -11,6 +11,7 @@ function DoctorNavbar() {
 
     useEffect(() => {
         const cachedUser = JSON.parse(localStorage.getItem("user") || "null");
+
         if (cachedUser?.name) {
             setDoctorName(cachedUser.name);
         }
@@ -19,11 +20,12 @@ function DoctorNavbar() {
             try {
                 const data = await getCurrentUser();
                 const user = data?.user || data;
+
                 if (user?.name) {
                     setDoctorName(user.name);
                 }
             } catch {
-                // Keep cached name if request fails.
+                //
             }
         };
 
@@ -37,7 +39,10 @@ function DoctorNavbar() {
 
     return (
         <nav className="navbar" id="navbar-doctor">
-            <div className="navbar-logo" onClick={() => navigate("/doctordashboard") }>
+            <div
+                className="navbar-logo"
+                onClick={() => navigate("/doctordashboard")}
+            >
                 <span>🏥</span> MediCare Pro
             </div>
 
@@ -45,21 +50,25 @@ function DoctorNavbar() {
                 <li>
                     <a
                         className={
-                            location.pathname === "/doctordashboard" || location.pathname === "/doctor"
+                            location.pathname === "/doctordashboard" ||
+                                location.pathname === "/doctor"
                                 ? "active"
                                 : ""
                         }
                         onClick={() => navigate("/doctordashboard")}
-                        data-link="doctor-dashboard"
                     >
                         Dashboard
                     </a>
                 </li>
+
                 <li>
                     <a
-                        className={location.pathname === "/doctorprofile" ? "active" : ""}
+                        className={
+                            location.pathname === "/doctorprofile"
+                                ? "active"
+                                : ""
+                        }
                         onClick={() => navigate("/doctorprofile")}
-                        data-link="doctor-profile"
                     >
                         My Profile
                     </a>
@@ -67,21 +76,36 @@ function DoctorNavbar() {
             </ul>
 
             <div className="navbar-actions">
-                <button className="theme-toggle-nav" onClick={toggleTheme}>
+                <button
+                    className="theme-toggle-nav"
+                    onClick={toggleTheme}
+                >
                     {theme === "light" ? "🌙" : "☀️"}
                 </button>
 
                 <div className="user-badge">
-                    <div className="user-avatar" style={{ background: "#3B82F6" }}>
+                    <div
+                        className="user-avatar"
+                        style={{ background: "#3B82F6" }}
+                    >
                         👨‍⚕️
                     </div>
+
                     <div>
-                        <div className="user-name" id="doctor-name">Dr. {doctorName}</div>
-                        <div className="role-tag">Doctor</div>
+                        <div className="user-name">
+                            Dr. {doctorName}
+                        </div>
+
+                        <div className="role-tag">
+                            Doctor
+                        </div>
                     </div>
                 </div>
 
-                <button className="btn-logout" onClick={handleLogout}>
+                <button
+                    className="btn-logout"
+                    onClick={handleLogout}
+                >
                     Logout
                 </button>
             </div>

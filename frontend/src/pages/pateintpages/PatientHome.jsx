@@ -90,24 +90,24 @@ function PatientHome() {
 
                     <div className="doctors-grid">
                         <div className="doctor-card"
-                             onClick={() => navigate("/patientfinddoctor")}
-                             style={{ cursor: "pointer", textAlign: "center", padding: "40px" }}>
+                            onClick={() => navigate("/patient/finddoctor")}
+                            style={{ cursor: "pointer", textAlign: "center", padding: "40px" }}>
                             <div style={{ fontSize: "60px", marginBottom: "16px" }}>🔍</div>
                             <h3 style={{ fontSize: "20px", marginBottom: "8px" }}>Find a Doctor</h3>
                             <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>Browse our network of verified
                                 specialists</p>
                         </div>
                         <div className="doctor-card"
-                             onClick={() => navigate("/patientappointment")}
-                             style={{ cursor: "pointer", textAlign: "center", padding: "40px" }}>
+                            onClick={() => navigate("/patient/appointment")}
+                            style={{ cursor: "pointer", textAlign: "center", padding: "40px" }}>
                             <div style={{ fontSize: "60px", marginBottom: "16px" }}>📋</div>
                             <h3 style={{ fontSize: "20px", marginBottom: "8px" }}>My Appointments</h3>
                             <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>View and manage your scheduled
                                 visits</p>
                         </div>
                         <div className="doctor-card"
-                             onClick={() => navigate("/patientfinddoctor")}
-                             style={{ cursor: "pointer", textAlign: "center", padding: "40px" }}>
+                            onClick={() => navigate("/patient/finddoctor")}
+                            style={{ cursor: "pointer", textAlign: "center", padding: "40px" }}>
                             <div style={{ fontSize: "60px", marginBottom: "16px" }}>📊</div>
                             <h3 style={{ fontSize: "20px", marginBottom: "8px" }}>Health Records</h3>
                             <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>Track your medical history</p>

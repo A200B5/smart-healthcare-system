@@ -1,8 +1,7 @@
-
 import {FcGoogle} from "react-icons/fc";
 import {FaFacebook} from "react-icons/fa";
 import Navigation from "../../components/Navigation.jsx";
-
+import {Link} from "react-router-dom";
 function SignupPatient(){
     return (
         <>
@@ -10,7 +9,7 @@ function SignupPatient(){
             <div className="page" id="page-signup-patient">
                 <div className="auth-wrapper">
                     <div className="auth-card">
-                        <a className="back-link">← Back to role selection</a>
+                        <Link to="/signuprole" className="back-link">← Back to role selection</Link>
                         <div style={{ textAlign: "center" }}>
                             <div className="role-badge">🧑 Patient Account</div>
                         </div>
@@ -56,7 +55,7 @@ function SignupPatient(){
                                 <FaFacebook size={22} color="#1877F2" />
                             </button>
                         </div>
-                        <p className="auth-link">Already have an account? <a>Sign in</a></p>
+                        <p className="auth-link">Already have an account? <Link to="/login">Sign in</Link></p>
                     </div>
                 </div>
             </div>
