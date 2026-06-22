@@ -9,6 +9,7 @@ import SignupAdmin from "./pages/signuppages/SignupAdmin.jsx";
 import PatientHome from "./pages/pateintpages/PatientHome.jsx";
 import PatientFindDoctor from "./pages/pateintpages/PatientFindDoctor.jsx";
 import PatientAppointments from "./pages/pateintpages/PatientAppointments.jsx";
+import BookAppointment from "./pages/pateintpages/BookAppointment.jsx";
 import DoctorProfile from "./pages/doctorpages/DoctorProfile.jsx";
 import AdminDashboard from "./pages/adminpages/AdminDashboard.jsx";
 import AdminManageDoctor from "./pages/adminpages/AdminManageDoctor.jsx";
@@ -33,6 +34,7 @@ function App() {
               <Route path="/patient/home" element={<PatientHome />} />
               <Route path="/patient/finddoctor" element={<PatientFindDoctor />} />
               <Route path="/patient/appointment" element={<PatientAppointments />} />
+              <Route path="/patient/bookappointment/:doctorId" element={<BookAppointment />} />
               <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
               <Route path="/doctor/profile" element={<DoctorProfile />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />

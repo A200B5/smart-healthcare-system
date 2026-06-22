@@ -1,5 +1,5 @@
 import PatientNavbar from "../../components/PatientNavbar.jsx";
-
+import {Link} from "react-router-dom";
 function PatientFindDoctor() {
     return (
         <>
@@ -62,8 +62,8 @@ function PatientFindDoctor() {
                             </div>
                             <div className="doctor-actions">
                                 <button className="btn-sm btn-sm-outline">View Profile</button>
-                                <button className="btn-sm btn-sm-primary">Book Now
-                                </button>
+                                <Link to="/patient/bookappointment/1" className="btn-sm btn-sm-primary">Book Now
+                                </Link>
                             </div>
                         </div>
 
@@ -93,8 +93,8 @@ function PatientFindDoctor() {
                             </div>
                             <div className="doctor-actions">
                                 <button className="btn-sm btn-sm-outline">View Profile</button>
-                                <button className="btn-sm btn-sm-primary">Book Now
-                                </button>
+                                <Link to="/patient/bookappointment/2" className="btn-sm btn-sm-primary">Book Now
+                                </Link>
                             </div>
                         </div>
 
@@ -124,8 +124,8 @@ function PatientFindDoctor() {
                             </div>
                             <div className="doctor-actions">
                                 <button className="btn-sm btn-sm-outline">View Profile</button>
-                                <button className="btn-sm btn-sm-primary">Book Now
-                                </button>
+                                <Link to="/patient/bookappointment/3" className="btn-sm btn-sm-primary">Book Now
+                                </Link>
                             </div>
                         </div>
 
@@ -184,8 +184,8 @@ function PatientFindDoctor() {
                             </div>
                             <div className="doctor-actions">
                                 <button className="btn-sm btn-sm-outline">View Profile</button>
-                                <button className="btn-sm btn-sm-primary">Book Now
-                                </button>
+                                <Link to="/patient/bookappointment/4" className="btn-sm btn-sm-primary">Book Now
+                                </Link>
                             </div>
                         </div>
 
@@ -215,8 +215,8 @@ function PatientFindDoctor() {
                             </div>
                             <div className="doctor-actions">
                                 <button className="btn-sm btn-sm-outline">View Profile</button>
-                                <button className="btn-sm btn-sm-primary">Book Now
-                                </button>
+                                <Link to="/patient/bookappointment/5" className="btn-sm btn-sm-primary">Book Now
+                                </Link>
                             </div>
                         </div>
                     </div>
