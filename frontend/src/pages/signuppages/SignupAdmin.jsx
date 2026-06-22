@@ -1,5 +1,5 @@
 import Navigation from "../../components/Navigation.jsx";
-
+import {Link} from "react-router-dom"
 function SignupAdmin() {
     return(
         <>
@@ -7,7 +7,7 @@ function SignupAdmin() {
             <div className="page" id="page-signup-admin">
                 <div className="auth-wrapper">
                     <div className="auth-card">
-                        <a className="back-link">← Back to role selection</a>
+                        <Link to="/signuprole" className="back-link">← Back to role selection</Link>
                         <div style={{textAlign:"center"}}>
                             <div className="role-badge">🔑 Admin Account</div>
                         </div>
@@ -41,7 +41,7 @@ function SignupAdmin() {
                             </div>
                             <button type="submit" className="btn-auth">Request Admin Access</button>
                         </form>
-                        <p className="auth-link">Already have an account? <a>Sign in</a></p>
+                        <p className="auth-link">Already have an account? <Link to="/login" >Sign in</Link></p>
                     </div>
                 </div>
             </div>

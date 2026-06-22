@@ -1,10 +1,12 @@
 import API from "./axios.js"
 
-// Error Handling :
+const errorHandle = (error, fallbackMessage) => {
+    const backendErrors = error?.response?.data?.errors
+    const message = Array.isArray(backendErrors) && backendErrors.length > 0
+        ? backendErrors.join(", ")
+        : error?.response?.data?.message || fallbackMessage
 
-const errorHandle = (error , fallbackMessage) => {
-      const message = error?.response?.data?.message || fallbackMessage;
-      throw new Error(message);
+    throw new Error(message)
 }
 
 // Login Function :
@@ -13,7 +15,7 @@ export const loginUser = async (userData) => {
     try{
         const response = await API.post(
             "/auth/login",
-                 userData,
+            userData,
         )
         return response.data;
     }catch (error) {
@@ -27,7 +29,7 @@ export const registerUser = async (userData) => {
     try{
         const response = await API.post(
             "/auth/register",
-                 userData,
+            userData,
         )
         return response.data;
     }catch (error) {

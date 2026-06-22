@@ -12,7 +12,7 @@ function AdminManageDoctor() {
                     <div className="table-card">
                         <div className="table-header">
                             <div className="table-title">All Doctors (8)</div>
-                            <button className="btn btn-primary">+ Add Doctor</button>
+
                         </div>
                         <table>
                             <thead>

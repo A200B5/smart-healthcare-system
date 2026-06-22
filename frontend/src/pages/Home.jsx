@@ -1,7 +1,34 @@
 import Navigation from "../components/Navigation.jsx";
 import Footer from "../components/Footer.jsx";
+import {Link, redirect, useNavigate} from "react-router-dom";
 
 function Home(){
+
+    const navigate = useNavigate();
+    const handleFindDoctor = () => {
+       navigate("/login" , {
+           state: {
+               redirect: "/patient/finddoctor"
+           }
+       })
+    }
+
+    const handleMakeAppointment = () => {
+        navigate("/login" , {
+            state: {
+                redirect: "/patient/appointment"
+            }
+        })
+    }
+
+    const handleGetTreatment = () => {
+        navigate("/login" ,{
+            state: {
+                redirect: "/patient/home"
+            }
+        })
+    }
+
     return (
         <>
             <Navigation/>
@@ -20,8 +47,8 @@ function Home(){
                             seamless healthcare management.
                         </p>
                         <div className="hero-buttons">
-                            <button className="btn btn-gold">Get Started Free</button>
-                            <button className="btn btn-white-outline">Sign In</button>
+                            <Link to="/signuprole" className="btn btn-gold" >Get Started Free</Link>
+                            <Link to="/login" className="btn btn-white-outline">Sign In</Link>
                         </div>
                     </div>
                     <div className="hero-stats">
@@ -63,21 +90,21 @@ function Home(){
                     <h2 className="section-title">How It Works</h2>
                     <p className="section-subtitle">Book your appointment in 3 simple steps</p>
                     <div className="steps-grid">
-                        <div className="step-card">
+                        <div className="step-card" onClick={handleFindDoctor}>
                             <div className="step-number">01</div>
                             <div className="step-icon">🔍</div>
                             <h3 className="step-title">Find Your Doctor</h3>
                             <p className="step-desc">Browse our network of verified specialists filtered by specialty,
                                 rating, and availability.</p>
                         </div>
-                        <div className="step-card">
+                        <div className="step-card" onClick={handleMakeAppointment}>
                             <div className="step-number">02</div>
                             <div className="step-icon">📅</div>
                             <h3 className="step-title">Book Appointment</h3>
                             <p className="step-desc">Choose your preferred date and time slot. Get instant confirmation
                                 via email.</p>
                         </div>
-                        <div className="step-card">
+                        <div className="step-card" onClick={handleGetTreatment}>
                             <div className="step-number">03</div>
                             <div className="step-icon">✅</div>
                             <h3 className="step-title">Get Treatment</h3>
@@ -91,7 +118,7 @@ function Home(){
                     <h2 className="cta-title">Ready to Take Control of<br/>Your Health?</h2>
                     <p className="cta-desc">Join thousands of patients who trust MediCare Pro for their healthcare
                         needs.</p>
-                    <button className="cta-btn" >Create Free Account</button>
+                    <Link to="/signuprole" className="cta-btn" >Create Free Account</Link>
                 </section>
             </div>
 

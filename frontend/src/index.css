@@ -960,8 +960,20 @@ ul{
 
 .role-card.selected {
   border-color: var(--primary-teal);
-  background: var(--bg-secondary);
-  box-shadow: 0 0 0 4px rgba(15, 95, 95, 0.1);
+  background: rgba(15, 95, 95, 0.08);
+  box-shadow: var(--shadow-md);
+}
+
+.role-card.selected .role-check {
+  background: var(--primary-teal);
+  border-color: var(--primary-teal);
+}
+
+.role-card.selected .role-check::after {
+  content: "✓";
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .role-icon {
