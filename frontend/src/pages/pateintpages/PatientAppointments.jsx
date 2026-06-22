@@ -1,5 +1,5 @@
 import PatientNavbar from "../../components/PatientNavbar.jsx";
-
+import {Link} from "react-router-dom";
 function PatientAppointments() {
     return (
         <>
@@ -11,9 +11,9 @@ function PatientAppointments() {
                             <h1 className="page-title">My Appointments</h1>
                             <p className="page-subtitle">Track and manage all your medical appointments</p>
                         </div>
-                        <button className="btn btn-primary">+ Book New
+                        <Link to="/patient/finddoctor" className="btn btn-primary">+ Book New
                             Appointment
-                        </button>
+                        </Link>
                     </div>
 
                     <div className="filter-tabs">

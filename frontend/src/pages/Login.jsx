@@ -1,6 +1,7 @@
 import Navigation from "../components/Navigation.jsx";
 import { FcGoogle } from "react-icons/fc"
 import { FaFacebook } from "react-icons/fa"
+import {Link} from "react-router-dom";
 function Login(){
     return(
         <>
@@ -46,7 +47,7 @@ function Login(){
                             </button>
                         </div>
 
-                        <p className="auth-link">Don't have an account? <a>Sign up</a>
+                        <p className="auth-link">Don't have an account? <Link to="/signuprole">Sign up</Link>
                         </p>
                     </div>
                 </div>

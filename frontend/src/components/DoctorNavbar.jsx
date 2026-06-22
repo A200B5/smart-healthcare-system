@@ -1,7 +1,14 @@
 import {useTheme} from "../context/ThemeContext.jsx";
-
+import {NavLink, useNavigate} from "react-router-dom";
+import {useAuth} from "../context/AuthContext.jsx";
 function DoctorNavbar() {
     const {theme , toggleTheme} = useTheme();
+    const navigate = useNavigate();
+    const {logout} = useAuth();
+    const handleLogout = () => {
+        logout();
+        navigate("/")
+    }
     return (
         <>
             <nav className="navbar hidden" id="navbar-doctor">
@@ -10,10 +17,10 @@ function DoctorNavbar() {
                 </div>
                 <ul className="navbar-links">
                     <li>
-                        <a  className="active"
-                           data-link="doctor-dashboard">Dashboard</a></li>
+                        <NavLink  to="/doctor/dashboard"
+                           data-link="doctor-dashboard">Dashboard</NavLink></li>
                     <li>
-                        <a  data-link="doctor-profile">My Profile</a></li>
+                        <NavLink to="/doctor/profile" data-link="doctor-profile">My Profile</NavLink></li>
                 </ul>
                 <div className="navbar-actions">
                     <button className="theme-toggle-nav" onClick={toggleTheme} >
@@ -26,7 +33,7 @@ function DoctorNavbar() {
                             <div className="role-tag">Doctor</div>
                         </div>
                     </div>
-                    <button className="btn-logout" >Logout</button>
+                    <button className="btn-logout" onClick={handleLogout} >Logout</button>
                 </div>
             </nav>
         </>

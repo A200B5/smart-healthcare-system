@@ -1,6 +1,18 @@
 import Navigation from "../../components/Navigation.jsx";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 function SignupRole(){
+    const [selectedRole , setSelectedRole] = useState("");
+    const navigate = useNavigate();
+    const handleContinue = () => {
+        console.log(selectedRole);
+        if (!selectedRole){
+            return;
+        }
+        navigate(`/signup/${selectedRole}`);
+    }
     return(
         <>
             <Navigation/>
@@ -12,7 +24,8 @@ function SignupRole(){
                         <p className="auth-subtitle">Choose your account type to get started</p>
 
                         <div className="role-grid">
-                            <div className="role-card" >
+                            <div className={`role-card ${selectedRole === "patient" ? "selected" : ""}`}
+                                 onClick={ () => setSelectedRole("patient") }  >
                                 <div className="role-icon">🧑</div>
                                 <div className="role-info">
                                     <div className="role-name">Patient</div>
@@ -20,7 +33,8 @@ function SignupRole(){
                                 </div>
                                 <div className="role-check"></div>
                             </div>
-                            <div className="role-card">
+                            <div className={`role-card ${selectedRole === "doctor" ? "selected" : ""}`}
+                                 onClick={ () => setSelectedRole("doctor") }        >
                                 <div className="role-icon">👨‍⚕️</div>
                                 <div className="role-info">
                                     <div className="role-name">Doctor</div>
@@ -28,7 +42,8 @@ function SignupRole(){
                                 </div>
                                 <div className="role-check"></div>
                             </div>
-                            <div className="role-card">
+                            <div className={`role-card ${selectedRole === "admin" ? "selected" : ""}`}
+                                 onClick={ () => setSelectedRole("admin") }         >
                                 <div className="role-icon">🔑</div>
                                 <div className="role-info">
                                     <div className="role-name">Admin</div>
@@ -38,11 +53,13 @@ function SignupRole(){
                             </div>
                         </div>
                         {/* "opacity: 0.5; pointer-events: none;"*/}
-                        <button className="btn-auth btn-auth-role"  id="continueBtn">
+                        <button className={`btn-auth ${!selectedRole ? "btn-auth-role" : ""}`}  id="continueBtn"
+                          onClick={handleContinue}
+                          disabled={!selectedRole}    >
                             Continue
                         </button>
 
-                        <p className="auth-link">Already have an account? <a>Sign in</a></p>
+                        <p className="auth-link">Already have an account? <Link to="/login">Sign in</Link></p>
                     </div>
                 </div>
             </div>

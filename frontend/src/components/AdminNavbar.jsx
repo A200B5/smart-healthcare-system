@@ -1,7 +1,15 @@
 import {useTheme} from "../context/ThemeContext.jsx";
+import {NavLink, useNavigate} from "react-router-dom";
+import {useAuth} from "../context/AuthContext.jsx";
 
 function AdminNavbar() {
     const {theme , toggleTheme} = useTheme();
+    const navigate = useNavigate();
+    const {logout} = useAuth();
+    const handleLogout = () => {
+        logout();
+        navigate("/")
+    }
     return (
         <>
             <nav className="navbar hidden" id="navbar-admin">
@@ -9,11 +17,11 @@ function AdminNavbar() {
                     <span>🏥</span> MediCare Pro
                 </div>
                 <ul className="navbar-links">
-                    <li><a className="active"
-                           data-link="admin-dashboard">Dashboard</a></li>
-                    <li><a data-link="admin-doctors">Doctors</a></li>
-                    <li><a data-link="admin-users">Users</a></li>
-                    <li><a data-link="admin-appointments">Appointments</a></li>
+                    <li><NavLink to="/admin/dashboard"
+                           data-link="admin-dashboard">Dashboard</NavLink></li>
+                    <li><NavLink to="/admin/managedoctor" data-link="admin-doctors">Doctors</NavLink></li>
+                    <li><NavLink to="/admin/manageuser" data-link="admin-users">Users</NavLink></li>
+                    <li><NavLink to="/admin/manageappiontment" data-link="admin-appointments">Appointments</NavLink></li>
                 </ul>
                 <div className="navbar-actions">
                     <button className="theme-toggle-nav" onClick={toggleTheme}>
@@ -25,7 +33,7 @@ function AdminNavbar() {
                             <div className="role-tag">Admin</div>
                         </div>
                     </div>
-                    <button className="btn-logout">Logout</button>
+                    <button className="btn-logout" onClick={handleLogout}>Logout</button>
                 </div>
             </nav>
 
