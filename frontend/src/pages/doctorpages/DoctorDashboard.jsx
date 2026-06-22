@@ -23,14 +23,26 @@ const normalizeAppointments = (payload) => {
       ? payload.appointments
       : [];
 
-  return list.map((app) => ({
-    id: app.id || app._id,
-    patientName: app.patientName || app.patient?.name || app.patient_name || "Unknown",
-    specialty: app.specialty || app.type || app.doctorSpecialty || "General",
-    date: app.date || app.appointmentDate || "-",
-    time: app.time || app.appointmentTime || "-",
-    status: (app.status || "pending").toLowerCase(),
-  }));
+  return list.map((app) => {
+    let dateStr = app.date || app.appointmentDate || "-";
+    if (dateStr && dateStr !== "-") {
+      try {
+        const d = new Date(dateStr);
+        if (!isNaN(d)) {
+          dateStr = d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+        }
+      } catch (e) {}
+    }
+
+    return {
+      id: app.id || app._id,
+      patientName: app.patientName || app.patient?.name || app.patient_name || "Unknown",
+      specialty: app.specialty || app.type || app.doctorSpecialty || "General",
+      date: dateStr,
+      time: app.time || app.appointmentTime || "-",
+      status: (app.status || "pending").toLowerCase(),
+    };
+  });
 };
 
 function DoctorDashboard() {

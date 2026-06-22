@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PatientNavbar from "../../components/PatientNavbar.jsx";
-<<<<<<< HEAD
 import {
     getMyAppointments,
     cancelAppointment,
@@ -10,9 +9,6 @@ import {
     submitReview,
 } from "../../services/patientService.js";
 
-=======
-import {Link} from "react-router-dom";
->>>>>>> origin/main
 function PatientAppointments() {
     const navigate = useNavigate();
 
@@ -183,18 +179,12 @@ function PatientAppointments() {
                             <h1 className="page-title">My Appointments</h1>
                             <p className="page-subtitle">Track and manage all your medical appointments</p>
                         </div>
-<<<<<<< HEAD
                         <button
                             className="btn btn-primary"
-                            onClick={() => navigate("/patientfinddoctor")}
+                            onClick={() => navigate("/patient/finddoctor")}
                         >
                             + Book New Appointment
                         </button>
-=======
-                        <Link to="/patient/finddoctor" className="btn btn-primary">+ Book New
-                            Appointment
-                        </Link>
->>>>>>> origin/main
                     </div>
 
                     {/* Filter Tabs */}
@@ -238,7 +228,7 @@ function PatientAppointments() {
                             <button
                                 className="btn btn-primary"
                                 style={{ marginTop: "16px" }}
-                                onClick={() => navigate("/patientfinddoctor")}
+                                onClick={() => navigate("/patient/finddoctor")}
                             >
                                 Book Your First Appointment
                             </button>
