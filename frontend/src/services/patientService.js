@@ -38,7 +38,7 @@ export const getDoctorById = async (doctorId) => {
 
 export const getDoctorReviews = async (doctorId) => {
 	try {
-		const response = await API.get(`/doctors/${doctorId}/reviews`)
+		const response = await API.get(`/reviews/doctors/${doctorId}/reviews`)
 		return response.data
 	} catch (error) {
 		errorHandle(error, "Failed to fetch doctor reviews")
