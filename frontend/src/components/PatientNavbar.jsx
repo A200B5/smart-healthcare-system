@@ -1,32 +1,62 @@
-import {useTheme} from "../context/ThemeContext.jsx";
+import { useTheme } from "../context/ThemeContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
+import { useNavigate, useLocation } from "react-router-dom";
 
-function PatientNavbar(){
-    const {theme , toggleTheme} = useTheme();
+function PatientNavbar() {
+    const { theme, toggleTheme } = useTheme();
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
+
+    const navItems = [
+        { path: "/patienthome", label: "Home", page: "patient-home" },
+        { path: "/patientfinddoctor", label: "Find Doctors", page: "patient-doctors" },
+        { path: "/patientappointment", label: "My Appointments", page: "patient-appointments" },
+    ];
+
+    const displayName = user?.name || "Patient";
+    const avatarInitial = displayName.charAt(0).toUpperCase();
+
     return (
         <>
-            <nav className="navbar hidden" id="navbar-patient">
-                <div className="navbar-logo" >
+            <nav className="navbar" id="navbar-patient">
+                <div className="navbar-logo" onClick={() => navigate("/patienthome")} style={{ cursor: "pointer" }}>
                     <span>🏥</span> MediCare Pro
                 </div>
                 <ul className="navbar-links">
-                    <li><a className="active" data-link="patient-home">Home</a></li>
-                    <li><a data-link="patient-doctors">Find Doctors</a></li>
-                    <li><a data-link="patient-appointments">My Appointments</a></li>
+                    {navItems.map((item) => (
+                        <li key={item.path}>
+                            <a
+                                className={location.pathname === item.path ? "active" : ""}
+                                onClick={() => navigate(item.path)}
+                                style={{ cursor: "pointer" }}
+                            >
+                                {item.label}
+                            </a>
+                        </li>
+                    ))}
                 </ul>
                 <div className="navbar-actions">
-                    <button className="theme-toggle-nav" onClick={toggleTheme}>{theme === "light" ? "🌙" : "☀️"}</button>
+                    <button className="theme-toggle-nav" onClick={toggleTheme}>
+                        {theme === "light" ? "🌙" : "☀️"}
+                    </button>
                     <div className="user-badge">
-                        <div className="user-avatar">P</div>
+                        <div className="user-avatar">{avatarInitial}</div>
                         <div>
-                            <div className="user-name" id="patient-name">Patient</div>
+                            <div className="user-name" id="patient-name">{displayName}</div>
                             <div className="role-tag">Patient</div>
                         </div>
                     </div>
-                    <button className="btn-logout" >Logout</button>
+                    <button className="btn-logout" onClick={handleLogout}>Logout</button>
                 </div>
             </nav>
         </>
-    )
+    );
 }
 
 export default PatientNavbar;
