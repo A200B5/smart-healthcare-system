@@ -1,11 +1,47 @@
+import { useState } from "react";
 import Navigation from "../components/Navigation.jsx";
-import { FcGoogle } from "react-icons/fc"
-import { FaFacebook } from "react-icons/fa"
-import {Link} from "react-router-dom";
-function Login(){
-    return(
+import { FcGoogle } from "react-icons/fc";
+import { FaFacebook } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
+
+function Login() {
+    const { login } = useAuth();
+    const navigate = useNavigate();
+    
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+    const [successMsg, setSuccessMsg] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setErrorMsg("");
+        setSuccessMsg("");
+        setIsSubmitting(true);
+
+        try {
+            const user = await login({ email, password });
+            setSuccessMsg("Welcome back!");
+            
+            // Redirect based on role
+            if (user.role === "admin") {
+                navigate("/admin/dashboard");
+            } else if (user.role === "doctor") {
+                navigate("/doctor/dashboard");
+            } else {
+                navigate("/patient/home");
+            }
+        } catch (error) {
+            setErrorMsg(error.message || "Invalid email or password. Please try again.");
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
         <>
-            <Navigation/>
+            <Navigation />
             <div className="page" id="page-login">
                 <div className="auth-wrapper">
                     <div className="auth-card">
@@ -13,47 +49,69 @@ function Login(){
                         <h1 className="auth-title">Welcome Back</h1>
                         <p className="auth-subtitle">Sign in to your MediCare Pro account</p>
 
-                        <div className="error-msg" id="loginError">
-                            ⚠️ <span>Invalid email or password. Please try again.</span>
-                        </div>
-                        <div className="success-msg" id="loginSuccess">
-                            ✅ <span id="loginSuccessText">Welcome back!</span>
-                        </div>
+                        {errorMsg && (
+                            <div className="error-msg" style={{ display: 'block' }}>
+                                ⚠️ <span>{errorMsg}</span>
+                            </div>
+                        )}
+                        
+                        {successMsg && (
+                            <div className="success-msg" style={{ display: 'block' }}>
+                                ✅ <span>{successMsg}</span>
+                            </div>
+                        )}
 
-                        <form >
+                        <form onSubmit={handleSubmit}>
                             <div className="form-group">
                                 <label className="form-label">Email Address</label>
-                                <input type="email" className="form-input" id="loginEmail" placeholder="you@example.com"
-                                       autoComplete="off"    required/>
+                                <input 
+                                    type="email" 
+                                    className="form-input" 
+                                    placeholder="you@example.com"
+                                    autoComplete="off" 
+                                    required 
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Password</label>
-                                <input type="password" className="form-input" id="loginPassword" placeholder="••••••••"
-                                       autoComplete="new-password"    required/>
+                                <input 
+                                    type="password" 
+                                    className="form-input" 
+                                    placeholder="••••••••"
+                                    autoComplete="new-password" 
+                                    required 
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
                             </div>
-                            <button type="submit" className="btn-auth">Sign In</button>
+                            <button type="submit" className="btn-auth" disabled={isSubmitting}>
+                                {isSubmitting ? "Signing in..." : "Sign In"}
+                            </button>
                         </form>
 
                         <div className="divider">OR CONTINUE WITH</div>
 
                         <div className="social-buttons">
-                            <button className="btn-social btn-google">
+                            <button className="btn-social btn-google" type="button">
                                 Continue with Google
                                 <FcGoogle size={22} />
                             </button>
-                            <button className="btn-social btn-facebook">
+                            <button className="btn-social btn-facebook" type="button">
                                 Continue with Facebook
                                 <FaFacebook size={22} color="#1877F2" />
                             </button>
                         </div>
 
-                        <p className="auth-link">Don't have an account? <Link to="/signuprole">Sign up</Link>
+                        <p className="auth-link">
+                            Don't have an account? <Link to="/signuprole">Sign up</Link>
                         </p>
                     </div>
                 </div>
             </div>
         </>
-    )
+    );
 }
 
 export default Login;

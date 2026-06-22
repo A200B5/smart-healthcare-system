@@ -24,6 +24,7 @@ const appointmentRoutes = require('./routes/appointments');
 const userRoutes        = require('./routes/users');
 const availabilityRoutes = require('./routes/availability');
 const reviewRoutes      = require('./routes/reviews');
+const adminRoutes       = require('./routes/admin');
 
 const app  = express();
 const PORT = process.env.PORT || 5000;
@@ -65,6 +66,7 @@ app.use('/api/appointments', appointmentRoutes);
 app.use('/api/users',        userRoutes);
 app.use('/api/availability', availabilityRoutes);
 app.use('/api/reviews',      reviewRoutes);
+app.use('/api/admin',        adminRoutes);
 
 // Health check – useful for Docker / CI environments
 app.get('/api/health', (_req, res) => {
@@ -111,6 +113,9 @@ const startServer = async () => {
     console.log('  GET    /api/users              [admin]');
     console.log('  GET    /api/users/stats        [admin]');
     console.log('  DELETE /api/users/:id          [admin]');
+    console.log('  GET    /api/admin/doctors/pending        [admin]');
+    console.log('  PUT    /api/admin/doctors/:id/approve    [admin]');
+    console.log('  PUT    /api/admin/doctors/:id/reject     [admin]');
     console.log('');
   });
 };

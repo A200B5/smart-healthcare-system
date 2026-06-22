@@ -51,6 +51,21 @@ router.post('/register', async (req, res) => {
       return res.status(409).json({ success: false, message: 'Email already registered' });
     }
 
+    // Validate and check license number for doctors
+    if (validatedData.role === 'doctor') {
+      if (!licenseNumber || String(licenseNumber).trim() === '') {
+        return res.status(400).json({ success: false, message: 'License number is required for doctors' });
+      }
+
+      const existingLicense = await pool.request()
+        .input('license_number', sql.NVarChar, licenseNumber)
+        .query('SELECT id FROM Doctors WHERE license_number = @license_number');
+
+      if (existingLicense.recordset.length > 0) {
+        return res.status(409).json({ success: false, message: 'License number already registered' });
+      }
+    }
+
     const hashedPassword = await bcrypt.hash(validatedData.password, 10);
 
     const result = await pool.request()
@@ -77,15 +92,17 @@ router.post('/register', async (req, res) => {
         .input('experience',     sql.Int,           experience ? parseInt(experience, 10) : 0)
         .input('location',       sql.NVarChar,      location || '')
         .input('price',          sql.Decimal(10,2), price ? parseFloat(price) : 0)
-        .input('license_number', sql.NVarChar,      licenseNumber || '')
+        .input('license_number', sql.NVarChar,      licenseNumber)
         .query(`
           INSERT INTO Doctors (
             user_id, specialty, experience, location, price, license_number,
-            rating, reviews, available, avatar, bio, schedule
+            rating, reviews, available, avatar, bio, schedule,
+            verification_status, rejection_reason, verified_at, verified_by
           )
           VALUES (
             @user_id, @specialty, @experience, @location, @price, @license_number,
-            0.0, 0, 1, '', '', ''
+            0.0, 0, 1, '', '', '',
+            'pending', NULL, NULL, NULL
           )
         `);
     }
@@ -144,6 +161,33 @@ router.post('/login', async (req, res) => {
 
     if (!isMatch) {
       return res.status(401).json({ success: false, message: 'Invalid email or password' });
+    }
+
+    if (user.role === 'doctor') {
+      const docResult = await pool.request()
+        .input('user_id', sql.Int, user.id)
+        .query('SELECT verification_status, rejection_reason FROM Doctors WHERE user_id = @user_id');
+
+      if (docResult.recordset.length === 0) {
+        return res.status(500).json({ success: false, message: 'Doctor profile not found' });
+      }
+
+      const doctorProfile = docResult.recordset[0];
+
+      if (doctorProfile.verification_status === 'pending') {
+        return res.status(403).json({
+          success: false,
+          message: 'Your account is waiting for admin approval.'
+        });
+      }
+
+      if (doctorProfile.verification_status === 'rejected') {
+        return res.status(403).json({
+          success: false,
+          message: 'Your application was rejected.',
+          reason: doctorProfile.rejection_reason
+        });
+      }
     }
 
     const token = signToken(user);

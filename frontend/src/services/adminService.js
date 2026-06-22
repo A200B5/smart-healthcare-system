@@ -110,6 +110,34 @@ export const deleteAppointment = async (appointmentId) => {
 	}
 }
 
+// Doctor Verification APIs
+export const getPendingDoctors = async () => {
+	try {
+		const response = await API.get("/admin/pending-doctors")
+		return response.data
+	} catch (error) {
+		errorHandle(error, "Failed to fetch pending doctors")
+	}
+}
+
+export const approveDoctor = async (doctorId) => {
+	try {
+		const response = await API.put(`/admin/doctors/${doctorId}/approve`)
+		return response.data
+	} catch (error) {
+		errorHandle(error, "Failed to approve doctor")
+	}
+}
+
+export const rejectDoctor = async (doctorId, rejectionReason) => {
+	try {
+		const response = await API.put(`/admin/doctors/${doctorId}/reject`, { rejectionReason })
+		return response.data
+	} catch (error) {
+		errorHandle(error, "Failed to reject doctor")
+	}
+}
+
 export default {
 	getAdminStats,
 	getUsers,
@@ -122,4 +150,7 @@ export default {
 	getAppointments,
 	updateAppointmentStatus,
 	deleteAppointment,
+	getPendingDoctors,
+	approveDoctor,
+	rejectDoctor
 }
