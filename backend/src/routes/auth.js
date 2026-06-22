@@ -25,7 +25,11 @@ const DUMMY_HASH = '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
 // Creates a new patient or doctor account.
 // Admin accounts can only be created directly in the database.
 router.post('/register', async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { 
+    name, email, password, role,
+    phone, gender, dateOfBirth,
+    specialty, experience, location, price, licenseNumber
+  } = req.body;
 
   // Validate input with comprehensive error checking
   const validation = validateRegistration(name, email, password, role);
@@ -50,17 +54,42 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(validatedData.password, 10);
 
     const result = await pool.request()
-      .input('name',     sql.NVarChar, validatedData.name)
-      .input('email',    sql.NVarChar, validatedData.email)
-      .input('password', sql.NVarChar, hashedPassword)
-      .input('role',     sql.NVarChar, validatedData.role)
+      .input('name',          sql.NVarChar, validatedData.name)
+      .input('email',         sql.NVarChar, validatedData.email)
+      .input('password',      sql.NVarChar, hashedPassword)
+      .input('role',          sql.NVarChar, validatedData.role)
+      .input('phone',         sql.NVarChar, phone || null)
+      .input('gender',        sql.NVarChar, gender || null)
+      .input('date_of_birth', sql.Date,     dateOfBirth || null)
       .query(`
-        INSERT INTO Users (name, email, password, role)
+        INSERT INTO Users (name, email, password, role, phone, gender, date_of_birth)
         OUTPUT INSERTED.id, INSERTED.name, INSERTED.email, INSERTED.role
-        VALUES (@name, @email, @password, @role)
+        VALUES (@name, @email, @password, @role, @phone, @gender, @date_of_birth)
       `);
 
     const newUser = result.recordset[0];
+
+    // If role is doctor, create a matching record in the Doctors table
+    if (validatedData.role === 'doctor') {
+      await pool.request()
+        .input('user_id',        sql.Int,           newUser.id)
+        .input('specialty',      sql.NVarChar,      specialty || '')
+        .input('experience',     sql.Int,           experience ? parseInt(experience, 10) : 0)
+        .input('location',       sql.NVarChar,      location || '')
+        .input('price',          sql.Decimal(10,2), price ? parseFloat(price) : 0)
+        .input('license_number', sql.NVarChar,      licenseNumber || '')
+        .query(`
+          INSERT INTO Doctors (
+            user_id, specialty, experience, location, price, license_number,
+            rating, reviews, available, avatar, bio, schedule
+          )
+          VALUES (
+            @user_id, @specialty, @experience, @location, @price, @license_number,
+            0.0, 0, 1, '', '', ''
+          )
+        `);
+    }
+
     const token   = signToken(newUser);
 
     res.status(201).json({

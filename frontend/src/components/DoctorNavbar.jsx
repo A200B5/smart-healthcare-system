@@ -41,7 +41,7 @@ function DoctorNavbar() {
         <nav className="navbar" id="navbar-doctor">
             <div
                 className="navbar-logo"
-                onClick={() => navigate("/doctordashboard")}
+                onClick={() => navigate("/doctor/dashboard")}
             >
                 <span>🏥</span> MediCare Pro
             </div>
@@ -50,12 +50,12 @@ function DoctorNavbar() {
                 <li>
                     <a
                         className={
-                            location.pathname === "/doctordashboard" ||
+                            location.pathname === "/doctor/dashboard" ||
                                 location.pathname === "/doctor"
                                 ? "active"
                                 : ""
                         }
-                        onClick={() => navigate("/doctordashboard")}
+                        onClick={() => navigate("/doctor/dashboard")}
                     >
                         Dashboard
                     </a>
@@ -64,11 +64,11 @@ function DoctorNavbar() {
                 <li>
                     <a
                         className={
-                            location.pathname === "/doctorprofile"
+                            location.pathname === "/doctor/profile"
                                 ? "active"
                                 : ""
                         }
-                        onClick={() => navigate("/doctorprofile")}
+                        onClick={() => navigate("/doctor/profile")}
                     >
                         My Profile
                     </a>
