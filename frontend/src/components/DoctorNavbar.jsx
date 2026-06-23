@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext.jsx";
-import { getCurrentUser, logoutUser } from "../services/authService";
+import { getCurrentUser } from "../services/authService";
+import { useAuth } from "../context/AuthContext.jsx";
 
 function DoctorNavbar() {
     const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
     const [doctorName, setDoctorName] = useState("Doctor");
+    const { logout } = useAuth();
 
     useEffect(() => {
         const cachedUser = JSON.parse(localStorage.getItem("user") || "null");
@@ -33,8 +35,8 @@ function DoctorNavbar() {
     }, []);
 
     const handleLogout = () => {
-        logoutUser();
-        navigate("/login");
+        logout();
+        navigate("/login", { replace: true });
     };
 
     return (

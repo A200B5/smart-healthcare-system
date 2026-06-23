@@ -20,32 +20,45 @@ import AdminManageAppiontment from "./pages/adminpages/AdminManageAppiontment.js
 import AdminDoctorDetails from "./pages/adminpages/AdminDoctorDetails.jsx";
 import NotFound from "./pages/notmatchpage/NotFound.jsx";
 
-function App() {
+import RoleProtectedRoute from "./components/RoleProtectedRoute.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
+import AlreadyAuthenticated from "./components/AlreadyAuthenticated.jsx";
+
+function App() {
 
   return (
       <>
           <Routes>
+              {/* Public Routes */}
               <Route path="/" element={<Home />} />
-              <Route path="/doctor" element={<DoctorDashboard />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signuprole" element={<SignupRole />} />
-              <Route path="/signup/patient" element={<SignupPatient />} />
-              <Route path="/signup/doctor" element={<SignupDoctor />} />
-              <Route path="/signup/admin" element={<SignupAdmin />} />
-              <Route path="/patient/home" element={<PatientHome />} />
-              <Route path="/patient/profile" element={<PatientProfile />} />
-              <Route path="/patient/finddoctor" element={<PatientFindDoctor />} />
-              <Route path="/patient/appointment" element={<PatientAppointments />} />
-              <Route path="/patient/bookappointment/:doctorId" element={<BookAppointment />} />
-              <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-              <Route path="/doctor/profile" element={<DoctorProfile />} />
-              <Route path="/doctor/schedule" element={<DoctorAvailability />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="/admin/managedoctor" element={<AdminManageDoctor />} />
-              <Route path="/admin/doctor/:id" element={<AdminDoctorDetails />} />
-              <Route path="/admin/manageuser" element={<AdminManageUser />} />
-              <Route path="/admin/manageappiontment" element={<AdminManageAppiontment />} />
+              <Route path="/login" element={<AlreadyAuthenticated><Login /></AlreadyAuthenticated>} />
+              <Route path="/signuprole" element={<AlreadyAuthenticated><SignupRole /></AlreadyAuthenticated>} />
+              <Route path="/signup/patient" element={<AlreadyAuthenticated><SignupPatient /></AlreadyAuthenticated>} />
+              <Route path="/signup/doctor" element={<AlreadyAuthenticated><SignupDoctor /></AlreadyAuthenticated>} />
+              <Route path="/signup/admin" element={<AlreadyAuthenticated><SignupAdmin /></AlreadyAuthenticated>} />
+
+              {/* Patient Routes */}
+              <Route path="/patient/home" element={<RoleProtectedRoute allowedRoles={["patient"]}><PatientHome /></RoleProtectedRoute>} />
+              <Route path="/patient/profile" element={<RoleProtectedRoute allowedRoles={["patient"]}><PatientProfile /></RoleProtectedRoute>} />
+              <Route path="/patient/finddoctor" element={<RoleProtectedRoute allowedRoles={["patient"]}><PatientFindDoctor /></RoleProtectedRoute>} />
+              <Route path="/patient/appointment" element={<RoleProtectedRoute allowedRoles={["patient"]}><PatientAppointments /></RoleProtectedRoute>} />
+              <Route path="/patient/bookappointment/:doctorId" element={<RoleProtectedRoute allowedRoles={["patient"]}><BookAppointment /></RoleProtectedRoute>} />
+
+              {/* Doctor Routes */}
+              <Route path="/doctor" element={<RoleProtectedRoute allowedRoles={["doctor"]}><DoctorDashboard /></RoleProtectedRoute>} />
+              <Route path="/doctor/dashboard" element={<RoleProtectedRoute allowedRoles={["doctor"]}><DoctorDashboard /></RoleProtectedRoute>} />
+              <Route path="/doctor/profile" element={<RoleProtectedRoute allowedRoles={["doctor"]}><DoctorProfile /></RoleProtectedRoute>} />
+              <Route path="/doctor/schedule" element={<RoleProtectedRoute allowedRoles={["doctor"]}><DoctorAvailability /></RoleProtectedRoute>} />
+
+              {/* Admin Routes */}
+              <Route path="/admin/dashboard" element={<RoleProtectedRoute allowedRoles={["admin"]}><AdminDashboard /></RoleProtectedRoute>} />
+              <Route path="/admin/managedoctor" element={<RoleProtectedRoute allowedRoles={["admin"]}><AdminManageDoctor /></RoleProtectedRoute>} />
+              <Route path="/admin/doctor/:id" element={<RoleProtectedRoute allowedRoles={["admin"]}><AdminDoctorDetails /></RoleProtectedRoute>} />
+              <Route path="/admin/manageuser" element={<RoleProtectedRoute allowedRoles={["admin"]}><AdminManageUser /></RoleProtectedRoute>} />
+              <Route path="/admin/manageappiontment" element={<RoleProtectedRoute allowedRoles={["admin"]}><AdminManageAppiontment /></RoleProtectedRoute>} />
+
+              {/* Catch-all 404 */}
               <Route path="*" element={<NotFound />} />
           </Routes>
       </>

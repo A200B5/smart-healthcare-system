@@ -8,7 +8,7 @@ function AdminNavbar({ pendingCount = 0 }) {
     const { logout } = useAuth();
     const handleLogout = () => {
         logout();
-        navigate("/")
+        navigate("/login", { replace: true });
     }
     return (
         <>

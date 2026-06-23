@@ -37,11 +37,16 @@ export const AuthProvider = ({ children }) => {
             }
             try {
                 const data = await getCurrentUser()
-                setUser(data.user)
-            }catch (error) {
-                console.error("Authentication Error", error)
-                clearAuthData()
-            }finally {
+                if (data && data.user) {
+                    setUser(data.user)
+                }
+            } catch (error) {
+                console.error("Authentication Restoration Error:", error)
+                // Only clear session if token is explicitly invalid (e.g., 401 Unauthorized)
+                if (error.status === 401) {
+                    clearAuthData()
+                }
+            } finally {
                 setLoading(false)
             }
         }
