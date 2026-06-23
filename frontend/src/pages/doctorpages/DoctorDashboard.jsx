@@ -236,9 +236,15 @@ function DoctorDashboard() {
 
               <tbody>
                 {loading && (
-                  <tr>
-                    <td colSpan="6">Loading...</td>
-                  </tr>
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <tr key={`sk-${i}`}>
+                      {Array.from({ length: 6 }).map((_, j) => (
+                        <td key={`sk-td-${i}-${j}`}>
+                          <div className="skeleton skeleton-text" style={{ margin: 0, height: '14px', width: j === 0 ? '80%' : '50%' }}></div>
+                        </td>
+                      ))}
+                    </tr>
+                  ))
                 )}
 
                 {error && (
@@ -344,7 +350,12 @@ function DoctorDashboard() {
               >
                 Manage Weekly Schedule
               </button>
-              {scheduleLoading && <p>Loading current schedule...</p>}
+              {scheduleLoading && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
+                    <div className="skeleton skeleton-text" style={{ height: '30px' }}></div>
+                    <div className="skeleton skeleton-text" style={{ height: '30px' }}></div>
+                  </div>
+              )}
 
               {!scheduleLoading && schedule.length === 0 && !scheduleError && (
                 <p>No availability has been configured yet.</p>

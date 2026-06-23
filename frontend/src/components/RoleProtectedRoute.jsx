@@ -1,15 +1,12 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import GlobalLoader from "./loaders/GlobalLoader.jsx";
 
 const RoleProtectedRoute = ({ allowedRoles, children }) => {
     const { user, isAuthenticated, loading } = useAuth();
 
     if (loading) {
-        return (
-            <div className="page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <p>Loading...</p>
-            </div>
-        );
+        return <GlobalLoader />;
     }
 
     if (!isAuthenticated) {

@@ -1,5 +1,6 @@
 import AdminNavbar from "../../components/AdminNavbar.jsx";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import { useNavigate } from "react-router-dom";
 import { getDoctors, deleteDoctor, approveDoctor, rejectDoctor } from "../../services/adminService.js";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
@@ -139,7 +140,7 @@ function AdminManageDoctor() {
                         </div>
 
                         {loading ? (
-                            <p style={{ padding: '1rem' }}>Loading doctors...</p>
+                            <TableSkeleton rows={5} columns={6} />
                         ) : error ? (
                             <p style={{ padding: '1rem', color: 'red' }}>{error}</p>
                         ) : filteredDoctors.length === 0 ? (

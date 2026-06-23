@@ -182,17 +182,6 @@ function SignupPatient() {
                                 {isSubmitting ? "Creating Account..." : "Create Patient Account"}
                             </button>
                         </form>
-                        <div className="divider">OR SIGN UP WITH</div>
-                        <div className="social-buttons">
-                            <button className="btn-social btn-google" type="button">
-                                Continue with Google
-                                <FcGoogle size={22} />
-                            </button>
-                            <button className="btn-social btn-facebook" type="button">
-                                Continue with Facebook
-                                <FaFacebook size={22} color="#1877F2" />
-                            </button>
-                        </div>
                         <p className="auth-link">Already have an account? <Link to="/login">Sign in</Link></p>
                     </div>
                 </div>

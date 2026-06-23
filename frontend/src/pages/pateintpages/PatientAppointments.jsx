@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import CardSkeleton from "../../components/loaders/CardSkeleton.jsx";
 import PatientNavbar from "../../components/PatientNavbar.jsx";
 import {
     getMyAppointments,
@@ -217,9 +218,10 @@ function PatientAppointments() {
 
                     {/* Loading */}
                     {loading ? (
-                        <div style={{ textAlign: "center", padding: "60px 0", color: "var(--text-secondary)" }}>
-                            <div style={{ fontSize: "48px", marginBottom: "16px" }}>⏳</div>
-                            <p>Loading appointments...</p>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <CardSkeleton />
+                            <CardSkeleton />
+                            <CardSkeleton />
                         </div>
                     ) : filteredAppointments.length === 0 ? (
                         <div style={{ textAlign: "center", padding: "60px 0", color: "var(--text-secondary)" }}>

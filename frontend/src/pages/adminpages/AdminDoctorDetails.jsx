@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminNavbar from "../../components/AdminNavbar.jsx";
 import { getDoctorById, updateDoctor } from "../../services/adminService.js";
@@ -70,7 +71,7 @@ function AdminDoctorDetails() {
         }
     };
 
-    if (loading) return <><AdminNavbar /><div className="page"><div className="page-content"><p>Loading doctor details...</p></div></div></>;
+    if (loading) return <><AdminNavbar /><div className="page"><div className="page-content"><ProfileSkeleton /></div></div></>;
     if (error) return <><AdminNavbar /><div className="page"><div className="page-content"><p style={{ color: "red" }}>{error}</p><button className="btn-secondary" onClick={() => navigate(-1)}>Go Back</button></div></div></>;
     if (!doctor) return null;
 

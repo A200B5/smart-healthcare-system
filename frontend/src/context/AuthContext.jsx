@@ -1,4 +1,5 @@
-import {createContext , useContext ,useState , useMemo , useEffect} from "react";
+import React, { createContext, useContext, useEffect, useState, useMemo } from "react";
+import GlobalLoader from "../components/loaders/GlobalLoader.jsx";
 
 import {loginUser , registerUser , getCurrentUser , logoutUser} from "../services/authService.js";
 
@@ -112,7 +113,7 @@ export const AuthProvider = ({ children }) => {
 
     // Loading Screen
     if(loading) {
-        return <div>Loading...</div>;
+        return <GlobalLoader />;
     }
 
     return (

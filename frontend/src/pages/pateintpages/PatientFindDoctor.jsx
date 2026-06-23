@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import CardSkeleton from "../../components/loaders/CardSkeleton.jsx";
 import PatientNavbar from "../../components/PatientNavbar.jsx";
 import {
     getDoctors,
@@ -246,9 +247,10 @@ function PatientFindDoctor() {
                     )}
 
                     {loading ? (
-                        <div style={{ textAlign: "center", padding: "60px 0", color: "var(--text-secondary)" }}>
-                            <div style={{ fontSize: "48px", marginBottom: "16px" }}>⏳</div>
-                            <p>Loading doctors...</p>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+                            <CardSkeleton />
+                            <CardSkeleton />
+                            <CardSkeleton />
                         </div>
                     ) : (
                         <>

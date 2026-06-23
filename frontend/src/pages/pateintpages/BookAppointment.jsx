@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 
 import PatientNavbar from "../../components/PatientNavbar.jsx";
 import { getDoctorById } from "../../services/doctorService.js";
@@ -192,11 +193,7 @@ function BookAppointment() {
 
                 <div className="page" id="page-book-appointment">
                     <div className="page-content">
-                        <div className="booking-loader-card">
-                            <div className="booking-loader-icon">🏥</div>
-                            <h2>Loading Doctor Details...</h2>
-                            <p>Please wait while we prepare your booking page.</p>
-                        </div>
+                        <ProfileSkeleton />
                     </div>
                 </div>
             </>

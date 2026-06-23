@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PatientNavbar from "../../components/PatientNavbar.jsx";
+import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 import { getCurrentUser, updateProfile } from "../../services/authService.js";
 import { useAuth } from "../../context/AuthContext.jsx";
 
@@ -84,10 +85,7 @@ function PatientProfile() {
                 <PatientNavbar />
                 <div className="page" id="page-patient-profile">
                     <div className="page-content">
-                        <div style={{ textAlign: "center", padding: "60px 0", color: "var(--text-secondary)" }}>
-                            <div style={{ fontSize: "48px", marginBottom: "16px" }}>⏳</div>
-                            <p>Loading profile...</p>
-                        </div>
+                        <ProfileSkeleton />
                     </div>
                 </div>
             </>

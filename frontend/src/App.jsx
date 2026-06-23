@@ -1,29 +1,42 @@
+import React, { Suspense } from "react";
 import {Routes , Route} from "react-router-dom";
-import DoctorDashboard from "./pages/doctorpages/DoctorDashboard.jsx";
+
+// Eagerly Loaded Critical Path Pages & Components
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import SignupRole from "./pages/signuppages/SignupRole.jsx";
 import SignupPatient from "./pages/signuppages/SignupPatient.jsx";
 import SignupDoctor from "./pages/signuppages/SignupDoctor.jsx";
 import SignupAdmin from "./pages/signuppages/SignupAdmin.jsx";
-import PatientHome from "./pages/pateintpages/PatientHome.jsx";
-import PatientFindDoctor from "./pages/pateintpages/PatientFindDoctor.jsx";
-import PatientAppointments from "./pages/pateintpages/PatientAppointments.jsx";
-import BookAppointment from "./pages/pateintpages/BookAppointment.jsx";
-import PatientProfile from "./pages/pateintpages/PatientProfile.jsx";
-import DoctorProfile from "./pages/doctorpages/DoctorProfile.jsx";
-import DoctorAvailability from "./pages/doctorpages/DoctorAvailability.jsx";
-import AdminDashboard from "./pages/adminpages/AdminDashboard.jsx";
-import AdminManageDoctor from "./pages/adminpages/AdminManageDoctor.jsx";
-import AdminManageUser from "./pages/adminpages/AdminManageUser.jsx";
-import AdminManageAppiontment from "./pages/adminpages/AdminManageAppiontment.jsx";
-import AdminDoctorDetails from "./pages/adminpages/AdminDoctorDetails.jsx";
 import NotFound from "./pages/notmatchpage/NotFound.jsx";
 
 import RoleProtectedRoute from "./components/RoleProtectedRoute.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-
 import AlreadyAuthenticated from "./components/AlreadyAuthenticated.jsx";
+
+// Fallbacks
+import GlobalLoader from "./components/loaders/GlobalLoader.jsx";
+import DashboardSkeleton from "./components/loaders/DashboardSkeleton.jsx";
+import ProfileSkeleton from "./components/loaders/ProfileSkeleton.jsx";
+import TableSkeleton from "./components/loaders/TableSkeleton.jsx";
+import CardSkeleton from "./components/loaders/CardSkeleton.jsx";
+
+import PageTransition from "./components/PageTransition.jsx";
+
+// Lazy Loaded Pages
+const DoctorDashboard = React.lazy(() => import("./pages/doctorpages/DoctorDashboard.jsx"));
+const PatientHome = React.lazy(() => import("./pages/pateintpages/PatientHome.jsx"));
+const PatientFindDoctor = React.lazy(() => import("./pages/pateintpages/PatientFindDoctor.jsx"));
+const PatientAppointments = React.lazy(() => import("./pages/pateintpages/PatientAppointments.jsx"));
+const BookAppointment = React.lazy(() => import("./pages/pateintpages/BookAppointment.jsx"));
+const PatientProfile = React.lazy(() => import("./pages/pateintpages/PatientProfile.jsx"));
+const DoctorProfile = React.lazy(() => import("./pages/doctorpages/DoctorProfile.jsx"));
+const DoctorAvailability = React.lazy(() => import("./pages/doctorpages/DoctorAvailability.jsx"));
+const AdminDashboard = React.lazy(() => import("./pages/adminpages/AdminDashboard.jsx"));
+const AdminManageDoctor = React.lazy(() => import("./pages/adminpages/AdminManageDoctor.jsx"));
+const AdminManageUser = React.lazy(() => import("./pages/adminpages/AdminManageUser.jsx"));
+const AdminManageAppiontment = React.lazy(() => import("./pages/adminpages/AdminManageAppiontment.jsx"));
+const AdminDoctorDetails = React.lazy(() => import("./pages/adminpages/AdminDoctorDetails.jsx"));
 
 function App() {
 
@@ -31,35 +44,35 @@ function App() {
       <>
           <Routes>
               {/* Public Routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<AlreadyAuthenticated><Login /></AlreadyAuthenticated>} />
-              <Route path="/signuprole" element={<AlreadyAuthenticated><SignupRole /></AlreadyAuthenticated>} />
-              <Route path="/signup/patient" element={<AlreadyAuthenticated><SignupPatient /></AlreadyAuthenticated>} />
-              <Route path="/signup/doctor" element={<AlreadyAuthenticated><SignupDoctor /></AlreadyAuthenticated>} />
-              <Route path="/signup/admin" element={<AlreadyAuthenticated><SignupAdmin /></AlreadyAuthenticated>} />
+              <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+              <Route path="/login" element={<AlreadyAuthenticated><PageTransition><Login /></PageTransition></AlreadyAuthenticated>} />
+              <Route path="/signuprole" element={<AlreadyAuthenticated><PageTransition><SignupRole /></PageTransition></AlreadyAuthenticated>} />
+              <Route path="/signup/patient" element={<AlreadyAuthenticated><PageTransition><SignupPatient /></PageTransition></AlreadyAuthenticated>} />
+              <Route path="/signup/doctor" element={<AlreadyAuthenticated><PageTransition><SignupDoctor /></PageTransition></AlreadyAuthenticated>} />
+              <Route path="/signup/admin" element={<AlreadyAuthenticated><PageTransition><SignupAdmin /></PageTransition></AlreadyAuthenticated>} />
 
               {/* Patient Routes */}
-              <Route path="/patient/home" element={<RoleProtectedRoute allowedRoles={["patient"]}><PatientHome /></RoleProtectedRoute>} />
-              <Route path="/patient/profile" element={<RoleProtectedRoute allowedRoles={["patient"]}><PatientProfile /></RoleProtectedRoute>} />
-              <Route path="/patient/finddoctor" element={<RoleProtectedRoute allowedRoles={["patient"]}><PatientFindDoctor /></RoleProtectedRoute>} />
-              <Route path="/patient/appointment" element={<RoleProtectedRoute allowedRoles={["patient"]}><PatientAppointments /></RoleProtectedRoute>} />
-              <Route path="/patient/bookappointment/:doctorId" element={<RoleProtectedRoute allowedRoles={["patient"]}><BookAppointment /></RoleProtectedRoute>} />
+              <Route path="/patient/home" element={<RoleProtectedRoute allowedRoles={["patient"]}><Suspense fallback={<DashboardSkeleton />}><PageTransition><PatientHome /></PageTransition></Suspense></RoleProtectedRoute>} />
+              <Route path="/patient/profile" element={<RoleProtectedRoute allowedRoles={["patient"]}><Suspense fallback={<ProfileSkeleton />}><PageTransition><PatientProfile /></PageTransition></Suspense></RoleProtectedRoute>} />
+              <Route path="/patient/finddoctor" element={<RoleProtectedRoute allowedRoles={["patient"]}><Suspense fallback={<CardSkeleton />}><PageTransition><PatientFindDoctor /></PageTransition></Suspense></RoleProtectedRoute>} />
+              <Route path="/patient/appointment" element={<RoleProtectedRoute allowedRoles={["patient"]}><Suspense fallback={<CardSkeleton />}><PageTransition><PatientAppointments /></PageTransition></Suspense></RoleProtectedRoute>} />
+              <Route path="/patient/bookappointment/:doctorId" element={<RoleProtectedRoute allowedRoles={["patient"]}><Suspense fallback={<ProfileSkeleton />}><PageTransition><BookAppointment /></PageTransition></Suspense></RoleProtectedRoute>} />
 
               {/* Doctor Routes */}
-              <Route path="/doctor" element={<RoleProtectedRoute allowedRoles={["doctor"]}><DoctorDashboard /></RoleProtectedRoute>} />
-              <Route path="/doctor/dashboard" element={<RoleProtectedRoute allowedRoles={["doctor"]}><DoctorDashboard /></RoleProtectedRoute>} />
-              <Route path="/doctor/profile" element={<RoleProtectedRoute allowedRoles={["doctor"]}><DoctorProfile /></RoleProtectedRoute>} />
-              <Route path="/doctor/schedule" element={<RoleProtectedRoute allowedRoles={["doctor"]}><DoctorAvailability /></RoleProtectedRoute>} />
+              <Route path="/doctor" element={<RoleProtectedRoute allowedRoles={["doctor"]}><Suspense fallback={<DashboardSkeleton />}><PageTransition><DoctorDashboard /></PageTransition></Suspense></RoleProtectedRoute>} />
+              <Route path="/doctor/dashboard" element={<RoleProtectedRoute allowedRoles={["doctor"]}><Suspense fallback={<DashboardSkeleton />}><PageTransition><DoctorDashboard /></PageTransition></Suspense></RoleProtectedRoute>} />
+              <Route path="/doctor/profile" element={<RoleProtectedRoute allowedRoles={["doctor"]}><Suspense fallback={<ProfileSkeleton />}><PageTransition><DoctorProfile /></PageTransition></Suspense></RoleProtectedRoute>} />
+              <Route path="/doctor/schedule" element={<RoleProtectedRoute allowedRoles={["doctor"]}><Suspense fallback={<TableSkeleton rows={7} columns={4} />}><PageTransition><DoctorAvailability /></PageTransition></Suspense></RoleProtectedRoute>} />
 
               {/* Admin Routes */}
-              <Route path="/admin/dashboard" element={<RoleProtectedRoute allowedRoles={["admin"]}><AdminDashboard /></RoleProtectedRoute>} />
-              <Route path="/admin/managedoctor" element={<RoleProtectedRoute allowedRoles={["admin"]}><AdminManageDoctor /></RoleProtectedRoute>} />
-              <Route path="/admin/doctor/:id" element={<RoleProtectedRoute allowedRoles={["admin"]}><AdminDoctorDetails /></RoleProtectedRoute>} />
-              <Route path="/admin/manageuser" element={<RoleProtectedRoute allowedRoles={["admin"]}><AdminManageUser /></RoleProtectedRoute>} />
-              <Route path="/admin/manageappiontment" element={<RoleProtectedRoute allowedRoles={["admin"]}><AdminManageAppiontment /></RoleProtectedRoute>} />
+              <Route path="/admin/dashboard" element={<RoleProtectedRoute allowedRoles={["admin"]}><Suspense fallback={<DashboardSkeleton />}><PageTransition><AdminDashboard /></PageTransition></Suspense></RoleProtectedRoute>} />
+              <Route path="/admin/managedoctor" element={<RoleProtectedRoute allowedRoles={["admin"]}><Suspense fallback={<TableSkeleton rows={5} columns={6} />}><PageTransition><AdminManageDoctor /></PageTransition></Suspense></RoleProtectedRoute>} />
+              <Route path="/admin/doctor/:id" element={<RoleProtectedRoute allowedRoles={["admin"]}><Suspense fallback={<ProfileSkeleton />}><PageTransition><AdminDoctorDetails /></PageTransition></Suspense></RoleProtectedRoute>} />
+              <Route path="/admin/manageuser" element={<RoleProtectedRoute allowedRoles={["admin"]}><Suspense fallback={<TableSkeleton rows={5} columns={6} />}><PageTransition><AdminManageUser /></PageTransition></Suspense></RoleProtectedRoute>} />
+              <Route path="/admin/manageappiontment" element={<RoleProtectedRoute allowedRoles={["admin"]}><Suspense fallback={<TableSkeleton rows={5} columns={6} />}><PageTransition><AdminManageAppiontment /></PageTransition></Suspense></RoleProtectedRoute>} />
 
               {/* Catch-all 404 */}
-              <Route path="*" element={<NotFound />} />
+              <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
           </Routes>
       </>
   )

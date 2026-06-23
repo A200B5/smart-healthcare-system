@@ -3,6 +3,7 @@ import Footer from "../components/Footer.jsx";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { getRoleHomeRoute } from "../services/navigationUtils.js";
+import GlobalLoader from "../components/loaders/GlobalLoader.jsx";
 
 function Home(){
 
@@ -10,11 +11,7 @@ function Home(){
     const { isAuthenticated, user, loading } = useAuth();
 
     if (loading) {
-        return (
-            <div className="page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <p>Loading...</p>
-            </div>
-        );
+        return <GlobalLoader />;
     }
 
     if (isAuthenticated && user) {

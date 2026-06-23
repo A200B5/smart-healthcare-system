@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import DoctorNavbar from "../../components/DoctorNavbar.jsx";
 import { getMySchedule, updateSchedule } from "../../services/doctorService.js";
 
@@ -97,8 +98,8 @@ function DoctorAvailability() {
       <>
         <DoctorNavbar />
         <div className="page">
-          <div className="page-content" style={{ textAlign: "center", padding: "60px 0" }}>
-            <p>Loading schedule...</p>
+          <div className="page-content">
+            <TableSkeleton rows={7} columns={4} />
           </div>
         </div>
       </>

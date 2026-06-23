@@ -1,5 +1,6 @@
 import AdminNavbar from "../../components/AdminNavbar.jsx";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import { getPendingDoctors, approveDoctor, rejectDoctor, getAdminStats } from "../../services/adminService.js";
 
 function AdminDashboard() {
@@ -131,7 +132,7 @@ function AdminDashboard() {
                         <div className="table-title">Doctor Verification Management</div>
                         
                         {loading ? (
-                            <p style={{ padding: '1rem' }}>Loading pending verifications...</p>
+                            <TableSkeleton rows={3} columns={5} />
                         ) : errorMsg ? (
                             <p style={{ padding: '1rem', color: 'red' }}>{errorMsg}</p>
                         ) : pendingDoctors.length === 0 ? (

@@ -1,17 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { getRoleHomeRoute } from "../services/navigationUtils.js";
+import GlobalLoader from "./loaders/GlobalLoader.jsx";
 
 const AlreadyAuthenticated = ({ children }) => {
     const { isAuthenticated, user, logout, loading } = useAuth();
     const navigate = useNavigate();
 
     if (loading) {
-        return (
-            <div className="page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <p>Loading...</p>
-            </div>
-        );
+        return <GlobalLoader />;
     }
 
     if (isAuthenticated && user) {

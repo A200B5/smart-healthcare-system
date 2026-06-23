@@ -1,5 +1,6 @@
 import AdminNavbar from "../../components/AdminNavbar.jsx";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import { getUsers, deleteUser } from "../../services/adminService.js";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -93,7 +94,7 @@ function AdminManageUser() {
                         </div>
 
                         {loading ? (
-                            <p style={{ padding: '1rem' }}>Loading users...</p>
+                            <TableSkeleton rows={5} columns={6} />
                         ) : error ? (
                             <p style={{ padding: '1rem', color: 'red' }}>{error}</p>
                         ) : filteredUsers.length === 0 ? (

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 import DoctorNavbar from "../../components/DoctorNavbar.jsx";
 import { getCurrentUser } from "../../services/authService";
 import { getDoctorProfile, updateDoctor } from "../../services/doctorService";
@@ -127,7 +128,7 @@ function DoctorProfile() {
         <DoctorNavbar />
         <div className="page" id="page-doctor-profile">
           <div className="page-content">
-            <p>Loading...</p>
+            <ProfileSkeleton />
           </div>
         </div>
       </>
