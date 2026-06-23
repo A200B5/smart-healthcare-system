@@ -158,8 +158,8 @@ function AdminDoctorDetails() {
                                 <h2 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-primary)' }}>{doctor.name}</h2>
                                 <p style={{ margin: '0', color: 'var(--text-secondary)' }}>{doctor.email}</p>
                                 <div style={{ marginTop: '0.5rem' }}>
-                                    <span className={`status-badge ${doctor.verificationStatus === 'approved' ? 'status-available' : doctor.verificationStatus === 'pending' ? 'status-busy' : 'status-rejected'}`}>
-                                        Verification: {doctor.verificationStatus ? doctor.verificationStatus.toUpperCase() : 'UNKNOWN'}
+                                    <span className={`status-badge ${doctor.verification_status === 'approved' ? 'status-available' : doctor.verification_status === 'pending' ? 'status-busy' : 'status-rejected'}`}>
+                                        Verification: {doctor.verification_status ? doctor.verification_status.toUpperCase() : 'UNKNOWN'}
                                     </span>
                                 </div>
                             </div>
@@ -239,21 +239,23 @@ function AdminDoctorDetails() {
                             )}
                         </div>
 
-                        <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
-                            <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Registration Information</h3>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-                                <div>
-                                    <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Account Created</label>
-                                    <div style={{ color: 'var(--text-primary)' }}>{new Date(doctor.createdAt).toLocaleDateString()}</div>
-                                </div>
-                                {doctor.verified_at && (
+                        {doctor.createdAt && (
+                            <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
+                                <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Registration Information</h3>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                                     <div>
-                                        <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Verification Date</label>
-                                        <div style={{ color: 'var(--text-primary)' }}>{new Date(doctor.verified_at).toLocaleDateString()}</div>
+                                        <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Account Created</label>
+                                        <div style={{ color: 'var(--text-primary)' }}>{new Date(doctor.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                                     </div>
-                                )}
+                                    {doctor.verified_at && (
+                                        <div>
+                                            <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Verification Date</label>
+                                            <div style={{ color: 'var(--text-primary)' }}>{new Date(doctor.verified_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                     </div>
                 </div>

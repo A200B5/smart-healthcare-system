@@ -6,7 +6,13 @@ const errorHandle = (error, fallbackMessage) => {
         ? backendErrors.join(", ")
         : error?.response?.data?.message || fallbackMessage
 
-    throw new Error(message)
+    const err = new Error(message);
+    if (error?.response?.data?.reason) {
+        err.reason = error.response.data.reason;
+    }
+    err.status = error?.response?.status;
+    err.originalMessage = error?.response?.data?.message;
+    throw err;
 }
 
 // Login Function :

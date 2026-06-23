@@ -162,7 +162,12 @@ SELECT
     d.price,
     d.location,
     d.bio,
-    d.schedule
+    d.schedule,
+    d.license_number,
+    d.verification_status,
+    d.rejection_reason,
+    d.verified_at,
+    u.created_at AS createdAt
 FROM  Doctors d
 JOIN  Users   u ON d.user_id = u.id
 WHERE u.is_active = 1;

@@ -34,7 +34,12 @@ function Login() {
                 navigate("/patient/home");
             }
         } catch (error) {
-            setErrorMsg(error.message || "Invalid email or password. Please try again.");
+            if (error.originalMessage === 'Your application was rejected.') {
+                const reasonText = error.reason ? `"${error.reason}"` : "Please contact support for more information.";
+                setErrorMsg(`Your application was rejected.\n\nReason:\n${reasonText}`);
+            } else {
+                setErrorMsg(error.message || "Invalid email or password. Please try again.");
+            }
             setIsSubmitting(false);
         }
     };
@@ -51,7 +56,7 @@ function Login() {
 
                         {errorMsg && (
                             <div className="error-msg" style={{ display: 'block' }}>
-                                ⚠️ <span>{errorMsg}</span>
+                                ⚠️ <span style={{ whiteSpace: 'pre-line' }}>{errorMsg}</span>
                             </div>
                         )}
 
