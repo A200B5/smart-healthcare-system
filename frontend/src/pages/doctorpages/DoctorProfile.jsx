@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import DoctorNavbar from "../../components/DoctorNavbar.jsx";
 import { getCurrentUser } from "../../services/authService";
-import { getDoctors, updateDoctor } from "../../services/doctorService";
+import { getDoctorProfile, updateDoctor } from "../../services/doctorService";
 
 const splitName = (fullName) => {
   const parts = (fullName || "").trim().split(/\s+/).filter(Boolean);
@@ -11,12 +11,6 @@ const splitName = (fullName) => {
     firstName: parts[0],
     lastName: parts.slice(1).join(" "),
   };
-};
-
-const normalizeDoctors = (payload) => {
-  if (Array.isArray(payload)) return payload;
-  if (Array.isArray(payload?.doctors)) return payload.doctors;
-  return [];
 };
 
 function DoctorProfile() {
@@ -47,21 +41,13 @@ function DoctorProfile() {
         setLoading(true);
         setError(null);
 
-        const [currentUserData, doctorsData] = await Promise.all([
+        const [currentUserData, doctorProfileData] = await Promise.all([
           getCurrentUser(),
-          getDoctors(),
+          getDoctorProfile(),
         ]);
 
         const user = currentUserData?.user || currentUserData;
-        const doctors = normalizeDoctors(doctorsData);
-
-        const matchedDoctor = doctors.find((item) => {
-          return (
-            item.user_id === user?.id ||
-            item.userId === user?.id ||
-            item.email === user?.email
-          );
-        });
+        const matchedDoctor = doctorProfileData?.doctor || doctorProfileData;
 
         const { firstName, lastName } = splitName(user?.name);
 
@@ -227,6 +213,18 @@ function DoctorProfile() {
               </div>
             </div>
 
+            {doctor?.profile?.verification_status === "pending" && (
+              <div style={{ background: "#FEF3C7", color: "#92400E", padding: "16px", borderRadius: "8px", marginBottom: "24px" }}>
+                <strong>⏳ Pending Approval:</strong> Your profile is currently under review by an administrator. Some features may be restricted until approved.
+              </div>
+            )}
+
+            {doctor?.profile?.verification_status === "rejected" && (
+              <div style={{ background: "#FEE2E2", color: "#991B1B", padding: "16px", borderRadius: "8px", marginBottom: "24px" }}>
+                <strong>❌ Application Rejected:</strong> {doctor?.profile?.rejection_reason || "Please update your profile information and contact support."}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit}>
               <div className="form-row">
                 <div className="form-group">
@@ -237,7 +235,7 @@ function DoctorProfile() {
                     className="form-input"
                     value={form.firstName || ""}
                     onChange={handleChange}
-                    disabled
+                    readOnly
                   />
                 </div>
 
@@ -249,7 +247,7 @@ function DoctorProfile() {
                     className="form-input"
                     value={form.lastName || ""}
                     onChange={handleChange}
-                    disabled
+                    readOnly
                   />
                 </div>
               </div>
@@ -262,7 +260,7 @@ function DoctorProfile() {
                   className="form-input"
                   value={form.email || ""}
                   onChange={handleChange}
-                  disabled
+                  readOnly
                 />
               </div>
 
@@ -340,15 +338,18 @@ function DoctorProfile() {
                 />
               </div>
 
-              <div className="checkbox-wrapper" style={{ marginBottom: "12px" }}>
-                <input
-                  name="available"
-                  id="profile-available"
-                  type="checkbox"
-                  checked={Boolean(form.available)}
-                  onChange={handleChange}
-                />
-                <label htmlFor="profile-available">Currently available for appointments</label>
+              <div className="checkbox-wrapper" style={{ marginBottom: "12px", background: "var(--bg-secondary)", padding: "12px", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <input
+                    name="available"
+                    id="profile-available"
+                    type="checkbox"
+                    checked={Boolean(form.available)}
+                    onChange={handleChange}
+                    style={{ width: "18px", height: "18px" }}
+                  />
+                  <label htmlFor="profile-available" style={{ fontWeight: 600 }}>Currently accepting appointments</label>
+                </div>
               </div>
 
               {submitError && (

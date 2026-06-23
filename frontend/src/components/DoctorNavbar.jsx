@@ -73,6 +73,19 @@ function DoctorNavbar() {
                         My Profile
                     </a>
                 </li>
+
+                <li>
+                    <a
+                        className={
+                            location.pathname === "/doctor/schedule"
+                                ? "active"
+                                : ""
+                        }
+                        onClick={() => navigate("/doctor/schedule")}
+                    >
+                        My Schedule
+                    </a>
+                </li>
             </ul>
 
             <div className="navbar-actions">

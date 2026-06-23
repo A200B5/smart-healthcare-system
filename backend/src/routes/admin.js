@@ -125,4 +125,68 @@ router.put('/doctors/:doctorId/reject', async (req, res) => {
   }
 });
 
+// GET /api/admin/dashboard-stats
+router.get('/dashboard-stats', async (req, res) => {
+  try {
+    const pool = getPool();
+    const statsResult = await pool.request().query('SELECT * FROM vw_AdminStats');
+    const revenueResult = await pool.request().query(`
+      SELECT SUM(d.price) as totalRevenue 
+      FROM Appointments a 
+      JOIN Doctors d ON a.doctor_id = d.id 
+      WHERE a.status = 'completed'
+    `);
+    
+    let stats = statsResult.recordset[0] || {};
+    stats.totalRevenue = revenueResult.recordset[0]?.totalRevenue || 0;
+    
+    res.json({ success: true, data: stats });
+  } catch (err) {
+    console.error('Error fetching admin stats:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// GET /api/admin/users
+router.get('/users', async (req, res) => {
+  try {
+    const pool = getPool();
+    const result = await pool.request().query('SELECT * FROM vw_UserList');
+    res.json({ success: true, data: result.recordset });
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// GET /api/admin/doctors
+router.get('/doctors', async (req, res) => {
+  try {
+    const pool = getPool();
+    const result = await pool.request().query(`
+      SELECT 
+        d.id as doctorId,
+        d.user_id as userId,
+        u.name,
+        u.email,
+        d.specialty,
+        d.rating,
+        d.reviews,
+        d.experience,
+        d.available,
+        d.price,
+        d.location,
+        d.verification_status as verificationStatus,
+        d.license_number as licenseNumber,
+        u.created_at as createdAt
+      FROM Doctors d
+      JOIN Users u ON d.user_id = u.id
+    `);
+    res.json({ success: true, data: result.recordset });
+  } catch (err) {
+    console.error('Error fetching all doctors:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 module.exports = router;

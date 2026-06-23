@@ -45,6 +45,9 @@ router.post('/', authMiddleware, requireRole('patient'), async (req, res) => {
       if (row.success === -3) {
         return res.status(409).json({ success: false, message: row.message });
       }
+      if (row.success === -4) {
+        return res.status(403).json({ success: false, message: row.message });
+      }
       return res.status(400).json({ success: false, message: row.message });
     }
 

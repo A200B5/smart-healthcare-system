@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import PatientNavbar from "../../components/PatientNavbar.jsx";
 import { getDoctorById } from "../../services/doctorService.js";
 import { bookAppointment } from "../../services/appointmentService.js";
+import { getAvailableSlots } from "../../services/patientService.js";
 
 function BookAppointment() {
     const { doctorId } = useParams();
@@ -23,16 +24,8 @@ function BookAppointment() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
-    // مؤقتًا عشان availabilityService مش موجود
-    const availableSlots = [
-        "09:00",
-        "10:00",
-        "11:00",
-        "12:00",
-        "14:00",
-        "15:00",
-        "16:00",
-    ];
+    const [availableSlots, setAvailableSlots] = useState([]);
+    const [slotsLoading, setSlotsLoading] = useState(false);
 
     const today = useMemo(() => {
         return new Date().toISOString().split("T")[0];
@@ -101,6 +94,30 @@ function BookAppointment() {
         setError("");
         setSuccess("");
     };
+
+    useEffect(() => {
+        const loadSlots = async () => {
+            if (!formData.date || !doctorId) return;
+            try {
+                setSlotsLoading(true);
+                const data = await getAvailableSlots(doctorId, formData.date);
+                if (data && data.availableSlots) {
+                    setAvailableSlots(data.availableSlots);
+                } else {
+                    setAvailableSlots([]);
+                }
+            } catch (error) {
+                console.error("Failed to load slots", error);
+                setAvailableSlots([]);
+            } finally {
+                setSlotsLoading(false);
+            }
+        };
+
+        if (formData.date) {
+            loadSlots();
+        }
+    }, [formData.date, doctorId]);
 
     const handleSelectSlot = (slot) => {
         setFormData((prev) => ({
@@ -381,18 +398,32 @@ function BookAppointment() {
                                     </p>
                                 )}
 
-                                {formData.date && (
+                                {formData.date && slotsLoading && (
+                                    <p className="booking-muted-text">
+                                        Loading available slots...
+                                    </p>
+                                )}
+
+                                {formData.date && !slotsLoading && availableSlots.length === 0 && (
+                                    <p className="booking-muted-text" style={{ color: "var(--rejected, #ef4444)" }}>
+                                        No available slots for this date.
+                                    </p>
+                                )}
+
+                                {formData.date && !slotsLoading && availableSlots.length > 0 && (
                                     <div className="slots-grid">
                                         {availableSlots.map((slot) => (
                                             <button
-                                                key={slot}
+                                                key={slot.time}
                                                 type="button"
                                                 className={`slot-btn ${
-                                                    formData.time === slot ? "selected" : ""
+                                                    formData.time === slot.time ? "selected" : ""
                                                 }`}
-                                                onClick={() => handleSelectSlot(slot)}
+                                                onClick={() => !slot.isBooked && handleSelectSlot(slot.time)}
+                                                disabled={slot.isBooked}
+                                                style={{ opacity: slot.isBooked ? 0.5 : 1, cursor: slot.isBooked ? "not-allowed" : "pointer" }}
                                             >
-                                                {slot}
+                                                {slot.time}
                                             </button>
                                         ))}
                                     </div>

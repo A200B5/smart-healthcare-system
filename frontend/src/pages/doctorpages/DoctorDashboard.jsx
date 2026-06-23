@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DoctorNavbar from "../../components/DoctorNavbar.jsx";
 import API from "../../services/axios.js";
 import {
   getAppointments,
   updateAppointmentStatus,
 } from "../../services/appointmentService";
+import { getDoctorProfile, getDoctorReviews } from "../../services/doctorService";
 
 const dayOptions = [
-  { value: 0, label: "Sunday" },
   { value: 1, label: "Monday" },
   { value: 2, label: "Tuesday" },
   { value: 3, label: "Wednesday" },
   { value: 4, label: "Thursday" },
   { value: 5, label: "Friday" },
   { value: 6, label: "Saturday" },
+  { value: 7, label: "Sunday" },
 ];
 
 const normalizeAppointments = (payload) => {
@@ -31,7 +33,7 @@ const normalizeAppointments = (payload) => {
         if (!isNaN(d)) {
           dateStr = d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
         }
-      } catch (e) {}
+      } catch (e) { }
     }
 
     return {
@@ -46,23 +48,19 @@ const normalizeAppointments = (payload) => {
 };
 
 function DoctorDashboard() {
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all");
   const [doctorId, setDoctorId] = useState(null);
+  const [doctorProfile, setDoctorProfile] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [schedule, setSchedule] = useState([]);
   const [scheduleLoading, setScheduleLoading] = useState(true);
   const [scheduleError, setScheduleError] = useState(null);
   const [savingSchedule, setSavingSchedule] = useState(false);
   const [scheduleSuccess, setScheduleSuccess] = useState("");
-  const [availabilityForm, setAvailabilityForm] = useState({
-    dayOfWeek: 1,
-    startTime: "09:00",
-    endTime: "17:00",
-    isAvailable: true,
-    slotDuration: 30,
-  });
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -72,9 +70,10 @@ function DoctorDashboard() {
         setError(null);
         setScheduleError(null);
 
-        const [appointmentsResult, scheduleResult] = await Promise.allSettled([
+        const [appointmentsResult, scheduleResult, profileResult] = await Promise.allSettled([
           getAppointments(),
           API.get("/availability/my-schedule"),
+          getDoctorProfile()
         ]);
 
         if (appointmentsResult.status === "fulfilled") {
@@ -93,6 +92,19 @@ function DoctorDashboard() {
         } else {
           setSchedule([]);
           setScheduleError(scheduleResult.reason?.message || "Failed to load availability");
+        }
+
+        if (profileResult.status === "fulfilled") {
+          const profileData = profileResult.value?.doctor || profileResult.value;
+          setDoctorProfile(profileData);
+          if (profileData?.id) {
+            try {
+              const reviewsData = await getDoctorReviews(profileData.id);
+              setReviews(reviewsData?.reviews || []);
+            } catch (e) {
+              console.error("Failed to fetch reviews");
+            }
+          }
         }
       } catch (err) {
         setError(err.message);
@@ -120,37 +132,7 @@ function DoctorDashboard() {
     }
   };
 
-  const handleAvailabilitySubmit = async (e) => {
-    e.preventDefault();
-    setScheduleSuccess("");
-    setScheduleError(null);
-
-    if (!doctorId) {
-      setScheduleError("Doctor profile ID is missing; availability cannot be updated.");
-      return;
-    }
-
-    try {
-      setSavingSchedule(true);
-      await API.put(`/availability/doctors/${doctorId}/schedule`, {
-        dayOfWeek: Number(availabilityForm.dayOfWeek),
-        startTime: availabilityForm.startTime,
-        endTime: availabilityForm.endTime,
-        isAvailable: availabilityForm.isAvailable,
-        slotDuration: Number(availabilityForm.slotDuration),
-      });
-
-      const refreshed = await API.get("/availability/my-schedule");
-      const refreshedData = refreshed.data;
-      setDoctorId(refreshedData?.doctorId || doctorId);
-      setSchedule(Array.isArray(refreshedData?.schedule) ? refreshedData.schedule : []);
-      setScheduleSuccess("Availability updated successfully.");
-    } catch (err) {
-      setScheduleError(err?.response?.data?.message || err.message || "Failed to update availability");
-    } finally {
-      setSavingSchedule(false);
-    }
-  };
+  // Removed handleAvailabilitySubmit
 
   const filteredAppointments =
     filter === "all"
@@ -180,6 +162,18 @@ function DoctorDashboard() {
             </div>
             <div className="welcome-icon">🩺</div>
           </div>
+
+          {doctorProfile?.verification_status === "pending" && (
+            <div style={{ background: "#FEF3C7", color: "#92400E", padding: "16px", borderRadius: "8px", marginBottom: "24px" }}>
+              <strong>⏳ Pending Approval:</strong> Your profile is currently under review by an administrator. You cannot accept or reject appointments until approved.
+            </div>
+          )}
+
+          {doctorProfile?.verification_status === "rejected" && (
+            <div style={{ background: "#FEE2E2", color: "#991B1B", padding: "16px", borderRadius: "8px", marginBottom: "24px" }}>
+              <strong>❌ Application Rejected:</strong> {doctorProfile?.rejection_reason || "Please update your profile information and contact support."}
+            </div>
+          )}
 
           {/* Stats */}
           <div className="stats-grid">
@@ -285,42 +279,48 @@ function DoctorDashboard() {
                       </td>
 
                       <td>
-                        {app.status === "pending" && (
-                          <div className="action-btns">
-                            <button
-                              className="action-btn btn-accept"
-                              onClick={() =>
-                                handleStatusUpdate(app.id, "confirmed")
-                              }
-                            >
-                              Accept
-                            </button>
+                        {doctorProfile?.verification_status === "approved" ? (
+                          <>
+                            {app.status === "pending" && (
+                              <div className="action-btns">
+                                <button
+                                  className="action-btn btn-accept"
+                                  onClick={() =>
+                                    handleStatusUpdate(app.id, "confirmed")
+                                  }
+                                >
+                                  Accept
+                                </button>
 
-                            <button
-                              className="action-btn btn-reject"
-                              onClick={() =>
-                                handleStatusUpdate(app.id, "rejected")
-                              }
-                            >
-                              Reject
-                            </button>
-                          </div>
-                        )}
+                                <button
+                                  className="action-btn btn-reject"
+                                  onClick={() =>
+                                    handleStatusUpdate(app.id, "rejected")
+                                  }
+                                >
+                                  Reject
+                                </button>
+                              </div>
+                            )}
 
-                        {app.status === "confirmed" && (
-                          <button
-                            className="action-btn btn-done"
-                            onClick={() =>
-                              handleStatusUpdate(app.id, "completed")
-                            }
-                          >
-                            Mark Done
-                          </button>
-                        )}
+                            {app.status === "confirmed" && (
+                              <button
+                                className="action-btn btn-done"
+                                onClick={() =>
+                                  handleStatusUpdate(app.id, "completed")
+                                }
+                              >
+                                Mark Done
+                              </button>
+                            )}
 
-                        {(app.status === "completed" ||
-                          app.status === "rejected") && (
-                          <span className="no-action">—</span>
+                            {(app.status === "completed" ||
+                              app.status === "rejected") && (
+                                <span className="no-action">—</span>
+                              )}
+                          </>
+                        ) : (
+                          <span className="no-action" title="Verify profile to manage appointments">🔒 Locked</span>
                         )}
                       </td>
                     </tr>
@@ -331,109 +331,19 @@ function DoctorDashboard() {
 
           <div className="table-card" style={{ marginTop: "24px" }}>
             <div className="table-header">
-              <div className="table-title">Manage Availability</div>
+              <div className="table-title">My Schedule</div>
             </div>
 
-            <form onSubmit={handleAvailabilitySubmit}>
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Day</label>
-                  <select
-                    className="form-input"
-                    value={availabilityForm.dayOfWeek}
-                    onChange={(e) =>
-                      setAvailabilityForm((prev) => ({
-                        ...prev,
-                        dayOfWeek: Number(e.target.value),
-                      }))
-                    }
-                  >
-                    {dayOptions.map((day) => (
-                      <option key={day.value} value={day.value}>
-                        {day.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Slot Duration (minutes)</label>
-                  <select
-                    className="form-input"
-                    value={availabilityForm.slotDuration}
-                    onChange={(e) =>
-                      setAvailabilityForm((prev) => ({
-                        ...prev,
-                        slotDuration: Number(e.target.value),
-                      }))
-                    }
-                  >
-                    <option value={15}>15</option>
-                    <option value={30}>30</option>
-                    <option value={45}>45</option>
-                    <option value={60}>60</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Start Time</label>
-                  <input
-                    type="time"
-                    className="form-input"
-                    value={availabilityForm.startTime}
-                    onChange={(e) =>
-                      setAvailabilityForm((prev) => ({
-                        ...prev,
-                        startTime: e.target.value,
-                      }))
-                    }
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">End Time</label>
-                  <input
-                    type="time"
-                    className="form-input"
-                    value={availabilityForm.endTime}
-                    onChange={(e) =>
-                      setAvailabilityForm((prev) => ({
-                        ...prev,
-                        endTime: e.target.value,
-                      }))
-                    }
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="checkbox-wrapper" style={{ marginBottom: "16px" }}>
-                <input
-                  type="checkbox"
-                  id="availability-enabled"
-                  checked={availabilityForm.isAvailable}
-                  onChange={(e) =>
-                    setAvailabilityForm((prev) => ({
-                      ...prev,
-                      isAvailable: e.target.checked,
-                    }))
-                  }
-                />
-                <label htmlFor="availability-enabled">Available on selected day</label>
-              </div>
-
-              <button type="submit" className="btn btn-primary" disabled={savingSchedule || scheduleLoading}>
-                {savingSchedule ? "Saving..." : "Save Availability"}
+            <div style={{ padding: "16px", textAlign: "center" }}>
+              <p style={{ marginBottom: "16px", color: "var(--text-secondary)" }}>
+                You are currently available on <strong>{stats.availableDays}</strong> days of the week.
+              </p>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/doctor/schedule")}
+              >
+                Manage Weekly Schedule
               </button>
-            </form>
-
-            {scheduleError && <p style={{ marginTop: "12px", color: "var(--rejected)" }}>{scheduleError}</p>}
-            {scheduleSuccess && <p style={{ marginTop: "12px", color: "var(--confirmed)" }}>{scheduleSuccess}</p>}
-
-            <div style={{ marginTop: "16px" }}>
               {scheduleLoading && <p>Loading current schedule...</p>}
 
               {!scheduleLoading && schedule.length === 0 && !scheduleError && (
@@ -460,7 +370,7 @@ function DoctorDashboard() {
                         <td>{item.slotDuration} min</td>
                         <td>
                           <span className={`status-badge ${item.isAvailable ? "badge-confirmed" : "badge-rejected"}`}>
-                            {item.isAvailable ? "available" : "off"}
+                            {item.isAvailable ? "Available" : "Not Available"}
                           </span>
                         </td>
                       </tr>
@@ -469,6 +379,44 @@ function DoctorDashboard() {
                 </table>
               )}
             </div>
+          </div>
+
+          {/* Reviews Section */}
+          <div className="table-card" style={{ marginTop: "24px" }}>
+            <div className="table-header">
+              <div className="table-title">Patient Reviews</div>
+            </div>
+
+            <div style={{ display: "flex", gap: "24px", marginBottom: "24px", alignItems: "center" }}>
+              <div style={{ fontSize: "48px", fontWeight: "bold", color: "var(--primary-teal)" }}>
+                {doctorProfile?.rating || "0.0"}
+              </div>
+              <div>
+                <div style={{ fontSize: "20px", color: "#F59E0B" }}>
+                  {"★".repeat(Math.round(doctorProfile?.rating || 0))}{"☆".repeat(5 - Math.round(doctorProfile?.rating || 0))}
+                </div>
+                <p style={{ color: "var(--text-secondary)", marginTop: "4px" }}>
+                  Based on {doctorProfile?.reviews || 0} reviews
+                </p>
+              </div>
+            </div>
+
+            {reviews.length === 0 ? (
+              <p>No reviews yet.</p>
+            ) : (
+              <div style={{ display: "grid", gap: "16px" }}>
+                {reviews.map((review) => (
+                  <div key={review.id} style={{ padding: "16px", border: "1px solid var(--border-color)", borderRadius: "8px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                      <strong>{review.patientName}</strong>
+                      <span style={{ color: "#F59E0B" }}>{"★".repeat(review.rating)}</span>
+                    </div>
+                    <p style={{ color: "var(--text-main)", marginBottom: "8px" }}>{review.comment}</p>
+                    <p style={{ color: "var(--text-secondary)", fontSize: "12px" }}>{review.daysAgo === 0 ? "Today" : `${review.daysAgo} days ago`}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
         </div>

@@ -6,7 +6,6 @@ import {
     getDoctorById,
     getDoctorReviews,
     checkReviewStatus,
-    submitReview,
     getAvailableSlots,
     bookAppointment,
 } from "../../services/patientService.js";
@@ -27,11 +26,6 @@ function PatientFindDoctor() {
     const [selectedDoctor, setSelectedDoctor] = useState(null);
     const [doctorReviews, setDoctorReviews] = useState([]);
     const [reviewsLoading, setReviewsLoading] = useState(false);
-    const [hasReviewed, setHasReviewed] = useState(false);
-    const [reviewForm, setReviewForm] = useState({ rating: 5, comment: "" });
-    const [reviewSubmitting, setReviewSubmitting] = useState(false);
-    const [reviewError, setReviewError] = useState(null);
-    const [reviewSuccess, setReviewSuccess] = useState("");
 
     // ── Booking Modal State ───────────────────────────────
     const [bookingDoctor, setBookingDoctor] = useState(null);
@@ -88,62 +82,15 @@ function PatientFindDoctor() {
     const handleViewProfile = async (doctor) => {
         setSelectedDoctor(doctor);
         setDoctorReviews([]);
-        setHasReviewed(false);
-        setReviewError(null);
-        setReviewSuccess("");
-        setReviewForm({ rating: 5, comment: "" });
 
         try {
             setReviewsLoading(true);
-            const [reviewsData, reviewStatus] = await Promise.allSettled([
-                getDoctorReviews(doctor.id),
-                checkReviewStatus(doctor.id),
-            ]);
-
-            if (reviewsData.status === "fulfilled") {
-                setDoctorReviews(reviewsData.value?.reviews || []);
-            }
-            if (reviewStatus.status === "fulfilled") {
-                setHasReviewed(reviewStatus.value?.hasReviewed || false);
-            }
+            const reviewsData = await getDoctorReviews(doctor.id);
+            setDoctorReviews(reviewsData?.reviews || []);
         } catch (err) {
             console.error("Failed to load doctor details:", err);
         } finally {
             setReviewsLoading(false);
-        }
-    };
-
-    // ── Submit Review Handler ─────────────────────────────
-    const handleSubmitReview = async (e) => {
-        e.preventDefault();
-        if (!selectedDoctor) return;
-
-        try {
-            setReviewSubmitting(true);
-            setReviewError(null);
-            setReviewSuccess("");
-
-            await submitReview({
-                doctorId: selectedDoctor.id,
-                rating: reviewForm.rating,
-                comment: reviewForm.comment,
-            });
-
-            setReviewSuccess("Review submitted successfully!");
-            setHasReviewed(true);
-            setReviewForm({ rating: 5, comment: "" });
-
-            // Refresh reviews
-            const reviewsData = await getDoctorReviews(selectedDoctor.id);
-            setDoctorReviews(reviewsData?.reviews || []);
-
-            // Refresh doctor list to update rating/review count
-            const data = await getDoctors();
-            setDoctors(data?.doctors || []);
-        } catch (err) {
-            setReviewError(err.message || "Failed to submit review");
-        } finally {
-            setReviewSubmitting(false);
         }
     };
 
@@ -460,55 +407,6 @@ function PatientFindDoctor() {
                                         </div>
                                     ))}
                                 </div>
-                            )}
-
-                            {/* Review Form */}
-                            {!hasReviewed && (
-                                <form onSubmit={handleSubmitReview} style={{ borderTop: "1px solid var(--border-color, #e2e8f0)", paddingTop: "12px" }}>
-                                    <h4 style={{ margin: "0 0 12px 0", color: "var(--text-primary)", fontSize: "15px" }}>Leave a Review</h4>
-                                    <div style={{ marginBottom: "12px" }}>
-                                        <label style={{ display: "block", marginBottom: "6px", fontSize: "14px", color: "var(--text-secondary)" }}>Rating</label>
-                                        <div style={{ display: "flex", gap: "4px" }}>
-                                            {[1, 2, 3, 4, 5].map((star) => (
-                                                <button
-                                                    key={star}
-                                                    type="button"
-                                                    onClick={() => setReviewForm((prev) => ({ ...prev, rating: star }))}
-                                                    style={{
-                                                        background: "none",
-                                                        border: "none",
-                                                        cursor: "pointer",
-                                                        fontSize: "24px",
-                                                        color: star <= reviewForm.rating ? "#f59e0b" : "#d1d5db",
-                                                        padding: "2px",
-                                                    }}
-                                                >
-                                                    ★
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <div style={{ marginBottom: "12px" }}>
-                                        <label style={{ display: "block", marginBottom: "6px", fontSize: "14px", color: "var(--text-secondary)" }}>Comment</label>
-                                        <textarea
-                                            value={reviewForm.comment}
-                                            onChange={(e) => setReviewForm((prev) => ({ ...prev, comment: e.target.value }))}
-                                            placeholder="Share your experience..."
-                                            rows={3}
-                                            style={textareaStyle}
-                                        />
-                                    </div>
-                                    {reviewError && <p style={{ color: "var(--rejected, #ef4444)", fontSize: "13px", margin: "0 0 8px 0" }}>⚠️ {reviewError}</p>}
-                                    {reviewSuccess && <p style={{ color: "var(--confirmed, #22c55e)", fontSize: "13px", margin: "0 0 8px 0" }}>✅ {reviewSuccess}</p>}
-                                    <button type="submit" className="btn btn-primary" disabled={reviewSubmitting} style={{ width: "100%" }}>
-                                        {reviewSubmitting ? "Submitting..." : "Submit Review"}
-                                    </button>
-                                </form>
-                            )}
-                            {hasReviewed && (
-                                <p style={{ color: "var(--confirmed, #22c55e)", fontSize: "14px", fontStyle: "italic" }}>
-                                    ✅ You have already reviewed this doctor.
-                                </p>
                             )}
                         </div>
                     </div>

@@ -18,6 +18,24 @@ export const getDoctors = async () => {
 	}
 }
 
+export const getDoctorProfile = async () => {
+	try {
+		const response = await API.get("/doctors/me")
+		return response.data
+	} catch (error) {
+		errorHandle(error, "Failed to fetch doctor profile")
+	}
+}
+
+export const getDoctorReviews = async (doctorId) => {
+	try {
+		const response = await API.get(`/reviews/doctors/${doctorId}/reviews`)
+		return response.data
+	} catch (error) {
+		errorHandle(error, "Failed to fetch doctor reviews")
+	}
+}
+
 export const getDoctorById = async (doctorId) => {
 	try {
 		const response = await API.get(`/doctors/${doctorId}`)
@@ -54,10 +72,32 @@ export const deleteDoctor = async (doctorId) => {
 	}
 }
 
+export const getMySchedule = async () => {
+	try {
+		const response = await API.get("/availability/my-schedule")
+		return response.data
+	} catch (error) {
+		errorHandle(error, "Failed to fetch schedule")
+	}
+}
+
+export const updateSchedule = async (doctorId, scheduleData) => {
+	try {
+		const response = await API.put(`/availability/doctors/${doctorId}/schedule`, scheduleData)
+		return response.data
+	} catch (error) {
+		errorHandle(error, "Failed to update schedule")
+	}
+}
+
 export default {
 	getDoctors,
+	getDoctorProfile,
+	getDoctorReviews,
 	getDoctorById,
 	createDoctor,
 	updateDoctor,
 	deleteDoctor,
+	getMySchedule,
+	updateSchedule,
 }

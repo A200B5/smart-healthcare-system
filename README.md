@@ -108,6 +108,58 @@ docs/MediCare-Pro-Figma-Specification.pdf
 
 ---
 
+## 🚀 Developer Setup
+
+To set up the project locally for development with exact mock data, follow these steps:
+
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd depi-project
+```
+
+### 2. Database Creation & Migrations
+Ensure you have SQL Server running locally.
+
+1. Open SSMS (SQL Server Management Studio).
+2. Create a database named `depi` (or run a script that creates it).
+3. Execute the migration scripts from `backend/database/migrations` in this exact order:
+   - `01_create_tables.sql`
+   - `02_create_views.sql`
+   - `03_create_reviews_sps.sql`
+   - `04_create_availability_sps.sql`
+   - `05_add_doctor_verification.sql`
+   - `06_doctor_license_unique.sql`
+
+### 3. Seed Development Data
+Run the seed script to populate the database with standardized test accounts and mock data. This script is idempotent and safely cleans existing development data before inserting.
+- Run: `backend/database/seeds/07_seed_data.sql`
+
+#### Available Test Accounts:
+- **Admin**: `admin@depi.com` / `Admin@2026_Secure!`
+- **Doctor (Approved)**: `sabry8818@gmail.com` / `123456`
+- **Patient**: `ab163545@gmail.com` / `123456`
+
+### 4. Start the Application
+**Backend:**
+```bash
+cd backend
+npm install
+npm run dev
+```
+*(Make sure to update `backend/.env` with your local SQL Server credentials).*
+
+**Frontend:**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+You can now navigate to the local frontend URL and log in using the provided test accounts!
+
+---
+
 ## 📅 Project Plan (5 Weeks)
 
 ### Week 1: Planning & Setup

@@ -23,6 +23,31 @@ router.get('/', async (req, res) => {
   }
 });
 
+// ── GET /api/doctors/me  ───────────────────────────────────────
+// Returns the currently authenticated doctor's profile.
+router.get('/me', authMiddleware, requireRole('doctor'), async (req, res) => {
+  try {
+    const pool = getPool();
+    const result = await pool.request()
+      .input('userId', sql.Int, req.user.id)
+      .query(`
+        SELECT d.*, u.name, u.email 
+        FROM Doctors d
+        JOIN Users u ON d.user_id = u.id
+        WHERE d.user_id = @userId
+      `);
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ success: false, message: 'Doctor profile not found' });
+    }
+
+    res.json({ success: true, doctor: result.recordset[0] });
+  } catch (err) {
+    console.error('Get doctor profile error:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 // ── GET /api/doctors/:id  ──────────────────────────────────────
 // Returns a single doctor profile (public route).
 router.get('/:id', async (req, res) => {
@@ -116,8 +141,8 @@ router.post('/', authMiddleware, requireRole('admin'), async (req, res) => {
 });
 
 // ── PUT /api/doctors/:id  ──────────────────────────────────────
-// Updates an existing doctor profile. Admin only.
-router.put('/:id', authMiddleware, requireRole('admin'), async (req, res) => {
+// Updates an existing doctor profile. Admin or the doctor themselves.
+router.put('/:id', authMiddleware, async (req, res) => {
   const { specialty, experience, available, avatar, price, location, bio, schedule } = req.body;  
   const doctorId = sanitizeNumber(req.params.id);
   if (doctorId === null) {
@@ -134,10 +159,16 @@ router.put('/:id', authMiddleware, requireRole('admin'), async (req, res) => {
 
     const check = await pool.request()
       .input('id', sql.Int, doctorId)
-      .query('SELECT id FROM Doctors WHERE id = @id');
+      .query('SELECT user_id FROM Doctors WHERE id = @id');
 
     if (check.recordset.length === 0) {
       return res.status(404).json({ success: false, message: 'Doctor not found' });
+    }
+
+    const doctorUserId = check.recordset[0].user_id;
+
+    if (req.user.role !== 'admin' && req.user.id !== doctorUserId) {
+      return res.status(403).json({ success: false, message: 'Access denied. You do not have permission for this action.' });
     }
 
     // Build update query with validated data

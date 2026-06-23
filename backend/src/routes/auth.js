@@ -213,7 +213,7 @@ router.get('/me', authMiddleware, async (req, res) => {
 
     const result = await pool.request()
       .input('id', sql.Int, req.user.id)
-      .query('SELECT id, name, email, role, created_at FROM Users WHERE id = @id');
+      .query('SELECT id, name, email, role, phone, gender, CONVERT(VARCHAR(10), date_of_birth, 23) AS dateOfBirth, created_at FROM Users WHERE id = @id');
 
     if (result.recordset.length === 0) {
       return res.status(404).json({ success: false, message: 'User not found' });
@@ -222,6 +222,48 @@ router.get('/me', authMiddleware, async (req, res) => {
     res.json({ success: true, user: result.recordset[0] });
   } catch (err) {
     console.error('GetMe error:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// ── PUT /api/auth/me ───────────────────────────────────────────
+// Updates the profile of the currently authenticated user.
+router.put('/me', authMiddleware, async (req, res) => {
+  const { name, phone, gender, dateOfBirth } = req.body;
+
+  if (!name || name.trim() === '') {
+    return res.status(400).json({ success: false, message: 'Name is required' });
+  }
+
+  try {
+    const pool = getPool();
+
+    await pool.request()
+      .input('id', sql.Int, req.user.id)
+      .input('name', sql.NVarChar, name)
+      .input('phone', sql.NVarChar, phone || null)
+      .input('gender', sql.NVarChar, gender || null)
+      .input('date_of_birth', sql.Date, dateOfBirth || null)
+      .query(`
+        UPDATE Users 
+        SET name = @name, 
+            phone = @phone, 
+            gender = @gender, 
+            date_of_birth = @date_of_birth 
+        WHERE id = @id
+      `);
+
+    const result = await pool.request()
+      .input('id', sql.Int, req.user.id)
+      .query('SELECT id, name, email, role, phone, gender, CONVERT(VARCHAR(10), date_of_birth, 23) AS dateOfBirth, created_at FROM Users WHERE id = @id');
+
+    res.json({ 
+      success: true, 
+      message: 'Profile updated successfully',
+      user: result.recordset[0] 
+    });
+  } catch (err) {
+    console.error('Update profile error:', err);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });

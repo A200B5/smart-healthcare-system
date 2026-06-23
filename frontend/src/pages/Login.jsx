@@ -8,7 +8,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 function Login() {
     const { login } = useAuth();
     const navigate = useNavigate();
-    
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
@@ -24,7 +24,7 @@ function Login() {
         try {
             const user = await login({ email, password });
             setSuccessMsg("Welcome back!");
-            
+
             // Redirect based on role
             if (user.role === "admin") {
                 navigate("/admin/dashboard");
@@ -54,7 +54,7 @@ function Login() {
                                 ⚠️ <span>{errorMsg}</span>
                             </div>
                         )}
-                        
+
                         {successMsg && (
                             <div className="success-msg" style={{ display: 'block' }}>
                                 ✅ <span>{successMsg}</span>
@@ -64,24 +64,24 @@ function Login() {
                         <form onSubmit={handleSubmit}>
                             <div className="form-group">
                                 <label className="form-label">Email Address</label>
-                                <input 
-                                    type="email" 
-                                    className="form-input" 
+                                <input
+                                    type="email"
+                                    className="form-input"
                                     placeholder="you@example.com"
-                                    autoComplete="off" 
-                                    required 
+                                    autoComplete="off"
+                                    required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Password</label>
-                                <input 
-                                    type="password" 
-                                    className="form-input" 
+                                <input
+                                    type="password"
+                                    className="form-input"
                                     placeholder="••••••••"
-                                    autoComplete="new-password" 
-                                    required 
+                                    autoComplete="new-password"
+                                    required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
@@ -90,19 +90,6 @@ function Login() {
                                 {isSubmitting ? "Signing in..." : "Sign In"}
                             </button>
                         </form>
-
-                        <div className="divider">OR CONTINUE WITH</div>
-
-                        <div className="social-buttons">
-                            <button className="btn-social btn-google" type="button">
-                                Continue with Google
-                                <FcGoogle size={22} />
-                            </button>
-                            <button className="btn-social btn-facebook" type="button">
-                                Continue with Facebook
-                                <FaFacebook size={22} color="#1877F2" />
-                            </button>
-                        </div>
 
                         <p className="auth-link">
                             Don't have an account? <Link to="/signuprole">Sign up</Link>

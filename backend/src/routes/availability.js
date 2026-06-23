@@ -94,7 +94,7 @@ router.get('/doctors/:doctorId/schedule', async (req, res) => {
         dayName: row.dayName,
         startTime: row.startTime,
         endTime: row.endTime,
-        isAvailable: row.is_available === 1,
+        isAvailable: row.is_available === true || row.is_available === 1,
         slotDuration: row.slot_duration_minutes,
       })),
     });
@@ -222,7 +222,7 @@ router.get('/my-schedule', authMiddleware, requireRole('doctor'), async (req, re
         dayName: row.dayName,
         startTime: row.startTime,
         endTime: row.endTime,
-        isAvailable: row.is_available === 1,
+        isAvailable: row.is_available === true || row.is_available === 1,
         slotDuration: row.slot_duration_minutes,
       })),
     });

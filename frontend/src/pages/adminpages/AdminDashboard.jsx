@@ -1,11 +1,12 @@
 import AdminNavbar from "../../components/AdminNavbar.jsx";
 import { useState, useEffect } from "react";
-import { getPendingDoctors, approveDoctor, rejectDoctor } from "../../services/adminService.js";
+import { getPendingDoctors, approveDoctor, rejectDoctor, getAdminStats } from "../../services/adminService.js";
 
 function AdminDashboard() {
     const [pendingDoctors, setPendingDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [errorMsg, setErrorMsg] = useState("");
+    const [stats, setStats] = useState(null);
     
     // Modal State
     const [showRejectModal, setShowRejectModal] = useState(false);
@@ -28,8 +29,20 @@ function AdminDashboard() {
         }
     };
 
+    const fetchStats = async () => {
+        try {
+            const res = await getAdminStats();
+            if (res && res.success) {
+                setStats(res.data);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     useEffect(() => {
         fetchPendingDoctors();
+        fetchStats();
     }, []);
 
     const handleApprove = async (doctorId) => {
@@ -89,27 +102,27 @@ function AdminDashboard() {
                     <div className="stats-grid">
                         <div className="stat-card-dash">
                             <div className="icon">👨‍⚕️</div>
-                            <div className="number teal">8</div>
+                            <div className="number teal">{stats ? stats.totalDoctors : "..."}</div>
                             <div className="label">Total Doctors</div>
-                            <div className="sublabel">6 available</div>
+                            <div className="sublabel">{stats ? stats.availableDoctors : "..."} available</div>
                         </div>
                         <div className="stat-card-dash">
                             <div className="icon">📅</div>
-                            <div className="number teal">4</div>
+                            <div className="number teal">{stats ? stats.totalAppointments : "..."}</div>
                             <div className="label">Total Appointments</div>
-                            <div className="sublabel">1 pending</div>
+                            <div className="sublabel">{stats ? stats.pendingAppointments : "..."} pending</div>
                         </div>
                         <div className="stat-card-dash">
                             <div className="icon">✅</div>
-                            <div className="number green">1</div>
+                            <div className="number green">{stats ? stats.confirmedAppointments : "..."}</div>
                             <div className="label">Confirmed</div>
                             <div className="sublabel">appointments</div>
                         </div>
                         <div className="stat-card-dash">
                             <div className="icon">💰</div>
-                            <div className="number gold">$94,500</div>
+                            <div className="number gold">${stats ? (stats.totalRevenue || 0).toLocaleString() : "..."}</div>
                             <div className="label">Revenue</div>
-                            <div className="sublabel">this month</div>
+                            <div className="sublabel">total lifetime</div>
                         </div>
                     </div>
 
@@ -178,20 +191,71 @@ function AdminDashboard() {
 
                     <div className="charts-grid" style={{ marginTop: '2rem' }}>
                         <div className="chart-card">
-                            <div className="chart-title">Monthly Appointments & Patients</div>
-                            <div className="chart-placeholder">📊 Bar Chart - Monthly Statistics</div>
-                        </div>
-                        <div className="chart-card">
                             <div className="chart-title">Appointment Status Breakdown</div>
-                            <div className="chart-placeholder">🍩 Donut Chart - Status Distribution</div>
+                            {stats ? (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+                                    <div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '14px' }}>
+                                            <span>Completed</span>
+                                            <span>{stats.completedAppointments}</span>
+                                        </div>
+                                        <div style={{ width: '100%', backgroundColor: 'var(--border-color)', height: '12px', borderRadius: '6px', overflow: 'hidden' }}>
+                                            <div style={{ width: `${stats.totalAppointments ? (stats.completedAppointments / stats.totalAppointments) * 100 : 0}%`, backgroundColor: 'var(--primary-teal)', height: '100%' }}></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '14px' }}>
+                                            <span>Confirmed</span>
+                                            <span>{stats.confirmedAppointments}</span>
+                                        </div>
+                                        <div style={{ width: '100%', backgroundColor: 'var(--border-color)', height: '12px', borderRadius: '6px', overflow: 'hidden' }}>
+                                            <div style={{ width: `${stats.totalAppointments ? (stats.confirmedAppointments / stats.totalAppointments) * 100 : 0}%`, backgroundColor: 'var(--confirmed)', height: '100%' }}></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '14px' }}>
+                                            <span>Pending</span>
+                                            <span>{stats.pendingAppointments}</span>
+                                        </div>
+                                        <div style={{ width: '100%', backgroundColor: 'var(--border-color)', height: '12px', borderRadius: '6px', overflow: 'hidden' }}>
+                                            <div style={{ width: `${stats.totalAppointments ? (stats.pendingAppointments / stats.totalAppointments) * 100 : 0}%`, backgroundColor: 'var(--pending)', height: '100%' }}></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '14px' }}>
+                                            <span>Rejected</span>
+                                            <span>{stats.rejectedAppointments}</span>
+                                        </div>
+                                        <div style={{ width: '100%', backgroundColor: 'var(--border-color)', height: '12px', borderRadius: '6px', overflow: 'hidden' }}>
+                                            <div style={{ width: `${stats.totalAppointments ? (stats.rejectedAppointments / stats.totalAppointments) * 100 : 0}%`, backgroundColor: 'var(--rejected)', height: '100%' }}></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <p>Loading stats...</p>
+                            )}
                         </div>
+
                         <div className="chart-card">
-                            <div className="chart-title">Revenue Trend (Monthly)</div>
-                            <div className="chart-placeholder">📈 Line Chart - Revenue Growth</div>
-                        </div>
-                        <div className="chart-card">
-                            <div className="chart-title">Doctors by Specialty</div>
-                            <div className="chart-placeholder">📊 Bar Chart - Specialty Distribution</div>
+                            <div className="chart-title">System Overview</div>
+                            {stats ? (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+                                    <div style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+                                        <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--primary-teal)' }}>{stats.totalUsers}</div>
+                                        <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Registered Users</div>
+                                    </div>
+                                    <div style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+                                        <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--primary-teal)' }}>{stats.totalPatients}</div>
+                                        <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Active Patients</div>
+                                    </div>
+                                    <div style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+                                        <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--primary-teal)' }}>{stats.todayAppointments}</div>
+                                        <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Appointments Booked Today</div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <p>Loading stats...</p>
+                            )}
                         </div>
                     </div>
 

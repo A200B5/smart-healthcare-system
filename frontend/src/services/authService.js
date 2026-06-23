@@ -48,6 +48,15 @@ export const getCurrentUser = async () => {
     }
 }
 
+export const updateProfile = async (userData) => {
+    try {
+        const response = await API.put("/auth/me", userData);
+        return response.data;
+    } catch (error) {
+        errorHandle(error, "Failed updating profile");
+    }
+}
+
 // Logout Function :
 
 export const logoutUser =  () => {

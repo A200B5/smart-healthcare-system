@@ -15,6 +15,7 @@ function PatientNavbar() {
 
     const navItems = [
         { path: "/patient/home", label: "Home", page: "patient-home" },
+        { path: "/patient/profile", label: "My Profile", page: "patient-profile" },
         { path: "/patient/finddoctor", label: "Find Doctors", page: "patient-doctors" },
         { path: "/patient/appointment", label: "My Appointments", page: "patient-appointments" },
     ];

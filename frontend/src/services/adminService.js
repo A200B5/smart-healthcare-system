@@ -11,7 +11,7 @@ const errorHandle = (error, fallbackMessage) => {
 
 export const getAdminStats = async () => {
 	try {
-		const response = await API.get("/users/stats")
+		const response = await API.get("/admin/dashboard-stats")
 		return response.data
 	} catch (error) {
 		errorHandle(error, "Failed to fetch admin stats")
@@ -20,7 +20,7 @@ export const getAdminStats = async () => {
 
 export const getUsers = async () => {
 	try {
-		const response = await API.get("/users")
+		const response = await API.get("/admin/users")
 		return response.data
 	} catch (error) {
 		errorHandle(error, "Failed to fetch users")
@@ -38,7 +38,7 @@ export const deleteUser = async (userId) => {
 
 export const getDoctors = async () => {
 	try {
-		const response = await API.get("/doctors")
+		const response = await API.get("/admin/doctors")
 		return response.data
 	} catch (error) {
 		errorHandle(error, "Failed to fetch doctors")

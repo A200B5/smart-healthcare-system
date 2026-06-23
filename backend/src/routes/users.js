@@ -69,7 +69,13 @@ router.delete('/:id', authMiddleware, requireRole('admin'), async (req, res) => 
   
   if (userId === null) {
     return res.status(400).json(validationError('Invalid user ID', ['User ID must be a valid integer']));
-  }  try {
+  }
+  
+  if (req.user && req.user.id === userId) {
+    return res.status(403).json({ success: false, message: 'Admins cannot delete their own account' });
+  }
+
+  try {
     const pool   = getPool();
     const result = await pool.request()
       .input('userId', sql.Int, userId)

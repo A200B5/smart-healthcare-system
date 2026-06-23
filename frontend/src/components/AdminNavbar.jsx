@@ -1,11 +1,11 @@
-import {useTheme} from "../context/ThemeContext.jsx";
-import {NavLink, useNavigate} from "react-router-dom";
-import {useAuth} from "../context/AuthContext.jsx";
+import { useTheme } from "../context/ThemeContext.jsx";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 function AdminNavbar({ pendingCount = 0 }) {
-    const {theme , toggleTheme} = useTheme();
+    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
-    const {logout} = useAuth();
+    const { logout } = useAuth();
     const handleLogout = () => {
         logout();
         navigate("/")
@@ -13,12 +13,12 @@ function AdminNavbar({ pendingCount = 0 }) {
     return (
         <>
             <nav className="navbar hidden" id="navbar-admin">
-                <div className="navbar-logo" >
+                <NavLink to="/admin/dashboard" className="navbar-logo" >
                     <span>🏥</span> MediCare Pro
-                </div>
+                </NavLink>
                 <ul className="navbar-links">
                     <li><NavLink to="/admin/dashboard"
-                           data-link="admin-dashboard">Dashboard</NavLink></li>
+                        data-link="admin-dashboard">Dashboard</NavLink></li>
                     <li style={{ position: 'relative' }}>
                         <NavLink to="/admin/managedoctor" data-link="admin-doctors">Doctors</NavLink>
                         {pendingCount > 0 && (

@@ -1,7 +1,12 @@
 import { Link } from "react-router-dom";
 import { HeartPulse } from "lucide-react";
+import { useAuth } from "../../context/AuthContext.jsx";
+import { getRoleHomeRoute } from "../../utils/navigationUtils.js";
 
 export default function NotFound() {
+    const { user } = useAuth();
+    const homeRoute = getRoleHomeRoute(user);
+
     return (
         <section className="not-found-page">
 
@@ -36,7 +41,7 @@ export default function NotFound() {
                     may have been moved, or the URL is incorrect.
                 </p>
 
-                <Link to="/" className="nf-home-btn">
+                <Link to={homeRoute} className="nf-home-btn">
                     Return Home
                 </Link>
 
