@@ -1,33 +1,39 @@
 import Navigation from "../components/Navigation.jsx";
 import Footer from "../components/Footer.jsx";
-import {Link, redirect, useNavigate} from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
+import { getRoleHomeRoute } from "../services/navigationUtils.js";
 
 function Home(){
 
     const navigate = useNavigate();
-    const handleFindDoctor = () => {
-       navigate("/login" , {
-           state: {
-               redirect: "/patient/finddoctor"
-           }
-       })
+    const { isAuthenticated, user, loading } = useAuth();
+
+    if (loading) {
+        return (
+            <div className="page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <p>Loading...</p>
+            </div>
+        );
     }
 
-    const handleMakeAppointment = () => {
-        navigate("/login" , {
-            state: {
-                redirect: "/patient/appointment"
-            }
-        })
+    if (isAuthenticated && user) {
+        return <Navigate to={getRoleHomeRoute(user)} replace />;
     }
 
-    const handleGetTreatment = () => {
-        navigate("/login" ,{
-            state: {
-                redirect: "/patient/home"
-            }
-        })
-    }
+    const handleAction = (patientRoute) => {
+        if (!isAuthenticated) {
+            navigate("/login", { state: { redirect: patientRoute } });
+        } else if (user?.role === "patient") {
+            navigate(patientRoute);
+        } else {
+            navigate(`/${user?.role === "doctor" ? "doctor/dashboard" : "admin/dashboard"}`);
+        }
+    };
+
+    const handleFindDoctor = () => handleAction("/patient/finddoctor");
+    const handleMakeAppointment = () => handleAction("/patient/appointment");
+    const handleGetTreatment = () => handleAction("/patient/home");
 
     return (
         <>
@@ -47,8 +53,14 @@ function Home(){
                             seamless healthcare management.
                         </p>
                         <div className="hero-buttons">
-                            <Link to="/signuprole" className="btn btn-gold" >Get Started Free</Link>
-                            <Link to="/login" className="btn btn-white-outline">Sign In</Link>
+                            {!isAuthenticated ? (
+                                <>
+                                    <Link to="/signuprole" className="btn btn-gold" >Get Started Free</Link>
+                                    <Link to="/login" className="btn btn-white-outline">Sign In</Link>
+                                </>
+                            ) : (
+                                <Link to={`/${user?.role === "patient" ? "patient/home" : user?.role === "doctor" ? "doctor/dashboard" : "admin/dashboard"}`} className="btn btn-gold">Go to Dashboard</Link>
+                            )}
                         </div>
                     </div>
                     <div className="hero-stats">

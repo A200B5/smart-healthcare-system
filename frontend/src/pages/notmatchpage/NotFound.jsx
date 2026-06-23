@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { HeartPulse } from "lucide-react";
 import { useAuth } from "../../context/AuthContext.jsx";
-import { getRoleHomeRoute } from "../../utils/navigationUtils.js";
+import { getRoleHomeRoute } from "../../services/navigationUtils.js";
 
 export default function NotFound() {
     const { user } = useAuth();

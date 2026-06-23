@@ -8,31 +8,8 @@ function DoctorNavbar() {
     const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
-    const [doctorName, setDoctorName] = useState("Doctor");
-    const { logout } = useAuth();
-
-    useEffect(() => {
-        const cachedUser = JSON.parse(localStorage.getItem("user") || "null");
-
-        if (cachedUser?.name) {
-            setDoctorName(cachedUser.name);
-        }
-
-        const loadUser = async () => {
-            try {
-                const data = await getCurrentUser();
-                const user = data?.user || data;
-
-                if (user?.name) {
-                    setDoctorName(user.name);
-                }
-            } catch {
-                //
-            }
-        };
-
-        loadUser();
-    }, []);
+    const { user, logout } = useAuth();
+    const doctorName = user?.name || "Doctor";
 
     const handleLogout = () => {
         logout();

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
-import { getRoleHomeRoute } from "../utils/navigationUtils.js";
+import { getRoleHomeRoute } from "../services/navigationUtils.js";
 
 const AlreadyAuthenticated = ({ children }) => {
     const { isAuthenticated, user, logout, loading } = useAuth();

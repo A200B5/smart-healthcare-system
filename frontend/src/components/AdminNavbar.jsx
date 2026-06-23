@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 function AdminNavbar({ pendingCount = 0 }) {
     const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
     const handleLogout = () => {
         logout();
         navigate("/login", { replace: true });
@@ -46,7 +46,7 @@ function AdminNavbar({ pendingCount = 0 }) {
                     <div className="user-badge">
                         <div className="user-avatar" style={{ background: "#F5A623" }}>🔑</div>
                         <div>
-                            <div className="user-name" id="admin-name">Admin</div>
+                            <div className="user-name" id="admin-name">{user?.name || "Admin"}</div>
                             <div className="role-tag">Admin</div>
                         </div>
                     </div>
