@@ -2,6 +2,8 @@ import AdminNavbar from "../../components/AdminNavbar.jsx";
 import React, { useState, useEffect } from "react";
 import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import { getPendingDoctors, approveDoctor, rejectDoctor, getAdminStats } from "../../services/adminService.js";
+import ConfirmationModal from "../../components/ConfirmationModal.jsx";
+import AlertModal from "../../components/AlertModal.jsx";
 
 function AdminDashboard() {
     const [pendingDoctors, setPendingDoctors] = useState([]);
@@ -14,6 +16,10 @@ function AdminDashboard() {
     const [selectedDoctorId, setSelectedDoctorId] = useState(null);
     const [rejectReason, setRejectReason] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    // New Modals State
+    const [confirmApprove, setConfirmApprove] = useState({ isOpen: false, doctorId: null });
+    const [alertInfo, setAlertInfo] = useState({ isOpen: false, message: "" });
 
     const fetchPendingDoctors = async () => {
         setLoading(true);
@@ -46,8 +52,14 @@ function AdminDashboard() {
         fetchStats();
     }, []);
 
-    const handleApprove = async (doctorId) => {
-        if (!window.confirm("Are you sure you want to approve this doctor?")) return;
+    const handleApproveClick = (doctorId) => {
+        setConfirmApprove({ isOpen: true, doctorId });
+    };
+
+    const handleConfirmApprove = async () => {
+        const doctorId = confirmApprove.doctorId;
+        setConfirmApprove({ isOpen: false, doctorId: null });
+        if (!doctorId) return;
         
         try {
             const res = await approveDoctor(doctorId);
@@ -56,7 +68,7 @@ function AdminDashboard() {
                 fetchPendingDoctors();
             }
         } catch (err) {
-            alert(err.message || "Failed to approve doctor");
+            setAlertInfo({ isOpen: true, message: err.message || "Failed to approve doctor" });
         }
     };
 
@@ -69,7 +81,7 @@ function AdminDashboard() {
     const handleRejectSubmit = async (e) => {
         e.preventDefault();
         if (!rejectReason.trim()) {
-            alert("Rejection reason is required");
+            setAlertInfo({ isOpen: true, message: "Rejection reason is required" });
             return;
         }
 
@@ -81,7 +93,7 @@ function AdminDashboard() {
                 fetchPendingDoctors();
             }
         } catch (err) {
-            alert(err.message || "Failed to reject doctor");
+            setAlertInfo({ isOpen: true, message: err.message || "Failed to reject doctor" });
         } finally {
             setIsSubmitting(false);
         }
@@ -168,7 +180,7 @@ function AdminDashboard() {
                                             <td>
                                                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                                                     <button 
-                                                        onClick={() => handleApprove(doctor.doctorId)}
+                                                        onClick={() => handleApproveClick(doctor.doctorId)}
                                                         className="btn-auth" 
                                                         style={{ padding: '0.25rem 0.5rem', background: '#10B981', minWidth: 'auto', fontSize: '0.875rem' }}
                                                     >
@@ -307,6 +319,24 @@ function AdminDashboard() {
                     </div>
                 </div>
             )}
+
+            <ConfirmationModal
+                isOpen={confirmApprove.isOpen}
+                title="Approve Doctor"
+                message="Are you sure you want to approve this doctor?"
+                confirmText="Approve"
+                cancelText="Cancel"
+                onConfirm={handleConfirmApprove}
+                onCancel={() => setConfirmApprove({ isOpen: false, doctorId: null })}
+                isDanger={false}
+            />
+
+            <AlertModal
+                isOpen={alertInfo.isOpen}
+                title="Notice"
+                message={alertInfo.message}
+                onClose={() => setAlertInfo({ isOpen: false, message: "" })}
+            />
         </>
     );
 }

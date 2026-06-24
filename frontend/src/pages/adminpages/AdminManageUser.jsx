@@ -2,7 +2,8 @@ import AdminNavbar from "../../components/AdminNavbar.jsx";
 import React, { useState, useEffect } from "react";
 import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import { getUsers, deleteUser } from "../../services/adminService.js";
-import ConfirmModal from "../../components/ConfirmModal.jsx";
+import ConfirmationModal from "../../components/ConfirmationModal.jsx";
+import AlertModal from "../../components/AlertModal.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 
 function AdminManageUser() {
@@ -15,6 +16,7 @@ function AdminManageUser() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [alertInfo, setAlertInfo] = useState({ isOpen: false, message: "" });
 
     const fetchUsers = async () => {
         setLoading(true);
@@ -47,7 +49,7 @@ function AdminManageUser() {
                 fetchUsers();
             }
         } catch (err) {
-            alert(err.message || "Failed to delete user");
+            setAlertInfo({ isOpen: true, message: err.message || "Failed to delete user" });
         } finally {
             setIsDeleting(false);
         }
@@ -164,14 +166,22 @@ function AdminManageUser() {
                 </div>
             </div>
 
-            <ConfirmModal 
+            <ConfirmationModal 
                 isOpen={showDeleteModal}
                 title="Delete User"
                 message={`Are you sure you want to permanently remove the user ${userToDelete?.name}?`}
                 onConfirm={handleDelete}
                 onCancel={() => setShowDeleteModal(false)}
-                confirmText="Delete User"
-                isSubmitting={isDeleting}
+                confirmText={isDeleting ? "Deleting..." : "Delete User"}
+                cancelText="Cancel"
+                isDanger={true}
+            />
+
+            <AlertModal
+                isOpen={alertInfo.isOpen}
+                title="Notice"
+                message={alertInfo.message}
+                onClose={() => setAlertInfo({ isOpen: false, message: "" })}
             />
         </>
     )

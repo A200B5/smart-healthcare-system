@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import { useNavigate } from "react-router-dom";
 import { getDoctors, deleteDoctor, approveDoctor, rejectDoctor } from "../../services/adminService.js";
-import ConfirmModal from "../../components/ConfirmModal.jsx";
+import ConfirmationModal from "../../components/ConfirmationModal.jsx";
+import AlertModal from "../../components/AlertModal.jsx";
 
 function AdminManageDoctor() {
     const navigate = useNavigate();
@@ -22,6 +23,10 @@ function AdminManageDoctor() {
     // Delete Modal State
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [doctorToDelete, setDoctorToDelete] = useState(null);
+
+    // New Modals State
+    const [confirmApprove, setConfirmApprove] = useState({ isOpen: false, doctorId: null });
+    const [alertInfo, setAlertInfo] = useState({ isOpen: false, message: "" });
 
     const fetchDoctors = async () => {
         setLoading(true);
@@ -60,21 +65,27 @@ function AdminManageDoctor() {
             }
         } catch (err) {
             console.error("deleteDoctor API error:", err);
-            alert(err.message || "Failed to delete doctor");
+            setAlertInfo({ isOpen: true, message: err.message || "Failed to delete doctor" });
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const handleApprove = async (doctorId) => {
-        if (!window.confirm("Are you sure you want to approve this doctor?")) return;
+    const handleApproveClick = (doctorId) => {
+        setConfirmApprove({ isOpen: true, doctorId });
+    };
+
+    const handleConfirmApprove = async () => {
+        const doctorId = confirmApprove.doctorId;
+        setConfirmApprove({ isOpen: false, doctorId: null });
+        if (!doctorId) return;
         try {
             const res = await approveDoctor(doctorId);
             if (res && res.success) {
                 fetchDoctors();
             }
         } catch (err) {
-            alert(err.message || "Failed to approve doctor");
+            setAlertInfo({ isOpen: true, message: err.message || "Failed to approve doctor" });
         }
     };
 
@@ -87,7 +98,7 @@ function AdminManageDoctor() {
     const handleRejectSubmit = async (e) => {
         e.preventDefault();
         if (!rejectReason.trim()) {
-            alert("Rejection reason is required");
+            setAlertInfo({ isOpen: true, message: "Rejection reason is required" });
             return;
         }
         setIsSubmitting(true);
@@ -98,7 +109,7 @@ function AdminManageDoctor() {
                 fetchDoctors();
             }
         } catch (err) {
-            alert(err.message || "Failed to reject doctor");
+            setAlertInfo({ isOpen: true, message: err.message || "Failed to reject doctor" });
         } finally {
             setIsSubmitting(false);
         }
@@ -211,7 +222,7 @@ function AdminManageDoctor() {
                                                         {doc.verificationStatus === 'pending' && (
                                                             <>
                                                                 <button 
-                                                                    onClick={() => { handleApprove(doc.doctorId); toggleDropdown(null); }} 
+                                                                    onClick={() => { handleApproveClick(doc.doctorId); toggleDropdown(null); }} 
                                                                     style={{ background: 'transparent', border: 'none', color: '#10B981', textAlign: 'left', padding: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', borderRadius: '4px' }}
                                                                     onMouseEnter={(e) => e.target.style.background = 'var(--bg-primary)'}
                                                                     onMouseLeave={(e) => e.target.style.background = 'transparent'}
@@ -289,14 +300,34 @@ function AdminManageDoctor() {
                 </div>
             )}
 
-            <ConfirmModal 
+
+            <ConfirmationModal 
                 isOpen={showDeleteModal}
                 title="Delete Doctor"
                 message={`Are you sure you want to permanently remove ${doctorToDelete?.name}? This action cannot be undone.`}
                 onConfirm={handleDelete}
                 onCancel={() => setShowDeleteModal(false)}
-                confirmText="Delete Doctor"
-                isSubmitting={isSubmitting}
+                confirmText={isSubmitting ? "Deleting..." : "Delete Doctor"}
+                cancelText="Cancel"
+                isDanger={true}
+            />
+
+            <ConfirmationModal
+                isOpen={confirmApprove.isOpen}
+                title="Approve Doctor"
+                message="Are you sure you want to approve this doctor?"
+                confirmText="Approve"
+                cancelText="Cancel"
+                onConfirm={handleConfirmApprove}
+                onCancel={() => setConfirmApprove({ isOpen: false, doctorId: null })}
+                isDanger={false}
+            />
+
+            <AlertModal
+                isOpen={alertInfo.isOpen}
+                title="Notice"
+                message={alertInfo.message}
+                onClose={() => setAlertInfo({ isOpen: false, message: "" })}
             />
         </>
     )

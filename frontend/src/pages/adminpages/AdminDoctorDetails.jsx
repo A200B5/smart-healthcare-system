@@ -3,6 +3,7 @@ import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminNavbar from "../../components/AdminNavbar.jsx";
 import { getDoctorById, updateDoctor } from "../../services/adminService.js";
+import AlertModal from "../../components/AlertModal.jsx";
 
 function AdminDoctorDetails() {
     const { id } = useParams();
@@ -18,6 +19,7 @@ function AdminDoctorDetails() {
         available: false,
         bio: ''
     });
+    const [alertInfo, setAlertInfo] = useState({ isOpen: false, message: "" });
 
     useEffect(() => {
         const fetchDoctor = async () => {
@@ -65,7 +67,7 @@ function AdminDoctorDetails() {
                 if (updatedRes && updatedRes.success) setDoctor(updatedRes.doctor);
             }
         } catch (err) {
-            alert(err.message || "Failed to save changes.");
+            setAlertInfo({ isOpen: true, message: err.message || "Failed to save changes." });
         } finally {
             setIsSaving(false);
         }
@@ -261,6 +263,13 @@ function AdminDoctorDetails() {
                     </div>
                 </div>
             </div>
+
+            <AlertModal
+                isOpen={alertInfo.isOpen}
+                title="Notice"
+                message={alertInfo.message}
+                onClose={() => setAlertInfo({ isOpen: false, message: "" })}
+            />
         </>
     );
 }

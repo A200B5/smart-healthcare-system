@@ -9,6 +9,7 @@ import {
     checkReviewStatus,
     submitReview,
 } from "../../services/patientService.js";
+import ConfirmationModal from "../../components/ConfirmationModal.jsx";
 
 function PatientAppointments() {
     const navigate = useNavigate();
@@ -60,9 +61,21 @@ function PatientAppointments() {
         loadAppointments();
     }, []);
 
+    // ── Confirmation Modal State ──────────────────────────
+    const [confirmModal, setConfirmModal] = useState({
+        isOpen: false,
+        appointmentId: null,
+    });
+
     // ── Cancel Appointment Handler ────────────────────────
-    const handleCancel = async (appointmentId) => {
-        if (!window.confirm("Are you sure you want to cancel this appointment?")) return;
+    const handleCancelClick = (appointmentId) => {
+        setConfirmModal({ isOpen: true, appointmentId });
+    };
+
+    const handleConfirmCancel = async () => {
+        const appointmentId = confirmModal.appointmentId;
+        setConfirmModal({ isOpen: false, appointmentId: null });
+        if (!appointmentId) return;
 
         try {
             setCancellingId(appointmentId);
@@ -74,6 +87,10 @@ function PatientAppointments() {
         } finally {
             setCancellingId(null);
         }
+    };
+
+    const handleCancelClose = () => {
+        setConfirmModal({ isOpen: false, appointmentId: null });
     };
 
     // ── Review Handler ────────────────────────────────────
@@ -263,7 +280,7 @@ function PatientAppointments() {
                                     {(appt.status === "pending" || appt.status === "confirmed") && (
                                         <button
                                             className="btn-sm btn-sm-outline"
-                                            onClick={() => handleCancel(appt.id)}
+                                            onClick={() => handleCancelClick(appt.id)}
                                             disabled={cancellingId === appt.id}
                                             style={{
                                                 color: "var(--rejected, #ef4444)",
@@ -408,6 +425,18 @@ function PatientAppointments() {
                     </div>
                 </div>
             )}
+
+            {/* ── Confirmation Modal ───────────────────────── */}
+            <ConfirmationModal
+                isOpen={confirmModal.isOpen}
+                title="Cancel Appointment"
+                message="Are you sure you want to cancel this appointment?&#10;&#10;This action cannot be undone."
+                confirmText="Cancel Appointment"
+                cancelText="Keep Appointment"
+                onConfirm={handleConfirmCancel}
+                onCancel={handleCancelClose}
+                isDanger={true}
+            />
         </>
     );
 }

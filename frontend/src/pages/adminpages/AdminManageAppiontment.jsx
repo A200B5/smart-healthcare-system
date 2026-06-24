@@ -2,7 +2,8 @@ import AdminNavbar from "../../components/AdminNavbar.jsx";
 import React, { useState, useEffect } from "react";
 import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import { getAppointments, deleteAppointment } from "../../services/adminService.js";
-import ConfirmModal from "../../components/ConfirmModal.jsx";
+import ConfirmationModal from "../../components/ConfirmationModal.jsx";
+import AlertModal from "../../components/AlertModal.jsx";
 
 function AdminManageAppiontment() {
     const [appointments, setAppointments] = useState([]);
@@ -13,6 +14,7 @@ function AdminManageAppiontment() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [appointmentToDelete, setAppointmentToDelete] = useState(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [alertInfo, setAlertInfo] = useState({ isOpen: false, message: "" });
 
     const fetchAppointments = async () => {
         setLoading(true);
@@ -45,7 +47,7 @@ function AdminManageAppiontment() {
                 fetchAppointments();
             }
         } catch (err) {
-            alert(err.message || "Failed to delete appointment");
+            setAlertInfo({ isOpen: true, message: err.message || "Failed to delete appointment" });
         } finally {
             setIsDeleting(false);
         }
@@ -153,14 +155,22 @@ function AdminManageAppiontment() {
                 </div>
             </div>
 
-            <ConfirmModal 
+            <ConfirmationModal 
                 isOpen={showDeleteModal}
                 title="Delete Appointment"
                 message={`Are you sure you want to permanently remove the appointment with ${appointmentToDelete?.doctorName}?`}
                 onConfirm={handleDelete}
                 onCancel={() => setShowDeleteModal(false)}
-                confirmText="Delete Appointment"
-                isSubmitting={isDeleting}
+                confirmText={isDeleting ? "Deleting..." : "Delete Appointment"}
+                cancelText="Cancel"
+                isDanger={true}
+            />
+
+            <AlertModal
+                isOpen={alertInfo.isOpen}
+                title="Notice"
+                message={alertInfo.message}
+                onClose={() => setAlertInfo({ isOpen: false, message: "" })}
             />
         </>
     )
