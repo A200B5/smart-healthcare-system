@@ -59,6 +59,11 @@ export const AuthProvider = ({ children }) => {
         setError(null)
         try {
             const data = await loginUser(userData)
+            
+            if (data.user?.role === 'doctor' && (data.user?.verification_status === 'pending' || data.user?.verificationStatus === 'pending')) {
+                throw new Error("Your account is currently awaiting administrator approval.");
+            }
+
             saveAuthData(data)
             return data.user
         }catch (error) {
@@ -72,7 +77,9 @@ export const AuthProvider = ({ children }) => {
         setError(null)
         try {
             const data = await registerUser(userData)
-            saveAuthData(data)
+            if (data.user?.role !== 'doctor') {
+                saveAuthData(data)
+            }
             return data.user
         }catch (error) {
             setError(

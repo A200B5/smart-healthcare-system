@@ -50,11 +50,11 @@ function SignupDoctor() {
 
         try {
             await register(userData);
-            setSuccessMsg("Your application has been submitted and is waiting for admin approval.");
+            setSuccessMsg("Your account has been created successfully and is awaiting admin approval.");
             
             // Redirect to login after a short delay
             setTimeout(() => {
-                navigate("/login");
+                navigate("/login", { replace: true });
             }, 3000);
             
         } catch (error) {
