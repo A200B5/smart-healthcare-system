@@ -21,20 +21,24 @@ router.get('/', authMiddleware, async (req, res) => {
     if (req.user.role === 'patient') {
       request.input('userId', sql.Int, req.user.id);
       query = `
-        SELECT * FROM vw_AppointmentDetails
-        WHERE patientId = @userId
+        SELECT v.*, d.price AS doctorPrice
+        FROM vw_AppointmentDetails v
+        JOIN Doctors d ON v.doctorId = d.id
+        WHERE v.patientId = @userId
         ORDER BY [date] DESC
       `;
     } else if (req.user.role === 'doctor') {
       request.input('userId', sql.Int, req.user.id);
       query = `
-        SELECT * FROM vw_AppointmentDetails
-        WHERE doctorId IN (SELECT id FROM Doctors WHERE user_id = @userId)
+        SELECT v.*, d.price AS doctorPrice
+        FROM vw_AppointmentDetails v
+        JOIN Doctors d ON v.doctorId = d.id
+        WHERE v.doctorId IN (SELECT id FROM Doctors WHERE user_id = @userId)
         ORDER BY [date] DESC
       `;
     } else {
       // admin sees everything
-      query = 'SELECT * FROM vw_AppointmentDetails ORDER BY [date] DESC';
+      query = 'SELECT v.*, d.price AS doctorPrice FROM vw_AppointmentDetails v JOIN Doctors d ON v.doctorId = d.id ORDER BY [date] DESC';
     }
 
     const result = await request.query(query);

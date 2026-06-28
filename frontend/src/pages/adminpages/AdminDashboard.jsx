@@ -10,13 +10,13 @@ function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [errorMsg, setErrorMsg] = useState("");
     const [stats, setStats] = useState(null);
-    
+
     // Modal State
     const [showRejectModal, setShowRejectModal] = useState(false);
     const [selectedDoctorId, setSelectedDoctorId] = useState(null);
     const [rejectReason, setRejectReason] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
-    
+
     // New Modals State
     const [confirmApprove, setConfirmApprove] = useState({ isOpen: false, doctorId: null });
     const [alertInfo, setAlertInfo] = useState({ isOpen: false, message: "" });
@@ -60,7 +60,7 @@ function AdminDashboard() {
         const doctorId = confirmApprove.doctorId;
         setConfirmApprove({ isOpen: false, doctorId: null });
         if (!doctorId) return;
-        
+
         try {
             const res = await approveDoctor(doctorId);
             if (res && res.success) {
@@ -114,25 +114,25 @@ function AdminDashboard() {
 
                     <div className="stats-grid">
                         <div className="stat-card-dash">
-                            <div className="icon">👨‍⚕️</div>
+
                             <div className="number teal">{stats ? stats.totalDoctors : "..."}</div>
                             <div className="label">Total Doctors</div>
                             <div className="sublabel">{stats ? stats.availableDoctors : "..."} available</div>
                         </div>
                         <div className="stat-card-dash">
-                            <div className="icon">📅</div>
+
                             <div className="number teal">{stats ? stats.totalAppointments : "..."}</div>
                             <div className="label">Total Appointments</div>
                             <div className="sublabel">{stats ? stats.pendingAppointments : "..."} pending</div>
                         </div>
                         <div className="stat-card-dash">
-                            <div className="icon">✅</div>
+
                             <div className="number green">{stats ? stats.confirmedAppointments : "..."}</div>
                             <div className="label">Confirmed</div>
                             <div className="sublabel">appointments</div>
                         </div>
                         <div className="stat-card-dash">
-                            <div className="icon">💰</div>
+
                             <div className="number gold">${stats ? (stats.totalRevenue || 0).toLocaleString() : "..."}</div>
                             <div className="label">Revenue</div>
                             <div className="sublabel">total lifetime</div>
@@ -142,7 +142,7 @@ function AdminDashboard() {
                     {/* Doctor Verification Section */}
                     <div className="table-card" style={{ marginTop: '2rem' }}>
                         <div className="table-title">Doctor Verification Management</div>
-                        
+
                         {loading ? (
                             <TableSkeleton rows={3} columns={5} />
                         ) : errorMsg ? (
@@ -179,16 +179,16 @@ function AdminDashboard() {
                                             <td>{new Date(doctor.createdAt).toLocaleDateString()}</td>
                                             <td>
                                                 <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                                    <button 
+                                                    <button
                                                         onClick={() => handleApproveClick(doctor.doctorId)}
-                                                        className="btn-auth" 
+                                                        className="btn-auth"
                                                         style={{ padding: '0.25rem 0.5rem', background: '#10B981', minWidth: 'auto', fontSize: '0.875rem' }}
                                                     >
                                                         Approve
                                                     </button>
-                                                    <button 
+                                                    <button
                                                         onClick={() => handleRejectClick(doctor.doctorId)}
-                                                        className="btn-auth" 
+                                                        className="btn-auth"
                                                         style={{ padding: '0.25rem 0.5rem', background: '#EF4444', minWidth: 'auto', fontSize: '0.875rem' }}
                                                     >
                                                         Reject
@@ -278,8 +278,8 @@ function AdminDashboard() {
             {/* Reject Modal */}
             {showRejectModal && (
                 <div className="modal-overlay" style={{
-                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, 
-                    backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', 
+                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex',
                     alignItems: 'center', justifyContent: 'center', zIndex: 1000
                 }}>
                     <div className="auth-card" style={{ maxWidth: '400px', width: '100%', padding: '2rem' }}>
@@ -287,8 +287,8 @@ function AdminDashboard() {
                         <form onSubmit={handleRejectSubmit}>
                             <div className="form-group">
                                 <label className="form-label">Rejection Reason</label>
-                                <textarea 
-                                    className="form-input" 
+                                <textarea
+                                    className="form-input"
                                     style={{ minHeight: '100px', resize: 'vertical' }}
                                     placeholder="Please provide a clear reason for rejection..."
                                     required
@@ -297,18 +297,18 @@ function AdminDashboard() {
                                 ></textarea>
                             </div>
                             <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-                                <button 
-                                    type="button" 
-                                    className="btn-auth" 
+                                <button
+                                    type="button"
+                                    className="btn-auth"
                                     style={{ background: '#6B7280' }}
                                     onClick={() => setShowRejectModal(false)}
                                     disabled={isSubmitting}
                                 >
                                     Cancel
                                 </button>
-                                <button 
-                                    type="submit" 
-                                    className="btn-auth" 
+                                <button
+                                    type="submit"
+                                    className="btn-auth"
                                     style={{ background: '#EF4444' }}
                                     disabled={isSubmitting}
                                 >

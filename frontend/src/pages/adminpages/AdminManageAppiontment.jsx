@@ -59,7 +59,7 @@ function AdminManageAppiontment() {
 
     const filteredAppointments = appointments.filter(app => {
         const matchesStatus = statusFilter === "all" || app.status === statusFilter;
-        const searchTarget = `${app.patientName} ${app.doctorName} ${app.doctorSpecialty}`.toLowerCase();
+        const searchTarget = `${app.patientName} ${app.doctorName} ${app.specialty}`.toLowerCase();
         const matchesSearch = searchTarget.includes(searchTerm.toLowerCase());
         return matchesStatus && matchesSearch;
     });
@@ -128,7 +128,7 @@ function AdminManageAppiontment() {
                                             <div className="table-avatar">👤 {app.patientName}</div>
                                         </td>
                                         <td>{app.doctorName}</td>
-                                        <td className="table-specialty">{app.doctorSpecialty}</td>
+                                        <td className="table-specialty">{app.specialty}</td>
                                         <td>{new Date(app.date).toLocaleDateString()}</td>
                                         <td>{app.time}</td>
                                         <td>${app.doctorPrice || 0}</td>
