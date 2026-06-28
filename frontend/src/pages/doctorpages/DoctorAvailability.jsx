@@ -209,21 +209,23 @@ function DoctorAvailability() {
               </div>
             )}
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "24px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "24px", alignItems: "center" }}>
               {schedule.map((day) => (
                 <div key={day.id} style={{ 
                   display: "flex", 
                   alignItems: "center", 
                   justifyContent: "space-between",
                   flexWrap: "wrap",
-                  gap: "16px",
-                  padding: "16px",
+                  gap: "24px",
+                  padding: "16px 24px",
                   background: "var(--bg-secondary, #f8fafc)",
                   border: "1px solid var(--border-color, #e2e8f0)",
                   borderRadius: "8px",
-                  opacity: day.isAvailable ? 1 : 0.7
+                  opacity: day.isAvailable ? 1 : 0.7,
+                  width: "100%",
+                  maxWidth: "750px"
                 }}>
-                  <div style={{ minWidth: "120px", display: "flex", alignItems: "center", gap: "8px" }}>
+                  <div style={{ width: "140px", display: "flex", alignItems: "center", gap: "12px", flexShrink: 0 }}>
                     <input 
                       type="checkbox"
                       checked={day.isAvailable}
@@ -236,35 +238,35 @@ function DoctorAvailability() {
                     </label>
                   </div>
                   
-                  <div style={{ display: "flex", alignItems: "center", gap: "12px", flex: 1, minWidth: "300px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "24px", flex: 1, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                       <input 
                         type="time" 
                         className="form-input" 
                         value={day.startTime}
                         onChange={(e) => handleChange(day.id, "startTime", e.target.value)}
                         disabled={!day.isAvailable}
-                        style={{ padding: "8px", width: "120px" }}
+                        style={{ padding: "8px 12px", width: "150px" }}
                       />
-                      <span style={{ color: "var(--text-secondary)" }}>to</span>
+                      <span style={{ color: "var(--text-secondary)", fontWeight: 500, minWidth: "16px", textAlign: "center" }}>to</span>
                       <input 
                         type="time" 
                         className="form-input" 
                         value={day.endTime}
                         onChange={(e) => handleChange(day.id, "endTime", e.target.value)}
                         disabled={!day.isAvailable}
-                        style={{ padding: "8px", width: "120px" }}
+                        style={{ padding: "8px 12px", width: "150px" }}
                       />
                     </div>
                     
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span style={{ fontSize: "14px", color: "var(--text-secondary)" }}>Slot:</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", width: "130px" }}>
+                      <span style={{ fontSize: "14px", color: "var(--text-secondary)", fontWeight: 500 }}>Slot:</span>
                       <select 
                         className="form-input" 
                         value={day.slotDuration}
                         onChange={(e) => handleChange(day.id, "slotDuration", Number(e.target.value))}
                         disabled={!day.isAvailable}
-                        style={{ padding: "8px" }}
+                        style={{ padding: "8px", flex: 1 }}
                       >
                         <option value={15}>15 min</option>
                         <option value={30}>30 min</option>
