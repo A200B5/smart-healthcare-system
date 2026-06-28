@@ -11,7 +11,22 @@ function DoctorNavbar() {
     const { user, logout } = useAuth();
     const doctorName = user?.name || "Doctor";
 
+    const handleNavigation = (path) => {
+        if (window.onNavigateBlocker) {
+            window.onNavigateBlocker(path, () => navigate(path));
+            return;
+        }
+        navigate(path);
+    };
+
     const handleLogout = () => {
+        if (window.onNavigateBlocker) {
+            window.onNavigateBlocker("/login", () => {
+                logout();
+                navigate("/login", { replace: true });
+            });
+            return;
+        }
         logout();
         navigate("/login", { replace: true });
     };
@@ -20,7 +35,7 @@ function DoctorNavbar() {
         <nav className="navbar" id="navbar-doctor">
             <div
                 className="navbar-logo"
-                onClick={() => navigate("/doctor/dashboard")}
+                onClick={() => handleNavigation("/doctor/dashboard")}
             >
                 <span>🏥</span> MediCare Pro
             </div>
@@ -34,7 +49,7 @@ function DoctorNavbar() {
                                 ? "active"
                                 : ""
                         }
-                        onClick={() => navigate("/doctor/dashboard")}
+                        onClick={() => handleNavigation("/doctor/dashboard")}
                     >
                         Dashboard
                     </a>
@@ -47,7 +62,7 @@ function DoctorNavbar() {
                                 ? "active"
                                 : ""
                         }
-                        onClick={() => navigate("/doctor/profile")}
+                        onClick={() => handleNavigation("/doctor/profile")}
                     >
                         My Profile
                     </a>
@@ -60,7 +75,7 @@ function DoctorNavbar() {
                                 ? "active"
                                 : ""
                         }
-                        onClick={() => navigate("/doctor/schedule")}
+                        onClick={() => handleNavigation("/doctor/schedule")}
                     >
                         My Schedule
                     </a>

@@ -139,7 +139,7 @@ select {
   font-family: var(--font-primary);
 }
 
-ul{
+ul {
   list-style: none;
 }
 
@@ -299,7 +299,8 @@ ul{
   justify-content: center;
   gap: 8px;
 }
-.btn-auth-role{
+
+.btn-auth-role {
   opacity: 0.5;
   pointer-events: none;
 }
@@ -862,9 +863,19 @@ ul{
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-8px); }
-  75% { transform: translateX(8px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-8px);
+  }
+
+  75% {
+    transform: translateX(8px);
+  }
 }
 
 /* Divider */
@@ -926,8 +937,13 @@ ul{
   font-weight: 700;
 }
 
-.btn-google .icon-circle { background: var(--google-color); }
-.btn-facebook .icon-circle { background: var(--facebook-color); }
+.btn-google .icon-circle {
+  background: var(--google-color);
+}
+
+.btn-facebook .icon-circle {
+  background: var(--facebook-color);
+}
 
 /* Auth Link */
 .auth-link {
@@ -1002,7 +1018,9 @@ ul{
   flex-shrink: 0;
 }
 
-.role-info { flex: 1; }
+.role-info {
+  flex: 1;
+}
 
 .role-name {
   font-size: 16px;
@@ -1057,7 +1075,9 @@ ul{
   transition: var(--transition);
 }
 
-.back-link:hover { color: var(--primary-teal); }
+.back-link:hover {
+  color: var(--primary-teal);
+}
 
 /* ============================================
    DASHBOARD - Common
@@ -1155,7 +1175,9 @@ ul{
   margin-bottom: 24px;
 }
 
-.showing-count strong { color: var(--primary-teal); }
+.showing-count strong {
+  color: var(--primary-teal);
+}
 
 /* Filter Tabs */
 .filter-tabs {
@@ -1196,12 +1218,35 @@ ul{
   font-weight: 600;
 }
 
-.status-available { background: var(--available-bg); color: var(--available); }
-.status-busy { background: var(--busy-bg); color: var(--busy); }
-.badge-confirmed { background: var(--confirmed-bg); color: var(--confirmed); }
-.badge-pending { background: var(--pending-bg); color: var(--pending); }
-.badge-completed { background: var(--completed-bg); color: var(--completed); }
-.badge-rejected { background: var(--rejected-bg); color: var(--rejected); }
+.status-available {
+  background: var(--available-bg);
+  color: var(--available);
+}
+
+.status-busy {
+  background: var(--busy-bg);
+  color: var(--busy);
+}
+
+.badge-confirmed {
+  background: var(--confirmed-bg);
+  color: var(--confirmed);
+}
+
+.badge-pending {
+  background: var(--pending-bg);
+  color: var(--pending);
+}
+
+.badge-completed {
+  background: var(--completed-bg);
+  color: var(--completed);
+}
+
+.badge-rejected {
+  background: var(--rejected-bg);
+  color: var(--rejected);
+}
 
 /* Stats Grid */
 .stats-grid {
@@ -1224,14 +1269,45 @@ ul{
   box-shadow: var(--shadow-md);
 }
 
-.stat-card-dash .icon { font-size: 36px; margin-bottom: 16px; }
-.stat-card-dash .number { font-size: 40px; font-weight: 700; margin-bottom: 4px; color: var(--text-primary); }
-.stat-card-dash .number.teal { color: var(--primary-teal); }
-.stat-card-dash .number.gold { color: var(--accent-gold); }
-.stat-card-dash .number.green { color: var(--confirmed); }
-.stat-card-dash .number.yellow { color: var(--pending); }
-.stat-card-dash .label { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
-.stat-card-dash .sublabel { font-size: 12px; color: var(--text-secondary); opacity: 0.7; }
+.stat-card-dash .icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.stat-card-dash .number {
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.stat-card-dash .number.teal {
+  color: var(--primary-teal);
+}
+
+.stat-card-dash .number.gold {
+  color: var(--accent-gold);
+}
+
+.stat-card-dash .number.green {
+  color: var(--confirmed);
+}
+
+.stat-card-dash .number.yellow {
+  color: var(--pending);
+}
+
+.stat-card-dash .label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.stat-card-dash .sublabel {
+  font-size: 12px;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
 
 /* Doctor Cards */
 .doctors-grid {
@@ -1274,10 +1350,27 @@ ul{
   flex-shrink: 0;
 }
 
-.doctor-info { flex: 1; }
-.doctor-name { font-size: 17px; font-weight: 700; color: var(--text-primary); }
-.doctor-specialty { font-size: 14px; font-weight: 600; color: var(--primary-teal); }
-.doctor-location { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.doctor-info {
+  flex: 1;
+}
+
+.doctor-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.doctor-specialty {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-teal);
+}
+
+.doctor-location {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
 
 .doctor-stats {
   display: flex;
@@ -1287,13 +1380,37 @@ ul{
   border-top: 1px solid var(--border-color);
 }
 
-.stat-item { text-align: center; }
-.stat-value { font-size: 18px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 4px; justify-content: center; }
-.stat-value .star { color: #FBBF24; }
-.stat-value .price { color: var(--primary-teal); }
-.stat-label-sm { font-size: 12px; color: var(--text-secondary); }
+.stat-item {
+  text-align: center;
+}
 
-.doctor-actions { display: flex; gap: 12px; }
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+}
+
+.stat-value .star {
+  color: #FBBF24;
+}
+
+.stat-value .price {
+  color: var(--primary-teal);
+}
+
+.stat-label-sm {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.doctor-actions {
+  display: flex;
+  gap: 12px;
+}
 
 /* Appointment Cards */
 .appointment-card {
@@ -1316,19 +1433,81 @@ ul{
   transform: translateX(4px);
 }
 
-.appointment-card.confirmed { border-left-color: var(--confirmed); }
-.appointment-card.pending { border-left-color: var(--pending); }
-.appointment-card.completed { border-left-color: var(--completed); }
-.appointment-card.rejected { border-left-color: var(--rejected); }
+.appointment-card.confirmed {
+  border-left-color: var(--confirmed);
+}
 
-.appt-doctor { display: flex; align-items: center; gap: 16px; flex: 1; min-width: 200px; }
-.appt-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
-.appt-name { font-size: 17px; font-weight: 700; color: var(--text-primary); }
-.appt-specialty { font-size: 14px; color: var(--primary-teal); font-weight: 600; }
-.appt-details { display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
-.appt-detail-item { text-align: center; }
-.appt-detail-label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-.appt-detail-value { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; color: var(--text-primary); }
+.appointment-card.pending {
+  border-left-color: var(--pending);
+}
+
+.appointment-card.completed {
+  border-left-color: var(--completed);
+}
+
+.appointment-card.rejected {
+  border-left-color: var(--rejected);
+}
+
+.appt-doctor {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.appt-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.appt-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.appt-specialty {
+  font-size: 14px;
+  color: var(--primary-teal);
+  font-weight: 600;
+}
+
+.appt-details {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.appt-detail-item {
+  text-align: center;
+}
+
+.appt-detail-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.appt-detail-value {
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-primary);
+}
 
 /* Fix for Patient Appointments Cancel Button Hover */
 .appointment-card .btn-sm-outline:hover {
@@ -1342,6 +1521,7 @@ ul{
   position: relative;
   top: 2px;
 }
+
 /* Charts */
 .charts-grid {
   display: grid;
@@ -1359,9 +1539,28 @@ ul{
   transition: var(--transition);
 }
 
-.chart-card:hover { box-shadow: var(--shadow-md); }
-.chart-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--text-primary); }
-.chart-placeholder { width: 100%; height: 200px; background: var(--bg-secondary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 14px; }
+.chart-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.chart-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.chart-placeholder {
+  width: 100%;
+  height: 200px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
 
 /* Tables */
 .table-card {
@@ -1373,7 +1572,9 @@ ul{
   overflow-x: auto;
 }
 
-.table-card:hover { box-shadow: var(--shadow-md); }
+.table-card:hover {
+  box-shadow: var(--shadow-md);
+}
 
 .table-header {
   display: flex;
@@ -1384,17 +1585,64 @@ ul{
   gap: 12px;
 }
 
-.table-title { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+.table-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
 
-table { width: 100%; border-collapse: collapse; min-width: 600px; }
-th { text-align: left; padding: 14px 16px; font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--border-color); }
-td { padding: 16px; font-size: 15px; border-bottom: 1px solid var(--border-color); color: var(--text-primary); }
-tr:last-child td { border-bottom: none; }
-tr:hover { background: var(--bg-secondary); }
-.table-avatar { display: flex; align-items: center; gap: 10px; font-weight: 600; }
-.table-specialty { color: var(--primary-teal); font-weight: 600; }
-.action-btns { display: flex; gap: 8px; }
-.no-action { color: var(--text-secondary); }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+th {
+  text-align: left;
+  padding: 14px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+td {
+  padding: 16px;
+  font-size: 15px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover {
+  background: var(--bg-secondary);
+}
+
+.table-avatar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.table-specialty {
+  color: var(--primary-teal);
+  font-weight: 600;
+}
+
+.action-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.no-action {
+  color: var(--text-secondary);
+}
 
 /* Welcome Banner */
 .welcome-banner {
@@ -1410,9 +1658,20 @@ tr:hover { background: var(--bg-secondary); }
   gap: 16px;
 }
 
-.welcome-text h2 { font-family: var(--font-primary); font-size: 28px; margin-bottom: 6px; }
-.welcome-text p { color: rgba(255, 255, 255, 0.8); font-size: 15px; }
-.welcome-icon { font-size: 64px; }
+.welcome-text h2 {
+  font-family: var(--font-primary);
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.welcome-text p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 15px;
+}
+
+.welcome-icon {
+  font-size: 64px;
+}
 
 /* ==================================================
    NOT FOUND PAGE
@@ -1429,12 +1688,10 @@ tr:hover { background: var(--bg-secondary); }
   overflow: hidden;
 
   background:
-          radial-gradient(
-                  circle at top,
-                  rgba(15, 122, 122, 0.12),
-                  transparent 55%
-          ),
-          var(--bg-primary);
+    radial-gradient(circle at top,
+      rgba(15, 122, 122, 0.12),
+      transparent 55%),
+    var(--bg-primary);
 }
 
 /* =======================================
@@ -1610,10 +1867,8 @@ tr:hover { background: var(--bg-secondary); }
 
   opacity: 0.35;
 
-  background-image: radial-gradient(
-          var(--border-color) 2px,
-          transparent 2px
-  );
+  background-image: radial-gradient(var(--border-color) 2px,
+      transparent 2px);
 
   background-size: 28px 28px;
 }
@@ -1917,36 +2172,105 @@ textarea {
    RESPONSIVE
    ============================================ */
 @media (max-width: 1024px) {
-  .hero { flex-direction: column; padding: 60px 32px; text-align: center; }
-  .hero-content { max-width: 100%; }
-  .hero-title { font-size: 48px; }
-  .hero-buttons { justify-content: center; }
-  .navbar { padding: 0 24px; }
-  .section { padding: 60px 24px; }
-  .doctors-grid { grid-template-columns: repeat(2, 1fr); }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .charts-grid { grid-template-columns: 1fr; }
-  .page-content { padding: 32px 24px; }
+  .hero {
+    flex-direction: column;
+    padding: 60px 32px;
+    text-align: center;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .hero-title {
+    font-size: 48px;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+  }
+
+  .navbar {
+    padding: 0 24px;
+  }
+
+  .section {
+    padding: 60px 24px;
+  }
+
+  .doctors-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-content {
+    padding: 32px 24px;
+  }
+
   .booking-layout {
     grid-template-columns: 1fr;
   }
+
   .booking-doctor-card {
     position: static;
   }
 }
 
 @media (max-width: 768px) {
-  .hero-stats { grid-template-columns: repeat(2, 1fr); width: 100%; }
-  .steps-grid { grid-template-columns: 1fr; }
-  .navbar-links { display: none; }
-  .hero-title { font-size: 36px; }
-  .section-title { font-size: 28px; }
-  .form-row { grid-template-columns: 1fr; }
-  .doctors-grid { grid-template-columns: 1fr; }
-  .stats-grid { grid-template-columns: 1fr; }
-  .filters-bar { flex-direction: column; }
-  .appointment-card { flex-direction: column; align-items: flex-start; }
-  .user-name, .role-tag { display: none; }
+  .hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  .hero-title {
+    font-size: 36px;
+  }
+
+  .section-title {
+    font-size: 28px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .doctors-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-bar {
+    flex-direction: column;
+  }
+
+  .appointment-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-name,
+  .role-tag {
+    display: none;
+  }
+
   .nf-title {
     font-size: 1.7rem;
   }
@@ -1984,6 +2308,23 @@ textarea {
   }
 }
 
+
+/* ============================================
+   MODAL ACTIONS
+   ============================================ */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: nowrap;
+}
+
+.modal-actions .btn {
+  width: auto;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
 
 /* ============================================
    SKELETON & LOADERS
@@ -2024,24 +2365,20 @@ textarea {
 /* Skeleton Base */
 .skeleton {
   background: var(--bg-secondary);
-  background: linear-gradient(
-    90deg,
-    var(--bg-secondary) 25%,
-    var(--border-color) 50%,
-    var(--bg-secondary) 75%
-  );
+  background: linear-gradient(90deg,
+      var(--bg-secondary) 25%,
+      var(--border-color) 50%,
+      var(--bg-secondary) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;
   border-radius: 6px;
 }
 
 [data-theme='dark'] .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--bg-secondary) 25%,
-    var(--border-color) 50%,
-    var(--bg-secondary) 75%
-  );
+  background: linear-gradient(90deg,
+      var(--bg-secondary) 25%,
+      var(--border-color) 50%,
+      var(--bg-secondary) 75%);
   background-size: 200% 100%;
 }
 
@@ -2049,6 +2386,7 @@ textarea {
   0% {
     background-position: -200% 0;
   }
+
   100% {
     background-position: 200% 0;
   }
@@ -2086,6 +2424,7 @@ textarea {
     opacity: 0;
     transform: translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -2095,4 +2434,3 @@ textarea {
 .page-transition-enter {
   animation: pageFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
-
