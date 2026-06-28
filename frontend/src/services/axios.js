@@ -1,10 +1,7 @@
 import axios from "axios"
 
 const API = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-    headers: {
-        "Content-Type": "application/json",
-    }
+    baseURL: import.meta.env.VITE_API_URL
 })
 
 API.interceptors.request.use(
@@ -26,8 +23,7 @@ API.interceptors.response.use(
     },
     (error) => {
         if ( error.response?.status === 401 ) {
-            localStorage.removeItem("token")
-            localStorage.removeItem("user")
+            window.dispatchEvent(new Event('session:expired'))
         }
         return Promise.reject(error);
     }

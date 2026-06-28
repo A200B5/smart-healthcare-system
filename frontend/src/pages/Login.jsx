@@ -1,7 +1,5 @@
 import { useState } from "react";
 import Navigation from "../components/Navigation.jsx";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebook } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 

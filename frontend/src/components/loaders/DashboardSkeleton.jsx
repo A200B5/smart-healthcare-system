@@ -1,4 +1,4 @@
-import React from "react";
+
 import TableSkeleton from "./TableSkeleton.jsx";
 import CardSkeleton from "./CardSkeleton.jsx";
 

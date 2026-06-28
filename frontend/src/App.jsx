@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import  { Suspense , lazy } from "react";
 import {Routes , Route} from "react-router-dom";
 
 // Eagerly Loaded Critical Path Pages & Components
@@ -24,19 +24,19 @@ import CardSkeleton from "./components/loaders/CardSkeleton.jsx";
 import PageTransition from "./components/PageTransition.jsx";
 
 // Lazy Loaded Pages
-const DoctorDashboard = React.lazy(() => import("./pages/doctorpages/DoctorDashboard.jsx"));
-const PatientHome = React.lazy(() => import("./pages/pateintpages/PatientHome.jsx"));
-const PatientFindDoctor = React.lazy(() => import("./pages/pateintpages/PatientFindDoctor.jsx"));
-const PatientAppointments = React.lazy(() => import("./pages/pateintpages/PatientAppointments.jsx"));
-const BookAppointment = React.lazy(() => import("./pages/pateintpages/BookAppointment.jsx"));
-const PatientProfile = React.lazy(() => import("./pages/pateintpages/PatientProfile.jsx"));
-const DoctorProfile = React.lazy(() => import("./pages/doctorpages/DoctorProfile.jsx"));
-const DoctorAvailability = React.lazy(() => import("./pages/doctorpages/DoctorAvailability.jsx"));
-const AdminDashboard = React.lazy(() => import("./pages/adminpages/AdminDashboard.jsx"));
-const AdminManageDoctor = React.lazy(() => import("./pages/adminpages/AdminManageDoctor.jsx"));
-const AdminManageUser = React.lazy(() => import("./pages/adminpages/AdminManageUser.jsx"));
-const AdminManageAppiontment = React.lazy(() => import("./pages/adminpages/AdminManageAppiontment.jsx"));
-const AdminDoctorDetails = React.lazy(() => import("./pages/adminpages/AdminDoctorDetails.jsx"));
+const DoctorDashboard = lazy(() => import("./pages/doctorpages/DoctorDashboard.jsx"));
+const PatientHome = lazy(() => import("./pages/pateintpages/PatientHome.jsx"));
+const PatientFindDoctor = lazy(() => import("./pages/pateintpages/PatientFindDoctor.jsx"));
+const PatientAppointments = lazy(() => import("./pages/pateintpages/PatientAppointments.jsx"));
+const BookAppointment = lazy(() => import("./pages/pateintpages/BookAppointment.jsx"));
+const PatientProfile = lazy(() => import("./pages/pateintpages/PatientProfile.jsx"));
+const DoctorProfile = lazy(() => import("./pages/doctorpages/DoctorProfile.jsx"));
+const DoctorAvailability = lazy(() => import("./pages/doctorpages/DoctorAvailability.jsx"));
+const AdminDashboard = lazy(() => import("./pages/adminpages/AdminDashboard.jsx"));
+const AdminManageDoctor = lazy(() => import("./pages/adminpages/AdminManageDoctor.jsx"));
+const AdminManageUser = lazy(() => import("./pages/adminpages/AdminManageUser.jsx"));
+const AdminManageAppiontment = lazy(() => import("./pages/adminpages/AdminManageAppiontment.jsx"));
+const AdminDoctorDetails = lazy(() => import("./pages/adminpages/AdminDoctorDetails.jsx"));
 
 function App() {
 

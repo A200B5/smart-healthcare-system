@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CardSkeleton from "../../components/loaders/CardSkeleton.jsx";
 import PatientNavbar from "../../components/PatientNavbar.jsx";
@@ -484,7 +484,7 @@ function PatientFindDoctor() {
                                                             transition: "all 0.2s",
                                                         }}
                                                     >
-                                                        🕐 {slot.time}
+                                                        {slot.time}
                                                     </button>
                                                 ))}
                                             </div>

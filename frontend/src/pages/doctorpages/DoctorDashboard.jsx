@@ -7,6 +7,7 @@ import {
   updateAppointmentStatus,
 } from "../../services/appointmentService";
 import { getDoctorProfile, getDoctorReviews } from "../../services/doctorService";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 const dayOptions = [
   { value: 1, label: "Monday" },
@@ -61,6 +62,8 @@ function DoctorDashboard() {
   const [scheduleError, setScheduleError] = useState(null);
   const [savingSchedule, setSavingSchedule] = useState(false);
   const [scheduleSuccess, setScheduleSuccess] = useState("");
+  const { user } = useAuth();
+  const doctorName = user?.name  || "Doctor";
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -157,7 +160,7 @@ function DoctorDashboard() {
           {/* Welcome */}
           <div className="welcome-banner">
             <div className="welcome-text">
-              <h2>Welcome back 👨‍⚕️</h2>
+              <h2>Welcome back {doctorName}️</h2>
               <p>You have appointment requests to manage</p>
             </div>
             <div className="welcome-icon">🩺</div>

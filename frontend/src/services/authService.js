@@ -65,7 +65,8 @@ export const updateProfile = async (userData) => {
 
 // Logout Function :
 
-export const logoutUser =  () => {
+export const logoutUser =  (reason = 'manual') => {
     localStorage.removeItem("token")
     localStorage.removeItem("user")
+    window.dispatchEvent(new CustomEvent('auth:logout', { detail: { reason } }))
 }
