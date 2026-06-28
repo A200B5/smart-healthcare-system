@@ -14,7 +14,7 @@ const signToken = (user) =>
   jwt.sign(
     { id: user.id, name: user.name, email: user.email, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
   );
 
 // Dummy bcrypt hash compared against when an email is not found, so a login

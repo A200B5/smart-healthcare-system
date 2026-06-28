@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import DoctorNavbar from "../../components/DoctorNavbar.jsx";
 import { getMySchedule, updateSchedule } from "../../services/doctorService.js";

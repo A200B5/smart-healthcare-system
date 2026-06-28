@@ -1,5 +1,5 @@
 import AdminNavbar from "../../components/AdminNavbar.jsx";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import { getAppointments, deleteAppointment } from "../../services/adminService.js";
 import ConfirmationModal from "../../components/ConfirmationModal.jsx";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 import DoctorNavbar from "../../components/DoctorNavbar.jsx";
 import { getCurrentUser } from "../../services/authService";

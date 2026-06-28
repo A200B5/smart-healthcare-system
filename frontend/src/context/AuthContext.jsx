@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useMemo } from "react";
 import GlobalLoader from "../components/loaders/GlobalLoader.jsx";
+import SessionManager from "../components/SessionManager.jsx";
+import { isTokenExpired } from "../services/jwtUtils.js";
 
 import {loginUser , registerUser , getCurrentUser , logoutUser} from "../services/authService.js";
 
@@ -32,7 +34,8 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const initAuth = async () => {
             const token = localStorage.getItem('token')
-            if (!token) {
+            if (!token || isTokenExpired(token)) {
+                if (token) clearAuthData(); // Token is expired, clear it
                 setLoading(false)
                 return;
             }
@@ -52,6 +55,16 @@ export const AuthProvider = ({ children }) => {
             }
         }
         initAuth()
+
+        // Listen for global auth:logout events (e.g. from axios interceptor)
+        const handleLogoutEvent = () => {
+            clearAuthData();
+        };
+        window.addEventListener('auth:logout', handleLogoutEvent);
+
+        return () => {
+            window.removeEventListener('auth:logout', handleLogoutEvent);
+        };
     } , [])
 
     // Login
@@ -90,8 +103,8 @@ export const AuthProvider = ({ children }) => {
     }
 
     // Logout
-    const logout = () => {
-        logoutUser()
+    const logout = (reason = 'manual') => {
+        logoutUser(reason)
         clearAuthData()
         setError(null)
     }
@@ -126,6 +139,10 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={value}>
             {children}
+            <SessionManager 
+                token={localStorage.getItem("token")} 
+                onLogout={logout} 
+            />
         </AuthContext.Provider>
     )
 

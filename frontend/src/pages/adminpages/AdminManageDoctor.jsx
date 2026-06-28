@@ -1,5 +1,5 @@
 import AdminNavbar from "../../components/AdminNavbar.jsx";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import { useNavigate } from "react-router-dom";
 import { getDoctors, deleteDoctor, approveDoctor, rejectDoctor } from "../../services/adminService.js";

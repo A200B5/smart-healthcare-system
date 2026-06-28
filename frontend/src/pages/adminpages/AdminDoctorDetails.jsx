@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminNavbar from "../../components/AdminNavbar.jsx";
