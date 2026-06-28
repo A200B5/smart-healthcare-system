@@ -107,6 +107,38 @@ Complete Figma Design System and UI/UX specification:
 docs/MediCare-Pro-Figma-Specification.pdf
 
 ---
+## 📊 Project Presentation
+
+The final presentation for **MediCare Pro – Smart Healthcare Management System** is available in the `docs` directory.
+
+### 📂 Presentation Files
+
+| File | Link |
+|------|------|
+| 📄 PDF Presentation | [View PDF](docs/MediCare_Pro_Presentation.pdf) |
+| 📊 PowerPoint Presentation | [Download PPTX](docs/MediCare_Pro_Presentation.pptx) |
+
+### Presentation Highlights
+
+The presentation includes:
+
+* Project Overview
+* Problem Statement
+* Project Objectives
+* Target Users
+* Core Features
+* Technology Stack
+* System Architecture
+* Database Overview
+* Security Features
+* Application Workflow
+* UI Showcase (Landing Page, Authentication, Patient, Doctor, and Admin Modules)
+* Project Strengths
+* Future Enhancements
+* Conclusion
+
+The presentation follows a modern, investor-style design with a dark theme and provides a complete walkthrough of the system architecture, implementation, and user experience.
+---
 
 ## 🚀 Developer Setup
 
