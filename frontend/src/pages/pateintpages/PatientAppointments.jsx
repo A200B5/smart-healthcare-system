@@ -242,7 +242,7 @@ function PatientAppointments() {
                         </div>
                     ) : filteredAppointments.length === 0 ? (
                         <div style={{ textAlign: "center", padding: "60px 0", color: "var(--text-secondary)" }}>
-                            <div style={{ fontSize: "48px", marginBottom: "16px" }}>📋</div>
+
                             <p>No {filter === "all" ? "" : filter} appointments found</p>
                             <button
                                 className="btn btn-primary"
@@ -265,11 +265,11 @@ function PatientAppointments() {
                                 <div className="appt-details">
                                     <div className="appt-detail-item">
                                         <div className="appt-detail-label">Date</div>
-                                        <div className="appt-detail-value">📅 {formatDate(appt.date)}</div>
+                                        <div className="appt-detail-value"> {formatDate(appt.date)}</div>
                                     </div>
                                     <div className="appt-detail-item">
                                         <div className="appt-detail-label">Time</div>
-                                        <div className="appt-detail-value">🕐 {appt.time}</div>
+                                        <div className="appt-detail-value"> {appt.time}</div>
                                     </div>
                                     <span className={`status-badge badge-${appt.status}`}>{appt.status}</span>
                                 </div>

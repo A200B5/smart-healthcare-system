@@ -16,13 +16,49 @@ const DAYS_OF_WEEK = [
 function DoctorAvailability() {
   const [doctorId, setDoctorId] = useState(null);
   const [schedule, setSchedule] = useState([]);
+  const [originalSchedule, setOriginalSchedule] = useState([]);
+  const [isDirty, setIsDirty] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [savingDay, setSavingDay] = useState(null);
+  const [savingAll, setSavingAll] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
+
+  const [showUnsavedModal, setShowUnsavedModal] = useState(false);
+  const [pendingNavigationFn, setPendingNavigationFn] = useState(null);
 
   useEffect(() => {
     loadSchedule();
+  }, []);
+
+  useEffect(() => {
+    // Determine if dirty
+    const dirty = JSON.stringify(schedule) !== JSON.stringify(originalSchedule);
+    setIsDirty(dirty);
+
+    if (dirty) {
+      window.onNavigateBlocker = (path, proceedFn) => {
+        setPendingNavigationFn(() => proceedFn);
+        setShowUnsavedModal(true);
+      };
+      const handleBeforeUnload = (e) => {
+        e.preventDefault();
+        e.returnValue = '';
+      };
+      window.addEventListener("beforeunload", handleBeforeUnload);
+      return () => {
+        window.onNavigateBlocker = null;
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+      };
+    } else {
+      window.onNavigateBlocker = null;
+    }
+  }, [schedule, originalSchedule]);
+
+  // Clean up global blocker when component unmounts
+  useEffect(() => {
+    return () => {
+      window.onNavigateBlocker = null;
+    };
   }, []);
 
   const loadSchedule = async () => {
@@ -52,6 +88,7 @@ function DoctorAvailability() {
         });
         
         setSchedule(mappedSchedule);
+        setOriginalSchedule(JSON.parse(JSON.stringify(mappedSchedule)));
       }
     } catch (err) {
       setError("Failed to load your schedule.");
@@ -61,28 +98,58 @@ function DoctorAvailability() {
     }
   };
 
-  const handleUpdateDay = async (dayId) => {
+  const handleSaveChanges = async (proceedFn = null) => {
     if (!doctorId) return;
-    const dayData = schedule.find(d => d.id === dayId);
-    
     try {
-      setSavingDay(dayId);
+      setSavingAll(true);
       setSuccessMsg("");
       setError("");
       
-      await updateSchedule(doctorId, {
-        dayOfWeek: dayData.id,
-        startTime: dayData.startTime,
-        endTime: dayData.endTime,
-        isAvailable: dayData.isAvailable,
-        slotDuration: dayData.slotDuration,
-      });
+      let hasError = false;
+
+      // Find modified days
+      const modifiedDays = schedule.filter((day, index) => 
+        JSON.stringify(day) !== JSON.stringify(originalSchedule[index])
+      );
+
+      for (const dayData of modifiedDays) {
+        try {
+          await updateSchedule(doctorId, {
+            dayOfWeek: dayData.id,
+            startTime: dayData.startTime,
+            endTime: dayData.endTime,
+            isAvailable: dayData.isAvailable,
+            slotDuration: dayData.slotDuration,
+          });
+        } catch (err) {
+          console.error(err);
+          hasError = true;
+          setError(`Failed to update ${dayData.name}: ${err.message}`);
+        }
+      }
       
-      setSuccessMsg(`Successfully updated schedule for ${dayData.name}`);
+      if (!hasError) {
+        setSuccessMsg("Successfully updated weekly schedule.");
+        const newOriginal = JSON.parse(JSON.stringify(schedule));
+        setOriginalSchedule(newOriginal);
+        // We explicitly calculate isDirty to false here immediately
+        // so it doesn't wait for next render if we proceed
+        setIsDirty(false);
+        window.onNavigateBlocker = null;
+
+        if (proceedFn && typeof proceedFn === 'function') {
+            proceedFn();
+        } else {
+            setShowUnsavedModal(false);
+        }
+      } else {
+          setShowUnsavedModal(false);
+      }
     } catch (err) {
-      setError(`Failed to update ${dayData.name}: ${err.message}`);
+      setError(`Failed to save changes: ${err.message}`);
+      setShowUnsavedModal(false);
     } finally {
-      setSavingDay(null);
+      setSavingAll(false);
     }
   };
 
@@ -91,6 +158,16 @@ function DoctorAvailability() {
       day.id === dayId ? { ...day, [field]: value } : day
     ));
     setSuccessMsg("");
+  };
+
+  const handleLeaveWithoutSaving = () => {
+    setShowUnsavedModal(false);
+    setSchedule(JSON.parse(JSON.stringify(originalSchedule)));
+    setIsDirty(false);
+    window.onNavigateBlocker = null;
+    if (pendingNavigationFn) {
+        pendingNavigationFn();
+    }
   };
 
   if (loading) {
@@ -132,7 +209,7 @@ function DoctorAvailability() {
               </div>
             )}
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "24px" }}>
               {schedule.map((day) => (
                 <div key={day.id} style={{ 
                   display: "flex", 
@@ -196,28 +273,101 @@ function DoctorAvailability() {
                       </select>
                     </div>
                   </div>
-                  
-                  <button 
-                    className="btn btn-primary"
-                    onClick={() => handleUpdateDay(day.id)}
-                    disabled={savingDay === day.id}
-                    style={{ padding: "8px 16px" }}
-                  >
-                    {savingDay === day.id ? "Saving..." : "Save"}
-                  </button>
                 </div>
               ))}
             </div>
 
-            <div style={{ marginTop: "24px", padding: "16px", background: "rgba(59, 130, 246, 0.1)", borderRadius: "8px", color: "#1e3a8a", fontSize: "14px" }}>
-              <strong>ℹ️ Note:</strong> If you uncheck a day, you will not accept any appointments for that day, regardless of the hours specified. Make sure to click "Save" after modifying each day.
+            <div style={{ textAlign: "center", marginBottom: "24px" }}>
+                <button
+                    className="btn btn-primary"
+                    onClick={() => handleSaveChanges(null)}
+                    disabled={!isDirty || savingAll}
+                    style={{ padding: "12px 32px", fontSize: "16px" }}
+                >
+                    {savingAll ? "Saving..." : "Save Changes"}
+                </button>
+            </div>
+
+            <div style={{ padding: "16px", background: "rgba(59, 130, 246, 0.1)", borderRadius: "8px", color: "#1e3a8a", fontSize: "14px" }}>
+              <strong>ℹ️ Note:</strong> Changes are not saved automatically. Click <strong>Save Changes</strong> after editing your weekly schedule. Unchecking a day means you will not accept any appointments for that day.
             </div>
             
           </div>
         </div>
       </div>
+
+      {showUnsavedModal && (
+        <div
+            className="modal-overlay"
+            style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "rgba(0, 0, 0, 0.5)",
+                backdropFilter: "blur(4px)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 1000,
+                padding: "20px",
+            }}
+        >
+            <div
+                className="modal-content"
+                style={{
+                    background: "var(--bg-primary, #ffffff)",
+                    borderRadius: "16px",
+                    padding: "24px",
+                    maxWidth: "600px",
+                    width: "100%",
+                    boxShadow: "var(--shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.3))",
+                }}
+            >
+                <div style={{ marginBottom: "16px" }}>
+                    <h2 style={{ margin: 0, fontSize: "20px", color: "var(--text-primary)" }}>
+                        Unsaved Changes
+                    </h2>
+                </div>
+                <div style={{ marginBottom: "32px", color: "var(--text-secondary)", fontSize: "15px", lineHeight: "1.5" }}>
+                    You have unsaved changes to your weekly schedule. Would you like to save them before leaving?
+                </div>
+                <div className="modal-actions" style={{ marginBottom: 0 }}>
+                    <button 
+                        className="btn btn-outline" 
+                        onClick={() => setShowUnsavedModal(false)}
+                        disabled={savingAll}
+                        style={{ minWidth: "100px" }}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        className="btn"
+                        onClick={handleLeaveWithoutSaving}
+                        disabled={savingAll}
+                        style={{
+                            background: "transparent",
+                            color: "var(--rejected, #ef4444)",
+                            border: "1px solid var(--rejected, #ef4444)"
+                        }}
+                    >
+                        Leave Without Saving
+                    </button>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => handleSaveChanges(pendingNavigationFn)}
+                        disabled={savingAll}
+                    >
+                        {savingAll ? "Saving..." : "Save & Leave"}
+                    </button>
+                </div>
+            </div>
+        </div>
+      )}
     </>
   );
 }
 
 export default DoctorAvailability;
+

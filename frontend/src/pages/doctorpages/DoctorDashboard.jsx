@@ -7,7 +7,7 @@ import {
   updateAppointmentStatus,
 } from "../../services/appointmentService";
 import { getDoctorProfile, getDoctorReviews } from "../../services/doctorService";
-import {useAuth} from "../../context/AuthContext.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 const dayOptions = [
   { value: 1, label: "Monday" },
@@ -63,7 +63,7 @@ function DoctorDashboard() {
   const [savingSchedule, setSavingSchedule] = useState(false);
   const [scheduleSuccess, setScheduleSuccess] = useState("");
   const { user } = useAuth();
-  const doctorName = user?.name  || "Doctor";
+  const doctorName = user?.name || "Doctor";
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -160,7 +160,7 @@ function DoctorDashboard() {
           {/* Welcome */}
           <div className="welcome-banner">
             <div className="welcome-text">
-              <h2>Welcome back {doctorName}️</h2>
+              <h2>Welcome back, Dr. {doctorName}</h2>
               <p>You have appointment requests to manage</p>
             </div>
             <div className="welcome-icon">🩺</div>
@@ -181,31 +181,30 @@ function DoctorDashboard() {
           {/* Stats */}
           <div className="stats-grid">
             <div className="stat-card-dash">
-              <div className="icon">📋</div>
+
               <div className="number teal">{stats.total}</div>
               <div className="label">Total Appointments</div>
             </div>
 
             <div className="stat-card-dash">
-              <div className="icon">⏳</div>
+
               <div className="number yellow">{stats.pending}</div>
               <div className="label">Pending</div>
             </div>
 
             <div className="stat-card-dash">
-              <div className="icon">✅</div>
+
               <div className="number green">{stats.confirmed}</div>
               <div className="label">Confirmed</div>
             </div>
 
             <div className="stat-card-dash">
-              <div className="icon">🏁</div>
-              <div className="number">{stats.completed}</div>
+              <div className="number " style={{ color: "var(--completed)" }}>{stats.completed}</div>
               <div className="label">Completed</div>
             </div>
 
             <div className="stat-card-dash">
-              <div className="icon">🗓️</div>
+
               <div className="number teal">{stats.availableDays}</div>
               <div className="label">Available Days</div>
             </div>
@@ -349,15 +348,16 @@ function DoctorDashboard() {
               </p>
               <button
                 className="btn btn-primary"
+                style={{ marginBottom: "12px" }}
                 onClick={() => navigate("/doctor/schedule")}
               >
                 Manage Weekly Schedule
               </button>
               {scheduleLoading && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
-                    <div className="skeleton skeleton-text" style={{ height: '30px' }}></div>
-                    <div className="skeleton skeleton-text" style={{ height: '30px' }}></div>
-                  </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
+                  <div className="skeleton skeleton-text" style={{ height: '30px' }}></div>
+                  <div className="skeleton skeleton-text" style={{ height: '30px' }}></div>
+                </div>
               )}
 
               {!scheduleLoading && schedule.length === 0 && !scheduleError && (

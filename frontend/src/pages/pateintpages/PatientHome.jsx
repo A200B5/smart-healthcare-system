@@ -46,7 +46,7 @@ function PatientHome() {
                             <h2>Welcome back, {displayName}! 👋</h2>
                             <p>Manage your health and book appointments easily</p>
                         </div>
-                        <div className="welcome-icon">🧑</div>
+
                     </div>
 
                     {error && (
@@ -65,17 +65,17 @@ function PatientHome() {
 
                     <div className="stats-grid">
                         <div className="stat-card-dash">
-                            <div className="icon">📅</div>
+
                             <div className="number teal">{loading ? "..." : stats.upcoming}</div>
                             <div className="label">Upcoming Appointments</div>
                         </div>
                         <div className="stat-card-dash">
-                            <div className="icon">✅</div>
+
                             <div className="number green">{loading ? "..." : stats.completed}</div>
                             <div className="label">Completed Visits</div>
                         </div>
                         <div className="stat-card-dash">
-                            <div className="icon">📋</div>
+
                             <div className="number gold">{loading ? "..." : stats.total}</div>
                             <div className="label">Total Appointments</div>
                         </div>
