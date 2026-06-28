@@ -372,7 +372,7 @@ function PatientFindDoctor() {
                                     handleBookNow(selectedDoctor);
                                 }}
                             >
-                                📅 Book Appointment
+                                Book Appointment
                             </button>
                         )}
 

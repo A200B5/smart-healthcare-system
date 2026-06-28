@@ -1330,6 +1330,18 @@ ul{
 .appt-detail-label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
 .appt-detail-value { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; color: var(--text-primary); }
 
+/* Fix for Patient Appointments Cancel Button Hover */
+.appointment-card .btn-sm-outline:hover {
+  background: rgba(239, 68, 68, 0.08) !important;
+  color: var(--rejected, #ef4444) !important;
+  border-color: var(--rejected, #ef4444) !important;
+}
+
+/* Fix for Patient Appointments Pending Badge Alignment */
+.appointment-card .badge-pending {
+  position: relative;
+  top: 2px;
+}
 /* Charts */
 .charts-grid {
   display: grid;
