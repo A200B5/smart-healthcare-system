@@ -3,15 +3,16 @@ import PatientNavbar from "../../components/PatientNavbar.jsx";
 import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 import { getCurrentUser, updateProfile } from "../../services/authService.js";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { toast } from "react-toastify";
+import SaveButton from "../../components/SaveButton.jsx";
+import { useFormState } from "../../services/formUtils.js";
 
 function PatientProfile() {
     const { login } = useAuth(); // If we need to update user context
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState("");
 
-    const [formData, setFormData] = useState({
+    const [initialForm, setInitialForm] = useState({
         name: "",
         email: "",
         phone: "",
@@ -19,14 +20,15 @@ function PatientProfile() {
         dateOfBirth: "",
     });
 
+    const { formData, handleChange, isDirty, syncSavedData } = useFormState(initialForm);
+
     useEffect(() => {
         const loadProfile = async () => {
             try {
                 setLoading(true);
-                setError(null);
                 const data = await getCurrentUser();
                 if (data && data.user) {
-                    setFormData({
+                    setInitialForm({
                         name: data.user.name || "",
                         email: data.user.email || "",
                         phone: data.user.phone || "",
@@ -35,7 +37,7 @@ function PatientProfile() {
                     });
                 }
             } catch (err) {
-                setError("Failed to load profile information.");
+                toast.error("Failed to load profile information.");
             } finally {
                 setLoading(false);
             }
@@ -43,18 +45,11 @@ function PatientProfile() {
         loadProfile();
     }, []);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-        setError(null);
-        setSuccess("");
-    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
-        setError(null);
-        setSuccess("");
 
         try {
             const data = await updateProfile({
@@ -65,7 +60,8 @@ function PatientProfile() {
             });
 
             if (data && data.success) {
-                setSuccess("Profile updated successfully!");
+                toast.success("Profile updated successfully.");
+                syncSavedData();
                 // Also update local storage if necessary so AuthContext picks it up
                 if (data.user) {
                     localStorage.setItem("user", JSON.stringify(data.user));
@@ -73,7 +69,7 @@ function PatientProfile() {
                 }
             }
         } catch (err) {
-            setError(err.message || "Failed to update profile.");
+            toast.error(err.message || "Failed to update profile.");
         } finally {
             setSaving(false);
         }
@@ -105,34 +101,6 @@ function PatientProfile() {
                     </div>
 
                     <div className="auth-card" style={{ maxWidth: "600px", margin: "0 auto", padding: "32px", background: "var(--bg-secondary, #f8fafc)", borderRadius: "16px" }}>
-                        {error && (
-                            <div style={{
-                                padding: "12px 16px",
-                                marginBottom: "16px",
-                                background: "rgba(239, 68, 68, 0.1)",
-                                border: "1px solid rgba(239, 68, 68, 0.3)",
-                                borderRadius: "8px",
-                                color: "var(--rejected, #ef4444)",
-                                fontSize: "14px"
-                            }}>
-                                ⚠️ {error}
-                            </div>
-                        )}
-
-                        {success && (
-                            <div style={{
-                                padding: "12px 16px",
-                                marginBottom: "16px",
-                                background: "rgba(34, 197, 94, 0.1)",
-                                border: "1px solid rgba(34, 197, 94, 0.3)",
-                                borderRadius: "8px",
-                                color: "var(--confirmed, #22c55e)",
-                                fontSize: "14px"
-                            }}>
-                                ✅ {success}
-                            </div>
-                        )}
-
                         <form onSubmit={handleSubmit}>
                             <div className="form-group" style={{ marginBottom: "16px" }}>
                                 <label className="form-label">Full Name</label>
@@ -197,14 +165,13 @@ function PatientProfile() {
                                 />
                             </div>
 
-                            <button
-                                type="submit"
+                            <SaveButton
                                 className="btn btn-primary"
                                 style={{ width: "100%" }}
-                                disabled={saving}
-                            >
-                                {saving ? "Saving Changes..." : "Save Profile"}
-                            </button>
+                                isDirty={isDirty}
+                                isSaving={saving}
+                                text="Save Profile"
+                            />
                         </form>
                     </div>
                 </div>

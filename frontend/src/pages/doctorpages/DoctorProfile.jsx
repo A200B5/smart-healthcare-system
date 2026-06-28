@@ -3,6 +3,9 @@ import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 import DoctorNavbar from "../../components/DoctorNavbar.jsx";
 import { getCurrentUser } from "../../services/authService";
 import { getDoctorProfile, updateDoctor } from "../../services/doctorService";
+import { toast } from "react-toastify";
+import SaveButton from "../../components/SaveButton.jsx";
+import { useFormState } from "../../services/formUtils.js";
 
 const splitName = (fullName) => {
   const parts = (fullName || "").trim().split(/\s+/).filter(Boolean);
@@ -19,10 +22,8 @@ function DoctorProfile() {
   const [doctorRecordId, setDoctorRecordId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [submitError, setSubmitError] = useState("");
-  const [submitSuccess, setSubmitSuccess] = useState("");
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({
+  const [initialForm, setInitialForm] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -35,6 +36,8 @@ function DoctorProfile() {
     available: true,
     avatar: "👨‍⚕️",
   });
+  
+  const { formData: form, handleChange, isDirty, syncSavedData } = useFormState(initialForm);
 
   useEffect(() => {
     const fetchDoctor = async () => {
@@ -54,7 +57,7 @@ function DoctorProfile() {
 
         setDoctor({ user, profile: matchedDoctor || null });
         setDoctorRecordId(matchedDoctor?.id || matchedDoctor?._id || null);
-        setForm({
+        setInitialForm({
           firstName,
           lastName,
           email: user?.email || "",
@@ -80,23 +83,13 @@ function DoctorProfile() {
     fetchDoctor();
   }, []);
 
-  const handleChange = (e) => {
-    const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
 
-    setForm({
-      ...form,
-      [e.target.name]: value,
-    });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitError("");
-    setSubmitSuccess("");
 
     if (!doctorRecordId) {
-      setSubmitError("Doctor profile record was not found for this account.");
+      toast.error("Doctor profile record was not found for this account.");
       return;
     }
 
@@ -114,9 +107,10 @@ function DoctorProfile() {
         schedule: form.schedule,
       });
 
-      setSubmitSuccess("Profile updated successfully.");
+      toast.success("Profile updated successfully.");
+      syncSavedData();
     } catch (err) {
-      setSubmitError(err.message);
+      toast.error(err.message);
     } finally {
       setSaving(false);
     }
@@ -353,21 +347,12 @@ function DoctorProfile() {
                 </div>
               </div>
 
-              {submitError && (
-                <p style={{ color: "var(--rejected)", marginBottom: "8px" }}>
-                  {submitError}
-                </p>
-              )}
-
-              {submitSuccess && (
-                <p style={{ color: "var(--confirmed)", marginBottom: "8px" }}>
-                  {submitSuccess}
-                </p>
-              )}
-
-              <button type="submit" className="btn-auth" disabled={saving}>
-                {saving ? "Saving..." : "Save Changes"}
-              </button>
+              <SaveButton
+                className="btn-auth"
+                isDirty={isDirty}
+                isSaving={saving}
+                text="Save Profile"
+              />
             </form>
           </div>
         </div>

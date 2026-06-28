@@ -6,12 +6,22 @@ import {ThemeProvider} from "./context/ThemeContext.jsx";
 import {BrowserRouter} from "react-router-dom";
 import {AuthProvider} from "./context/AuthContext.jsx";
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
         <AuthProvider>
             <ThemeProvider>
                 <App />
+                <ToastContainer 
+                    autoClose={2000} 
+                    pauseOnHover={true} 
+                    closeOnClick={true}
+                    position="top-right"
+                    hideProgressBar={true}
+                />
             </ThemeProvider>
         </AuthProvider>
     </BrowserRouter>

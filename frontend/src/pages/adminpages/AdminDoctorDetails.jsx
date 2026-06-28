@@ -3,7 +3,9 @@ import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminNavbar from "../../components/AdminNavbar.jsx";
 import { getDoctorById, updateDoctor } from "../../services/adminService.js";
-import AlertModal from "../../components/AlertModal.jsx";
+import { toast } from "react-toastify";
+import SaveButton from "../../components/SaveButton.jsx";
+import { useFormState } from "../../services/formUtils.js";
 
 function AdminDoctorDetails() {
     const { id } = useParams();
@@ -13,13 +15,15 @@ function AdminDoctorDetails() {
     const [error, setError] = useState("");
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
-    const [formData, setFormData] = useState({
+    
+    const [initialForm, setInitialForm] = useState({
         price: 0,
         experience: 0,
         available: false,
         bio: ''
     });
-    const [alertInfo, setAlertInfo] = useState({ isOpen: false, message: "" });
+
+    const { formData, setFormData, handleChange, isDirty, syncSavedData } = useFormState(initialForm);
 
     useEffect(() => {
         const fetchDoctor = async () => {
@@ -27,7 +31,7 @@ function AdminDoctorDetails() {
                 const res = await getDoctorById(id);
                 if (res && res.success) {
                     setDoctor(res.doctor);
-                    setFormData({
+                    setInitialForm({
                         price: res.doctor.price || 0,
                         experience: res.doctor.experience || 0,
                         available: !!res.doctor.available,
@@ -64,10 +68,19 @@ function AdminDoctorDetails() {
                 setIsEditing(false);
                 // fetch updated data from server or just update local state
                 const updatedRes = await getDoctorById(id);
-                if (updatedRes && updatedRes.success) setDoctor(updatedRes.doctor);
+                if (updatedRes && updatedRes.success) {
+                    setDoctor(updatedRes.doctor);
+                    setInitialForm({
+                        price: updatedRes.doctor.price || 0,
+                        experience: updatedRes.doctor.experience || 0,
+                        available: !!updatedRes.doctor.available,
+                        bio: updatedRes.doctor.bio || ''
+                    });
+                }
+                toast.success("Doctor information updated successfully.");
             }
         } catch (err) {
-            setAlertInfo({ isOpen: true, message: err.message || "Failed to save changes." });
+            toast.error(err.message || "Failed to save changes.");
         } finally {
             setIsSaving(false);
         }
@@ -105,21 +118,19 @@ function AdminDoctorDetails() {
                                     >
                                         Cancel
                                     </button>
-                                    <button 
+                                    <SaveButton 
                                         onClick={handleSave} 
-                                        disabled={isSaving} 
+                                        isDirty={isDirty} 
+                                        isSaving={isSaving} 
+                                        text="Save Changes"
+                                        className=""
                                         style={{ 
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
                                             background: 'var(--primary-teal)', color: 'white',
                                             border: 'none', borderRadius: '999px',
                                             padding: '0 24px', fontSize: '15px', fontWeight: '600',
-                                            transition: 'all 0.2s ease', cursor: 'pointer', height: '44px'
+                                            height: '44px'
                                         }}
-                                        onMouseEnter={(e) => { e.target.style.transform = 'translateY(-2px)'; e.target.style.boxShadow = '0 6px 20px rgba(15, 95, 95, 0.3)'; }}
-                                        onMouseLeave={(e) => { e.target.style.transform = 'none'; e.target.style.boxShadow = 'none'; }}
-                                    >
-                                        {isSaving ? 'Saving...' : 'Save Changes'}
-                                    </button>
+                                    />
                                 </>
                             ) : (
                                 <button 
@@ -178,9 +189,10 @@ function AdminDoctorDetails() {
                                 {isEditing ? (
                                     <input 
                                         type="number" 
+                                        name="experience"
                                         className="form-input" 
                                         value={formData.experience} 
-                                        onChange={(e) => setFormData({...formData, experience: e.target.value})}
+                                        onChange={handleChange}
                                     />
                                 ) : (
                                     <div style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{doctor.experience ? `${doctor.experience} Years` : 'Not specified'}</div>
@@ -191,9 +203,10 @@ function AdminDoctorDetails() {
                                 {isEditing ? (
                                     <input 
                                         type="number" 
+                                        name="price"
                                         className="form-input" 
                                         value={formData.price} 
-                                        onChange={(e) => setFormData({...formData, price: e.target.value})}
+                                        onChange={handleChange}
                                     />
                                 ) : (
                                     <div style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>${doctor.price || 0}</div>
@@ -208,8 +221,9 @@ function AdminDoctorDetails() {
                                 {isEditing ? (
                                     <select 
                                         className="form-input" 
+                                        name="available"
                                         value={formData.available ? 'true' : 'false'} 
-                                        onChange={(e) => setFormData({...formData, available: e.target.value === 'true'})}
+                                        onChange={(e) => handleCustomChange('available', e.target.value === 'true')}
                                     >
                                         <option value="true">Available for Bookings</option>
                                         <option value="false">Not Available</option>
@@ -231,9 +245,10 @@ function AdminDoctorDetails() {
                             {isEditing ? (
                                 <textarea 
                                     className="form-input" 
+                                    name="bio"
                                     rows="4"
                                     value={formData.bio} 
-                                    onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                                    onChange={handleChange}
                                 ></textarea>
                             ) : (
                                 <div style={{ color: 'var(--text-primary)', background: 'var(--bg-secondary)', padding: '1rem', borderRadius: '4px', minHeight: '80px' }}>
@@ -264,12 +279,6 @@ function AdminDoctorDetails() {
                 </div>
             </div>
 
-            <AlertModal
-                isOpen={alertInfo.isOpen}
-                title="Notice"
-                message={alertInfo.message}
-                onClose={() => setAlertInfo({ isOpen: false, message: "" })}
-            />
         </>
     );
 }

@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import DoctorNavbar from "../../components/DoctorNavbar.jsx";
 import { getMySchedule, updateSchedule } from "../../services/doctorService.js";
+import { toast } from "react-toastify";
+import SaveButton from "../../components/SaveButton.jsx";
+import { hasDataChanged } from "../../services/formUtils.js";
 
 const DAYS_OF_WEEK = [
   { id: 1, name: "Monday" },
@@ -19,9 +22,7 @@ function DoctorAvailability() {
   const [originalSchedule, setOriginalSchedule] = useState([]);
   const [isDirty, setIsDirty] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [savingAll, setSavingAll] = useState(false);
-  const [successMsg, setSuccessMsg] = useState("");
 
   const [showUnsavedModal, setShowUnsavedModal] = useState(false);
   const [pendingNavigationFn, setPendingNavigationFn] = useState(null);
@@ -32,7 +33,7 @@ function DoctorAvailability() {
 
   useEffect(() => {
     // Determine if dirty
-    const dirty = JSON.stringify(schedule) !== JSON.stringify(originalSchedule);
+    const dirty = hasDataChanged(schedule, originalSchedule);
     setIsDirty(dirty);
 
     if (dirty) {
@@ -64,7 +65,6 @@ function DoctorAvailability() {
   const loadSchedule = async () => {
     try {
       setLoading(true);
-      setError(null);
       const data = await getMySchedule();
       if (data && data.success) {
         setDoctorId(data.doctorId);
@@ -91,7 +91,7 @@ function DoctorAvailability() {
         setOriginalSchedule(JSON.parse(JSON.stringify(mappedSchedule)));
       }
     } catch (err) {
-      setError("Failed to load your schedule.");
+      toast.error("Failed to load your schedule.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -102,14 +102,11 @@ function DoctorAvailability() {
     if (!doctorId) return;
     try {
       setSavingAll(true);
-      setSuccessMsg("");
-      setError("");
       
       let hasError = false;
 
-      // Find modified days
       const modifiedDays = schedule.filter((day, index) => 
-        JSON.stringify(day) !== JSON.stringify(originalSchedule[index])
+        hasDataChanged(day, originalSchedule[index])
       );
 
       for (const dayData of modifiedDays) {
@@ -123,13 +120,12 @@ function DoctorAvailability() {
           });
         } catch (err) {
           console.error(err);
-          hasError = true;
-          setError(`Failed to update ${dayData.name}: ${err.message}`);
+          toast.error(`Failed to update ${dayData.name}: ${err.message}`);
         }
       }
       
       if (!hasError) {
-        setSuccessMsg("Successfully updated weekly schedule.");
+        toast.success("Weekly schedule updated successfully.");
         const newOriginal = JSON.parse(JSON.stringify(schedule));
         setOriginalSchedule(newOriginal);
         // We explicitly calculate isDirty to false here immediately
@@ -146,7 +142,7 @@ function DoctorAvailability() {
           setShowUnsavedModal(false);
       }
     } catch (err) {
-      setError(`Failed to save changes: ${err.message}`);
+      toast.error(`Failed to save changes: ${err.message}`);
       setShowUnsavedModal(false);
     } finally {
       setSavingAll(false);
@@ -157,7 +153,6 @@ function DoctorAvailability() {
     setSchedule(prev => prev.map(day => 
       day.id === dayId ? { ...day, [field]: value } : day
     ));
-    setSuccessMsg("");
   };
 
   const handleLeaveWithoutSaving = () => {
@@ -196,18 +191,6 @@ function DoctorAvailability() {
           </div>
 
           <div className="auth-card" style={{ maxWidth: "800px", margin: "0 auto" }}>
-            
-            {error && (
-              <div style={{ background: "#FEE2E2", color: "#991B1B", padding: "12px", borderRadius: "8px", marginBottom: "20px" }}>
-                ⚠️ {error}
-              </div>
-            )}
-            
-            {successMsg && (
-              <div style={{ background: "#DCFCE7", color: "#166534", padding: "12px", borderRadius: "8px", marginBottom: "20px" }}>
-                ✅ {successMsg}
-              </div>
-            )}
 
             <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "24px", alignItems: "center" }}>
               {schedule.map((day) => (
@@ -279,15 +262,13 @@ function DoctorAvailability() {
               ))}
             </div>
 
-            <div style={{ textAlign: "center", marginBottom: "24px" }}>
-                <button
-                    className="btn btn-primary"
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: "24px" }}>
+                <SaveButton
                     onClick={() => handleSaveChanges(null)}
-                    disabled={!isDirty || savingAll}
+                    isDirty={isDirty}
+                    isSaving={savingAll}
                     style={{ padding: "12px 32px", fontSize: "16px" }}
-                >
-                    {savingAll ? "Saving..." : "Save Changes"}
-                </button>
+                />
             </div>
 
             <div style={{ padding: "16px", background: "rgba(59, 130, 246, 0.1)", borderRadius: "8px", color: "#1e3a8a", fontSize: "14px" }}>
