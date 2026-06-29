@@ -28,6 +28,10 @@ const PatientHome = lazy(() => import("./pages/pateintpages/PatientHome.jsx"));
 const PatientFindDoctor = lazy(() => import("./pages/pateintpages/PatientFindDoctor.jsx"));
 const PatientAppointments = lazy(() => import("./pages/pateintpages/PatientAppointments.jsx"));
 const BookAppointment = lazy(() => import("./pages/pateintpages/BookAppointment.jsx"));
+const PatientCheckout = lazy(() => import("./pages/pateintpages/PatientCheckout.jsx"));
+const PaymentSuccess = lazy(() => import("./pages/pateintpages/PaymentSuccess.jsx"));
+const PaymentFailed = lazy(() => import("./pages/pateintpages/PaymentFailed.jsx"));
+const PatientPayments = lazy(() => import("./pages/pateintpages/PatientPayments.jsx"));
 const PatientProfile = lazy(() => import("./pages/pateintpages/PatientProfile.jsx"));
 const DoctorProfile = lazy(() => import("./pages/doctorpages/DoctorProfile.jsx"));
 const DoctorAvailability = lazy(() => import("./pages/doctorpages/DoctorAvailability.jsx"));
@@ -56,6 +60,10 @@ function App() {
                 <Route path="/patient/finddoctor" element={<RoleProtectedRoute allowedRoles={["patient"]}><Suspense fallback={<CardSkeleton />}><PageTransition><PatientFindDoctor /></PageTransition></Suspense></RoleProtectedRoute>} />
                 <Route path="/patient/appointment" element={<RoleProtectedRoute allowedRoles={["patient"]}><Suspense fallback={<CardSkeleton />}><PageTransition><PatientAppointments /></PageTransition></Suspense></RoleProtectedRoute>} />
                 <Route path="/patient/bookappointment/:doctorId" element={<RoleProtectedRoute allowedRoles={["patient"]}><Suspense fallback={<ProfileSkeleton />}><PageTransition><BookAppointment /></PageTransition></Suspense></RoleProtectedRoute>} />
+                <Route path="/patient/checkout" element={<RoleProtectedRoute allowedRoles={["patient"]}><Suspense fallback={<CardSkeleton />}><PageTransition><PatientCheckout /></PageTransition></Suspense></RoleProtectedRoute>} />
+                <Route path="/patient/payment-success" element={<RoleProtectedRoute allowedRoles={["patient"]}><Suspense fallback={<CardSkeleton />}><PageTransition><PaymentSuccess /></PageTransition></Suspense></RoleProtectedRoute>} />
+                <Route path="/patient/payment-failed" element={<RoleProtectedRoute allowedRoles={["patient"]}><Suspense fallback={<CardSkeleton />}><PageTransition><PaymentFailed /></PageTransition></Suspense></RoleProtectedRoute>} />
+                <Route path="/patient/payments" element={<RoleProtectedRoute allowedRoles={["patient"]}><Suspense fallback={<CardSkeleton />}><PageTransition><PatientPayments /></PageTransition></Suspense></RoleProtectedRoute>} />
 
                 {/* Doctor Routes */}
                 <Route path="/doctor" element={<RoleProtectedRoute allowedRoles={["doctor"]}><Suspense fallback={<DashboardSkeleton />}><PageTransition><DoctorDashboard /></PageTransition></Suspense></RoleProtectedRoute>} />
