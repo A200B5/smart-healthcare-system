@@ -21,14 +21,12 @@ function SignupDoctor() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const [errorMsg, setErrorMsg] = useState("");
-    const [successMsg, setSuccessMsg] = useState("");
+
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrorMsg("");
-        setSuccessMsg("");
+
 
         if (!phone || phone.trim() === "") {
             toast.error("Phone number is required.");
@@ -47,7 +45,7 @@ function SignupDoctor() {
         }
 
         if (password !== confirmPassword) {
-            setErrorMsg("Passwords do not match.");
+            toast.error("Passwords do not match.");
             return;
         }
 
@@ -68,7 +66,7 @@ function SignupDoctor() {
 
         try {
             await register(userData);
-            setSuccessMsg("Your account has been created successfully and is awaiting admin approval.");
+            toast.success("Your account has been created successfully and is awaiting admin approval.");
             
             // Redirect to login after a short delay
             setTimeout(() => {
@@ -76,7 +74,7 @@ function SignupDoctor() {
             }, 3000);
             
         } catch (error) {
-            setErrorMsg(error.message || "Registration failed. Please try again.");
+            toast.error(error.message || "Registration failed. Please try again.");
             setIsSubmitting(false);
         }
     };
@@ -94,17 +92,6 @@ function SignupDoctor() {
                         <h1 className="auth-title">Create Doctor Account</h1>
                         <p className="auth-subtitle">Join our network of verified specialists</p>
                         
-                        {errorMsg && (
-                            <div className="error-msg signup-msg-visible">
-                                ⚠️ <span>{errorMsg}</span>
-                            </div>
-                        )}
-                        
-                        {successMsg && (
-                            <div className="success-msg signup-msg-visible">
-                                ✅ <span>{successMsg}</span>
-                            </div>
-                        )}
 
                         <form onSubmit={handleSubmit}>
                             <div className="form-row">

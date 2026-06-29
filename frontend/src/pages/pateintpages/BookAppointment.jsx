@@ -6,6 +6,7 @@ import PatientNavbar from "../../components/PatientNavbar.jsx";
 import { getDoctorById } from "../../services/doctorService.js";
 import { bookAppointment } from "../../services/appointmentService.js";
 import { getAvailableSlots } from "../../services/patientService.js";
+import { toast } from "react-toastify";
 import "./patient.css";
 
 function BookAppointment() {
@@ -23,8 +24,7 @@ function BookAppointment() {
     const [doctorLoading, setDoctorLoading] = useState(true);
     const [bookingLoading, setBookingLoading] = useState(false);
 
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
+
 
     const [availableSlots, setAvailableSlots] = useState([]);
     const [slotsLoading, setSlotsLoading] = useState(false);
@@ -37,13 +37,13 @@ function BookAppointment() {
         const loadDoctor = async () => {
             try {
                 setDoctorLoading(true);
-                setError("");
+
 
                 const data = await getDoctorById(doctorId);
 
                 setDoctor(data.doctor);
             } catch (error) {
-                setError(error.message || "Failed to load doctor details");
+                toast.error(error.message || "Failed to load doctor details");
             } finally {
                 setDoctorLoading(false);
             }
@@ -93,8 +93,7 @@ function BookAppointment() {
             ...(name === "date" ? { time: "" } : {}),
         }));
 
-        setError("");
-        setSuccess("");
+
     };
 
     useEffect(() => {
@@ -127,28 +126,27 @@ function BookAppointment() {
             time: slot,
         }));
 
-        setError("");
-        setSuccess("");
+
     };
 
     const validateForm = () => {
         if (!formData.date) {
-            setError("Please select appointment date");
+            toast.error("Please select appointment date");
             return false;
         }
 
         if (formData.date < today) {
-            setError("Appointment date cannot be in the past");
+            toast.error("Appointment date cannot be in the past");
             return false;
         }
 
         if (!formData.time) {
-            setError("Please select appointment time");
+            toast.error("Please select appointment time");
             return false;
         }
 
         if (formData.notes.length > 500) {
-            setError("Notes must not exceed 500 characters");
+            toast.error("Notes must not exceed 500 characters");
             return false;
         }
 
@@ -158,8 +156,7 @@ function BookAppointment() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        setError("");
-        setSuccess("");
+
 
         if (!validateForm()) return;
 
@@ -175,13 +172,13 @@ function BookAppointment() {
 
             await bookAppointment(appointmentData);
 
-            setSuccess("Appointment booked successfully");
+            toast.success("Appointment booked successfully");
 
             setTimeout(() => {
                 navigate("/patient/appointment");
             }, 1200);
         } catch (error) {
-            setError(error.message || "Failed to book appointment");
+            toast.error(error.message || "Failed to book appointment");
         } finally {
             setBookingLoading(false);
         }
@@ -361,17 +358,7 @@ function BookAppointment() {
                                 </div>
                             </div>
 
-                            {error && (
-                                <div className="error-msg show">
-                                    ⚠️ <span>{error}</span>
-                                </div>
-                            )}
 
-                            {success && (
-                                <div className="success-msg show">
-                                    ✅ <span>{success}</span>
-                                </div>
-                            )}
 
                             <div className="form-group">
                                 <label className="form-label">Appointment Date</label>

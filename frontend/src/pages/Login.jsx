@@ -19,7 +19,11 @@ function Login() {
 
         try {
             const user = await login({ email, password });
-            toast.success("Welcome back!");
+            if (location.state?.sessionRefreshed) {
+                toast.success("🔒 Your session has been refreshed successfully to keep your account secure.");
+            } else {
+                toast.success("Welcome back!");
+            }
 
             // Redirect based on role
             const redirectPath = location.state?.redirect;

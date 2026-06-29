@@ -114,7 +114,7 @@ const SessionManager = ({ token, onLogout }) => {
 
     const executeLogout = () => {
         onLogout(); // Clears AuthContext state and localStorage
-        navigate("/login");
+        navigate("/login", { state: { sessionRefreshed: true } });
     };
 
     const handleLoginAgain = () => {
