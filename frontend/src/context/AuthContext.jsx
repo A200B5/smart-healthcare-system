@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useMemo } from "react";
+import { toast } from "react-toastify";
 import GlobalLoader from "../components/loaders/GlobalLoader.jsx";
 import SessionManager from "../components/SessionManager.jsx";
 import { isTokenExpired } from "../services/jwtUtils.js";
@@ -107,6 +108,10 @@ export const AuthProvider = ({ children }) => {
         logoutUser(reason)
         clearAuthData()
         setError(null)
+        
+        if (reason === 'manual') {
+            toast.success("Thanks for using MediCare Pro.\nSee you again soon! 👋");
+        }
     }
 
     // Clean Error

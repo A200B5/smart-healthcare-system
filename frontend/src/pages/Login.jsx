@@ -29,11 +29,24 @@ function Login() {
                 navigate("/patient/home");
             }
         } catch (error) {
+            const errorMsgStr = error.originalMessage || error.message || "";
+            const isAccountStatusError = 
+                errorMsgStr.toLowerCase().includes("profile not found") || 
+                errorMsgStr.toLowerCase().includes("pending") || 
+                errorMsgStr.toLowerCase().includes("rejected");
+
+            const toastOptions = isAccountStatusError ? {
+                onClose: () => {
+                    setEmail("");
+                    setPassword("");
+                }
+            } : {};
+
             if (error.originalMessage === 'Your application was rejected.') {
                 const reasonText = error.reason ? `"${error.reason}"` : "Please contact support for more information.";
-                toast.error(`Your application was rejected.\n\nReason:\n${reasonText}`);
+                toast.error(`Your application was rejected.\n\nReason:\n${reasonText}`, toastOptions);
             } else {
-                toast.error(error.message || "Invalid email or password. Please try again.");
+                toast.error(error.message || "Invalid email or password. Please try again.", toastOptions);
             }
             setIsSubmitting(false);
         }
