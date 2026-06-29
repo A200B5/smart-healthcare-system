@@ -9,6 +9,7 @@ import {
     checkReviewStatus,
     submitReview,
 } from "../../services/patientService.js";
+import "./patient.css";
 import ConfirmationModal from "../../components/ConfirmationModal.jsx";
 
 function PatientAppointments() {
@@ -173,14 +174,8 @@ function PatientAppointments() {
                 key={i}
                 type="button"
                 onClick={() => setReviewForm((prev) => ({ ...prev, rating: i }))}
-                style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "24px",
-                    color: i <= rating ? "#f59e0b" : "#d1d5db",
-                    padding: "2px",
-                }}
+                className="patient-review-star-btn"
+                style={{ color: i <= rating ? "#f59e0b" : "#d1d5db" }}
             >
                 ★
             </button>
@@ -220,33 +215,24 @@ function PatientAppointments() {
 
                     {/* Error */}
                     {error && (
-                        <div style={{
-                            padding: "12px 16px",
-                            marginBottom: "16px",
-                            background: "rgba(239, 68, 68, 0.1)",
-                            border: "1px solid rgba(239, 68, 68, 0.3)",
-                            borderRadius: "8px",
-                            color: "var(--rejected, #ef4444)",
-                            fontSize: "14px"
-                        }}>
+                        <div className="patient-home-error">
                             ⚠️ {error}
                         </div>
                     )}
 
                     {/* Loading */}
                     {loading ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div className="patient-appt-list">
                             <CardSkeleton />
                             <CardSkeleton />
                             <CardSkeleton />
                         </div>
                     ) : filteredAppointments.length === 0 ? (
-                        <div style={{ textAlign: "center", padding: "60px 0", color: "var(--text-secondary)" }}>
+                        <div className="original-empty-state">
 
                             <p>No {filter === "all" ? "" : filter} appointments found</p>
                             <button
-                                className="btn btn-primary"
-                                style={{ marginTop: "16px" }}
+                                className="btn btn-primary patient-appt-mt"
                                 onClick={() => navigate("/patient/finddoctor")}
                             >
                                 Book Your First Appointment
@@ -275,17 +261,13 @@ function PatientAppointments() {
                                 </div>
 
                                 {/* Actions */}
-                                <div style={{ display: "flex", gap: "8px", marginTop: "12px", flexWrap: "wrap" }}>
+                                <div className="patient-appt-actions">
                                     {/* Cancel for pending/confirmed */}
                                     {(appt.status === "pending" || appt.status === "confirmed") && (
                                         <button
-                                            className="btn-sm btn-sm-outline"
+                                            className="btn-sm btn-sm-outline patient-btn-cancel-outline"
                                             onClick={() => handleCancelClick(appt.id)}
                                             disabled={cancellingId === appt.id}
-                                            style={{
-                                                color: "var(--rejected, #ef4444)",
-                                                borderColor: "var(--rejected, #ef4444)",
-                                            }}
                                         >
                                             {cancellingId === appt.id ? "Cancelling..." : "✕ Cancel"}
                                         </button>
@@ -310,77 +292,46 @@ function PatientAppointments() {
             {/* ── Review Modal ─────────────────────────────── */}
             {reviewDoctor && (
                 <div
-                    className="modal-overlay"
+                    className="modal-overlay patient-modal-overlay"
                     onClick={() => setReviewDoctor(null)}
-                    style={{
-                        position: "fixed",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        background: "rgba(0, 0, 0, 0.5)",
-                        backdropFilter: "blur(4px)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        zIndex: 1000,
-                        padding: "20px",
-                    }}
                 >
                     <div
-                        className="modal-content"
+                        className="modal-content patient-modal-content"
                         onClick={(e) => e.stopPropagation()}
-                        style={{
-                            background: "var(--bg-primary, #ffffff)",
-                            borderRadius: "16px",
-                            padding: "24px",
-                            maxWidth: "480px",
-                            width: "100%",
-                            maxHeight: "85vh",
-                            overflowY: "auto",
-                            boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
-                        }}
                     >
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-                            <h2 style={{ margin: 0, fontSize: "22px", color: "var(--text-primary)" }}>
+                        <div className="patient-modal-header">
+                            <h2 className="patient-modal-title">
                                 Review Dr. {reviewDoctor.doctorName}
                             </h2>
                             <button
                                 onClick={() => setReviewDoctor(null)}
-                                style={{
-                                    background: "none",
-                                    border: "none",
-                                    fontSize: "20px",
-                                    cursor: "pointer",
-                                    color: "var(--text-secondary)",
-                                    padding: "4px 8px",
-                                }}
+                                className="patient-modal-close-btn"
                             >
                                 ✕
                             </button>
                         </div>
 
                         {reviewCheckLoading ? (
-                            <p style={{ color: "var(--text-secondary)", textAlign: "center" }}>Checking review status...</p>
+                            <p className="patient-review-status-text">Checking review status...</p>
                         ) : hasReviewed ? (
-                            <div style={{ textAlign: "center", padding: "20px 0" }}>
-                                <div style={{ fontSize: "48px", marginBottom: "12px" }}>✅</div>
-                                <p style={{ color: "var(--confirmed, #22c55e)", fontWeight: 600, fontSize: "16px" }}>
+                            <div className="patient-review-success-container">
+                                <div className="patient-review-success-icon">✅</div>
+                                <p className="patient-review-success-title">
                                     {reviewSuccess || "You have already reviewed this doctor."}
                                 </p>
                             </div>
                         ) : (
                             <form onSubmit={handleSubmitReview}>
-                                <div style={{ marginBottom: "16px" }}>
-                                    <label style={{ display: "block", marginBottom: "8px", fontSize: "14px", fontWeight: 500, color: "var(--text-secondary)" }}>
+                                <div className="patient-form-group">
+                                    <label className="patient-modal-label">
                                         Rating
                                     </label>
-                                    <div style={{ display: "flex", gap: "4px" }}>
+                                    <div className="patient-review-stars-container">
                                         {renderStars(reviewForm.rating)}
                                     </div>
                                 </div>
-                                <div style={{ marginBottom: "16px" }}>
-                                    <label style={{ display: "block", marginBottom: "8px", fontSize: "14px", fontWeight: 500, color: "var(--text-secondary)" }}>
+                                <div className="patient-form-group">
+                                    <label className="patient-modal-label">
                                         Comment
                                     </label>
                                     <textarea
@@ -388,35 +339,23 @@ function PatientAppointments() {
                                         onChange={(e) => setReviewForm((prev) => ({ ...prev, comment: e.target.value }))}
                                         placeholder="Share your experience with this doctor..."
                                         rows={4}
-                                        style={{
-                                            width: "100%",
-                                            padding: "10px 12px",
-                                            border: "1px solid var(--border-color, #e2e8f0)",
-                                            borderRadius: "8px",
-                                            fontSize: "14px",
-                                            background: "var(--bg-secondary, #f8fafc)",
-                                            color: "var(--text-primary)",
-                                            resize: "vertical",
-                                            fontFamily: "inherit",
-                                            boxSizing: "border-box",
-                                        }}
+                                        className="patient-modal-textarea"
                                     />
                                 </div>
                                 {reviewError && (
-                                    <p style={{ color: "var(--rejected, #ef4444)", fontSize: "13px", margin: "0 0 12px 0" }}>
+                                    <p className="patient-error-text">
                                         ⚠️ {reviewError}
                                     </p>
                                 )}
                                 {reviewSuccess && (
-                                    <p style={{ color: "var(--confirmed, #22c55e)", fontSize: "13px", margin: "0 0 12px 0" }}>
+                                    <p className="patient-success-text">
                                         ✅ {reviewSuccess}
                                     </p>
                                 )}
                                 <button
                                     type="submit"
-                                    className="btn btn-primary"
+                                    className="btn btn-primary patient-btn-full"
                                     disabled={reviewSubmitting}
-                                    style={{ width: "100%" }}
                                 >
                                     {reviewSubmitting ? "Submitting..." : "Submit Review"}
                                 </button>

@@ -1,0 +1,11 @@
+/* ============================================
+   SIGNUP PAGES CSS
+   ============================================ */
+
+.signup-role-badge-container {
+    text-align: center;
+}
+
+.signup-msg-visible {
+    display: block;
+}

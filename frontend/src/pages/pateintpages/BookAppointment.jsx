@@ -6,6 +6,7 @@ import PatientNavbar from "../../components/PatientNavbar.jsx";
 import { getDoctorById } from "../../services/doctorService.js";
 import { bookAppointment } from "../../services/appointmentService.js";
 import { getAvailableSlots } from "../../services/patientService.js";
+import "./patient.css";
 
 function BookAppointment() {
     const { doctorId } = useParams();
@@ -220,7 +221,7 @@ function BookAppointment() {
                     {/* Content */}
                     <div className="not-found-content">
                         <div className="nf-icon-wrapper">
-                            <span style={{fontSize: "60px"}} >🩺</span>
+                            <span className="patient-nf-icon" >🩺</span>
                         </div>
 
                         <h1 className="nf-error-code">
@@ -402,7 +403,7 @@ function BookAppointment() {
                                 )}
 
                                 {formData.date && !slotsLoading && availableSlots.length === 0 && (
-                                    <p className="booking-muted-text" style={{ color: "var(--rejected, #ef4444)" }}>
+                                    <p className="booking-muted-text patient-booking-error">
                                         No available slots for this date.
                                     </p>
                                 )}

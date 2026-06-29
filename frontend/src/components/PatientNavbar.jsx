@@ -1,6 +1,7 @@
 import { useTheme } from "../context/ThemeContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
+import "./components.css";
 
 function PatientNavbar() {
     const { theme, toggleTheme } = useTheme();
@@ -26,16 +27,15 @@ function PatientNavbar() {
     return (
         <>
             <nav className="navbar" id="navbar-patient">
-                <div className="navbar-logo" onClick={() => navigate("/patient/home")} style={{ cursor: "pointer" }}>
+                <div className="navbar-logo nav-item-pointer" onClick={() => navigate("/patient/home")}>
                     <span>🏥</span> MediCare Pro
                 </div>
                 <ul className="navbar-links">
                     {navItems.map((item) => (
                         <li key={item.path}>
                             <a
-                                className={location.pathname === item.path ? "active" : ""}
+                                className={`nav-item-pointer ${location.pathname === item.path ? "active" : ""}`}
                                 onClick={() => navigate(item.path)}
-                                style={{ cursor: "pointer" }}
                             >
                                 {item.label}
                             </a>

@@ -233,21 +233,13 @@ function PatientFindDoctor() {
                     </div>
 
                     {error && (
-                        <div style={{
-                            padding: "12px 16px",
-                            marginBottom: "16px",
-                            background: "rgba(239, 68, 68, 0.1)",
-                            border: "1px solid rgba(239, 68, 68, 0.3)",
-                            borderRadius: "8px",
-                            color: "var(--rejected, #ef4444)",
-                            fontSize: "14px"
-                        }}>
+                        <div className="patient-home-error">
                             ⚠️ {error}
                         </div>
                     )}
 
                     {loading ? (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+                        <div className="doctors-grid">
                             <CardSkeleton />
                             <CardSkeleton />
                             <CardSkeleton />
@@ -259,8 +251,8 @@ function PatientFindDoctor() {
                             </p>
 
                             {filteredDoctors.length === 0 && !error ? (
-                                <div style={{ textAlign: "center", padding: "60px 0", color: "var(--text-secondary)" }}>
-                                    <div style={{ fontSize: "48px", marginBottom: "16px" }}>🔍</div>
+                                <div className="original-empty-state">
+                                    <div className="patient-empty-icon">🔍</div>
                                     <p>No doctors found matching your criteria</p>
                                 </div>
                             ) : (
@@ -325,48 +317,47 @@ function PatientFindDoctor() {
             {selectedDoctor && (
                 <div className="modal-overlay" onClick={() => setSelectedDoctor(null)} style={modalOverlayStyle}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()} style={modalContentStyle}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-                            <h2 style={{ margin: 0, fontSize: "22px", color: "var(--text-primary)" }}>Doctor Profile</h2>
-                            <button onClick={() => setSelectedDoctor(null)} style={closeButtonStyle}>✕</button>
+                        <div className="patient-modal-header">
+                            <h2 className="patient-modal-title">Doctor Profile</h2>
+                            <button onClick={() => setSelectedDoctor(null)} className="patient-modal-close-btn">✕</button>
                         </div>
 
                         {/* Doctor Info */}
-                        <div style={{ display: "flex", gap: "16px", marginBottom: "20px", alignItems: "center" }}>
-                            <div style={{ fontSize: "48px" }}>{selectedDoctor.avatar || "👨‍⚕️"}</div>
+                        <div className="patient-modal-doc-info">
+                            <div className="patient-modal-avatar">{selectedDoctor.avatar || "👨‍⚕️"}</div>
                             <div>
-                                <h3 style={{ margin: "0 0 4px 0", fontSize: "20px", color: "var(--text-primary)" }}>{selectedDoctor.name}</h3>
-                                <p style={{ margin: "0 0 4px 0", color: "var(--accent)", fontWeight: 500 }}>{selectedDoctor.specialty}</p>
-                                <p style={{ margin: 0, color: "var(--text-secondary)", fontSize: "14px" }}>📍 {selectedDoctor.location || "N/A"}</p>
+                                <h3 className="patient-modal-doc-name">{selectedDoctor.name}</h3>
+                                <p className="patient-modal-doc-specialty">{selectedDoctor.specialty}</p>
+                                <p className="patient-modal-doc-location">📍 {selectedDoctor.location || "N/A"}</p>
                             </div>
                         </div>
 
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px", marginBottom: "20px" }}>
-                            <div style={statBoxStyle}>
-                                <div style={{ fontWeight: 700, color: "var(--text-primary)" }}>⭐ {Number(selectedDoctor.rating || 0).toFixed(1)}</div>
-                                <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>{selectedDoctor.reviews || 0} reviews</div>
+                        <div className="patient-stats-grid">
+                            <div className="patient-stat-box">
+                                <div className="patient-stat-value">⭐ {Number(selectedDoctor.rating || 0).toFixed(1)}</div>
+                                <div className="patient-stat-label">{selectedDoctor.reviews || 0} reviews</div>
                             </div>
-                            <div style={statBoxStyle}>
-                                <div style={{ fontWeight: 700, color: "var(--text-primary)" }}>{selectedDoctor.experience || 0} years</div>
-                                <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>Experience</div>
+                            <div className="patient-stat-box">
+                                <div className="patient-stat-value">{selectedDoctor.experience || 0} years</div>
+                                <div className="patient-stat-label">Experience</div>
                             </div>
-                            <div style={statBoxStyle}>
-                                <div style={{ fontWeight: 700, color: "var(--accent)" }}>${Number(selectedDoctor.price || 0).toFixed(0)}</div>
-                                <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>per visit</div>
+                            <div className="patient-stat-box">
+                                <div className="patient-stat-value-accent">${Number(selectedDoctor.price || 0).toFixed(0)}</div>
+                                <div className="patient-stat-label">per visit</div>
                             </div>
                         </div>
 
                         {selectedDoctor.bio && (
-                            <div style={{ marginBottom: "20px" }}>
-                                <h4 style={{ margin: "0 0 8px 0", color: "var(--text-primary)" }}>About</h4>
-                                <p style={{ margin: 0, color: "var(--text-secondary)", fontSize: "14px", lineHeight: "1.6" }}>{selectedDoctor.bio}</p>
+                            <div className="patient-modal-section">
+                                <h4 className="patient-modal-section-title">About</h4>
+                                <p className="patient-modal-about-text">{selectedDoctor.bio}</p>
                             </div>
                         )}
 
                         {/* Book button */}
                         {selectedDoctor.available && (
                             <button
-                                className="btn btn-primary"
-                                style={{ width: "100%", marginBottom: "20px" }}
+                                className="btn btn-primary patient-modal-book-btn"
                                 onClick={() => {
                                     setSelectedDoctor(null);
                                     handleBookNow(selectedDoctor);
@@ -377,34 +368,28 @@ function PatientFindDoctor() {
                         )}
 
                         {/* Reviews Section */}
-                        <div style={{ borderTop: "1px solid var(--border-color, #e2e8f0)", paddingTop: "16px" }}>
-                            <h4 style={{ margin: "0 0 12px 0", color: "var(--text-primary)" }}>
+                        <div className="patient-reviews-section">
+                            <h4 className="patient-reviews-title">
                                 Patient Reviews ({doctorReviews.length})
                             </h4>
 
                             {reviewsLoading ? (
-                                <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>Loading reviews...</p>
+                                <p className="patient-reviews-msg">Loading reviews...</p>
                             ) : doctorReviews.length === 0 ? (
-                                <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>No reviews yet.</p>
+                                <p className="patient-reviews-msg">No reviews yet.</p>
                             ) : (
-                                <div style={{ maxHeight: "200px", overflowY: "auto", marginBottom: "16px" }}>
+                                <div className="patient-reviews-list">
                                     {doctorReviews.map((review) => (
-                                        <div key={review.id} style={{
-                                            padding: "12px",
-                                            marginBottom: "8px",
-                                            background: "var(--bg-secondary, #f8fafc)",
-                                            borderRadius: "8px",
-                                            fontSize: "14px"
-                                        }}>
-                                            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-                                                <strong style={{ color: "var(--text-primary)" }}>{review.patientName || "Anonymous"}</strong>
-                                                <span style={{ color: "var(--text-secondary)", fontSize: "12px" }}>
+                                        <div key={review.id} className="patient-review-card">
+                                            <div className="patient-review-header">
+                                                <strong className="patient-review-author">{review.patientName || "Anonymous"}</strong>
+                                                <span className="patient-review-date">
                                                     {review.daysAgo != null ? (review.daysAgo === 0 ? "Today" : `${review.daysAgo}d ago`) : ""}
                                                 </span>
                                             </div>
-                                            <div style={{ marginBottom: "6px" }}>{renderStars(review.rating)}</div>
+                                            <div className="patient-review-stars-wrap">{renderStars(review.rating)}</div>
                                             {review.comment && (
-                                                <p style={{ margin: 0, color: "var(--text-secondary)" }}>{review.comment}</p>
+                                                <p className="patient-review-text">{review.comment}</p>
                                             )}
                                         </div>
                                     ))}
@@ -419,54 +404,54 @@ function PatientFindDoctor() {
             {bookingDoctor && (
                 <div className="modal-overlay" onClick={() => setBookingDoctor(null)} style={modalOverlayStyle}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ ...modalContentStyle, maxWidth: "500px" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-                            <h2 style={{ margin: 0, fontSize: "22px", color: "var(--text-primary)" }}>Book Appointment</h2>
-                            <button onClick={() => setBookingDoctor(null)} style={closeButtonStyle}>✕</button>
+                        <div className="patient-modal-header">
+                            <h2 className="patient-modal-title">Book Appointment</h2>
+                            <button onClick={() => setBookingDoctor(null)} className="patient-modal-close-btn">✕</button>
                         </div>
 
                         {/* Doctor summary */}
-                        <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "20px", padding: "12px", background: "var(--bg-secondary, #f8fafc)", borderRadius: "8px" }}>
-                            <div style={{ fontSize: "36px" }}>{bookingDoctor.avatar || "👨‍⚕️"}</div>
+                        <div className="patient-booking-doc-summary">
+                            <div className="patient-booking-avatar">{bookingDoctor.avatar || "👨‍⚕️"}</div>
                             <div>
-                                <div style={{ fontWeight: 600, color: "var(--text-primary)" }}>{bookingDoctor.name}</div>
-                                <div style={{ color: "var(--accent)", fontSize: "14px" }}>{bookingDoctor.specialty}</div>
-                                <div style={{ color: "var(--text-secondary)", fontSize: "13px" }}>${Number(bookingDoctor.price || 0).toFixed(0)} per visit</div>
+                                <div className="patient-booking-doc-name">{bookingDoctor.name}</div>
+                                <div className="patient-booking-doc-specialty">{bookingDoctor.specialty}</div>
+                                <div className="patient-booking-doc-price">${Number(bookingDoctor.price || 0).toFixed(0)} per visit</div>
                             </div>
                         </div>
 
                         {bookingSuccess ? (
-                            <div style={{ textAlign: "center", padding: "40px 0" }}>
-                                <div style={{ fontSize: "48px", marginBottom: "12px" }}>✅</div>
-                                <p style={{ color: "var(--confirmed, #22c55e)", fontWeight: 600, fontSize: "18px" }}>{bookingSuccess}</p>
-                                <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>You will be redirected shortly...</p>
+                            <div className="patient-booking-success-wrap">
+                                <div className="patient-booking-success-icon">✅</div>
+                                <p className="patient-booking-success-title">{bookingSuccess}</p>
+                                <p className="patient-booking-success-desc">You will be redirected shortly...</p>
                             </div>
                         ) : (
                             <form onSubmit={handleSubmitBooking}>
                                 {/* Date */}
-                                <div style={{ marginBottom: "16px" }}>
-                                    <label style={labelStyle}>Select Date</label>
+                                <div className="patient-form-group">
+                                    <label className="patient-modal-label">Select Date</label>
                                     <input
                                         type="date"
                                         value={bookingDate}
                                         min={today}
                                         onChange={(e) => handleDateChange(e.target.value)}
                                         required
-                                        style={inputStyle}
+                                        className="patient-modal-input"
                                     />
                                 </div>
 
                                 {/* Time Slots */}
                                 {bookingDate && (
-                                    <div style={{ marginBottom: "16px" }}>
-                                        <label style={labelStyle}>Available Time Slots</label>
+                                    <div className="patient-form-group">
+                                        <label className="patient-modal-label">Available Time Slots</label>
                                         {bookingSlotsLoading ? (
-                                            <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>Loading slots...</p>
+                                            <p className="patient-slots-status-msg">Loading slots...</p>
                                         ) : bookingSlots.length === 0 ? (
-                                            <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
+                                            <p className="patient-slots-status-msg">
                                                 No available slots for this date.
                                             </p>
                                         ) : (
-                                            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
+                                            <div className="patient-slots-grid">
                                                 {bookingSlots.map((slot) => (
                                                     <button
                                                         key={slot.time}
@@ -493,24 +478,23 @@ function PatientFindDoctor() {
                                 )}
 
                                 {/* Notes */}
-                                <div style={{ marginBottom: "16px" }}>
-                                    <label style={labelStyle}>Notes (optional)</label>
+                                <div className="patient-form-group">
+                                    <label className="patient-modal-label">Notes (optional)</label>
                                     <textarea
                                         value={bookingNotes}
                                         onChange={(e) => setBookingNotes(e.target.value)}
                                         placeholder="Describe your symptoms or reason for visit..."
                                         rows={3}
-                                        style={textareaStyle}
+                                        className="patient-modal-textarea"
                                     />
                                 </div>
 
-                                {bookingError && <p style={{ color: "var(--rejected, #ef4444)", fontSize: "13px", margin: "0 0 12px 0" }}>⚠️ {bookingError}</p>}
+                                {bookingError && <p className="patient-booking-error-msg">⚠️ {bookingError}</p>}
 
                                 <button
                                     type="submit"
-                                    className="btn btn-primary"
+                                    className="btn btn-primary patient-booking-submit-btn"
                                     disabled={bookingSubmitting || !bookingDate || !selectedSlot}
-                                    style={{ width: "100%" }}
                                 >
                                     {bookingSubmitting ? "Booking..." : "Confirm Booking"}
                                 </button>

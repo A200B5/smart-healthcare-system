@@ -1,12 +1,12 @@
-
 import TableSkeleton from "./TableSkeleton.jsx";
 import CardSkeleton from "./CardSkeleton.jsx";
+import "./loaders.css";
 
 const DashboardSkeleton = () => {
     return (
         <div className="page">
             <div className="page-content">
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px', marginBottom: '32px' }}>
+                <div className="skeleton-dashboard-grid">
                     <CardSkeleton />
                     <CardSkeleton />
                     <CardSkeleton />

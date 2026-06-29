@@ -1,6 +1,7 @@
 import Navigation from "../../components/Navigation.jsx";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import "./signup.css";
 
 function SignupRole() {
     const [selectedRole, setSelectedRole] = useState("");

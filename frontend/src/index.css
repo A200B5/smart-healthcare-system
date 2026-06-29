@@ -862,6 +862,14 @@ ul {
   display: flex;
 }
 
+.auth-msg-visible {
+  display: block;
+}
+
+.auth-msg-pre-line {
+  white-space: pre-line;
+}
+
 @keyframes shake {
 
   0%,

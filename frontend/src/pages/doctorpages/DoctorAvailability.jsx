@@ -5,6 +5,7 @@ import { getMySchedule, updateSchedule } from "../../services/doctorService.js";
 import { toast } from "react-toastify";
 import SaveButton from "../../components/SaveButton.jsx";
 import { hasDataChanged } from "../../services/formUtils.js";
+import "./doctor.css";
 
 const DAYS_OF_WEEK = [
   { id: 1, name: "Monday" },
@@ -190,66 +191,50 @@ function DoctorAvailability() {
             </div>
           </div>
 
-          <div className="auth-card" style={{ maxWidth: "800px", margin: "0 auto" }}>
+          <div className="auth-card doctor-availability-card">
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "24px", alignItems: "center" }}>
+            <div className="doctor-availability-grid">
               {schedule.map((day) => (
-                <div key={day.id} style={{ 
-                  display: "flex", 
-                  alignItems: "center", 
-                  justifyContent: "space-between",
-                  flexWrap: "wrap",
-                  gap: "24px",
-                  padding: "16px 24px",
-                  background: "var(--bg-secondary, #f8fafc)",
-                  border: "1px solid var(--border-color, #e2e8f0)",
-                  borderRadius: "8px",
-                  opacity: day.isAvailable ? 1 : 0.7,
-                  width: "100%",
-                  maxWidth: "750px"
-                }}>
-                  <div style={{ width: "140px", display: "flex", alignItems: "center", gap: "12px", flexShrink: 0 }}>
+                <div key={day.id} className="doctor-availability-day" style={{ opacity: day.isAvailable ? 1 : 0.7 }}>
+                  <div className="doctor-availability-checkbox-wrap">
                     <input 
                       type="checkbox"
                       checked={day.isAvailable}
                       onChange={(e) => handleChange(day.id, "isAvailable", e.target.checked)}
-                      style={{ width: "18px", height: "18px", cursor: "pointer" }}
+                      className="doctor-availability-checkbox"
                       id={`day-${day.id}`}
                     />
-                    <label htmlFor={`day-${day.id}`} style={{ fontWeight: 600, fontSize: "16px", cursor: "pointer", color: day.isAvailable ? "var(--text-primary)" : "var(--text-secondary)" }}>
+                    <label htmlFor={`day-${day.id}`} className="doctor-availability-label" style={{ color: day.isAvailable ? "var(--text-primary)" : "var(--text-secondary)" }}>
                       {day.name}
                     </label>
                   </div>
                   
-                  <div style={{ display: "flex", alignItems: "center", gap: "24px", flex: 1, flexWrap: "wrap", justifyContent: "flex-end" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <div className="doctor-availability-controls">
+                    <div className="doctor-availability-time-wrap">
                       <input 
                         type="time" 
-                        className="form-input" 
+                        className="form-input doctor-availability-time-input" 
                         value={day.startTime}
                         onChange={(e) => handleChange(day.id, "startTime", e.target.value)}
                         disabled={!day.isAvailable}
-                        style={{ padding: "8px 12px", width: "150px" }}
                       />
-                      <span style={{ color: "var(--text-secondary)", fontWeight: 500, minWidth: "16px", textAlign: "center" }}>to</span>
+                      <span className="doctor-availability-time-separator">to</span>
                       <input 
                         type="time" 
-                        className="form-input" 
+                        className="form-input doctor-availability-time-input" 
                         value={day.endTime}
                         onChange={(e) => handleChange(day.id, "endTime", e.target.value)}
                         disabled={!day.isAvailable}
-                        style={{ padding: "8px 12px", width: "150px" }}
                       />
                     </div>
                     
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px", width: "130px" }}>
-                      <span style={{ fontSize: "14px", color: "var(--text-secondary)", fontWeight: 500 }}>Slot:</span>
+                    <div className="doctor-availability-slot-wrap">
+                      <span className="doctor-availability-slot-label">Slot:</span>
                       <select 
-                        className="form-input" 
+                        className="form-input doctor-availability-slot-input" 
                         value={day.slotDuration}
                         onChange={(e) => handleChange(day.id, "slotDuration", Number(e.target.value))}
                         disabled={!day.isAvailable}
-                        style={{ padding: "8px", flex: 1 }}
                       >
                         <option value={15}>15 min</option>
                         <option value={30}>30 min</option>
@@ -262,16 +247,16 @@ function DoctorAvailability() {
               ))}
             </div>
 
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: "24px" }}>
+            <div className="doctor-availability-save-wrap">
                 <SaveButton
                     onClick={() => handleSaveChanges(null)}
                     isDirty={isDirty}
                     isSaving={savingAll}
-                    style={{ padding: "12px 32px", fontSize: "16px" }}
+                    className="btn btn-primary doctor-availability-save-btn"
                 />
             </div>
 
-            <div style={{ padding: "16px", background: "rgba(59, 130, 246, 0.1)", borderRadius: "8px", color: "#1e3a8a", fontSize: "14px" }}>
+            <div className="doctor-availability-note">
               <strong>ℹ️ Note:</strong> Changes are not saved automatically. Click <strong>Save Changes</strong> after editing your weekly schedule. Unchecking a day means you will not accept any appointments for that day.
             </div>
             
@@ -281,59 +266,31 @@ function DoctorAvailability() {
 
       {showUnsavedModal && (
         <div
-            className="modal-overlay"
-            style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: "rgba(0, 0, 0, 0.5)",
-                backdropFilter: "blur(4px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 1000,
-                padding: "20px",
-            }}
+            className="modal-overlay doctor-availability-modal-overlay"
         >
             <div
-                className="modal-content"
-                style={{
-                    background: "var(--bg-primary, #ffffff)",
-                    borderRadius: "16px",
-                    padding: "24px",
-                    maxWidth: "600px",
-                    width: "100%",
-                    boxShadow: "var(--shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.3))",
-                }}
+                className="modal-content doctor-availability-modal-content"
             >
-                <div style={{ marginBottom: "16px" }}>
-                    <h2 style={{ margin: 0, fontSize: "20px", color: "var(--text-primary)" }}>
+                <div className="doctor-availability-modal-header">
+                    <h2 className="doctor-availability-modal-title">
                         Unsaved Changes
                     </h2>
                 </div>
-                <div style={{ marginBottom: "32px", color: "var(--text-secondary)", fontSize: "15px", lineHeight: "1.5" }}>
+                <div className="doctor-availability-modal-body">
                     You have unsaved changes to your weekly schedule. Would you like to save them before leaving?
                 </div>
-                <div className="modal-actions" style={{ marginBottom: 0 }}>
+                <div className="modal-actions doctor-availability-modal-actions">
                     <button 
-                        className="btn btn-outline" 
+                        className="btn btn-outline doctor-availability-btn-cancel" 
                         onClick={() => setShowUnsavedModal(false)}
                         disabled={savingAll}
-                        style={{ minWidth: "100px" }}
                     >
                         Cancel
                     </button>
                     <button
-                        className="btn"
+                        className="btn doctor-availability-btn-leave"
                         onClick={handleLeaveWithoutSaving}
                         disabled={savingAll}
-                        style={{
-                            background: "transparent",
-                            color: "var(--rejected, #ef4444)",
-                            border: "1px solid var(--rejected, #ef4444)"
-                        }}
                     >
                         Leave Without Saving
                     </button>

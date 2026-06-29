@@ -6,6 +6,7 @@ import { useAuth } from "../../context/AuthContext.jsx";
 import { toast } from "react-toastify";
 import SaveButton from "../../components/SaveButton.jsx";
 import { useFormState } from "../../services/formUtils.js";
+import "./patient.css";
 
 function PatientProfile() {
     const { login } = useAuth(); // If we need to update user context
@@ -100,9 +101,9 @@ function PatientProfile() {
                         </div>
                     </div>
 
-                    <div className="auth-card" style={{ maxWidth: "600px", margin: "0 auto", padding: "32px", background: "var(--bg-secondary, #f8fafc)", borderRadius: "16px" }}>
+                    <div className="auth-card patient-profile-card">
                         <form onSubmit={handleSubmit}>
-                            <div className="form-group" style={{ marginBottom: "16px" }}>
+                            <div className="form-group patient-form-group">
                                 <label className="form-label">Full Name</label>
                                 <input
                                     type="text"
@@ -114,20 +115,19 @@ function PatientProfile() {
                                 />
                             </div>
 
-                            <div className="form-group" style={{ marginBottom: "16px" }}>
+                            <div className="form-group patient-form-group">
                                 <label className="form-label">Email Address</label>
                                 <input
                                     type="email"
                                     name="email"
-                                    className="form-input"
+                                    className="form-input patient-input-disabled"
                                     value={formData.email}
                                     disabled
-                                    style={{ background: "#e2e8f0", cursor: "not-allowed" }}
                                 />
-                                <small style={{ color: "var(--text-secondary)" }}>Email cannot be changed.</small>
+                                <small className="patient-form-hint">Email cannot be changed.</small>
                             </div>
 
-                            <div className="form-group" style={{ marginBottom: "16px" }}>
+                            <div className="form-group patient-form-group">
                                 <label className="form-label">Phone Number</label>
                                 <input
                                     type="tel"
@@ -139,7 +139,7 @@ function PatientProfile() {
                                 />
                             </div>
 
-                            <div className="form-group" style={{ marginBottom: "16px" }}>
+                            <div className="form-group patient-form-group">
                                 <label className="form-label">Gender</label>
                                 <select
                                     name="gender"
@@ -154,7 +154,7 @@ function PatientProfile() {
                                 </select>
                             </div>
 
-                            <div className="form-group" style={{ marginBottom: "24px" }}>
+                            <div className="form-group patient-form-group-lg">
                                 <label className="form-label">Date of Birth</label>
                                 <input
                                     type="date"
@@ -166,8 +166,7 @@ function PatientProfile() {
                             </div>
 
                             <SaveButton
-                                className="btn btn-primary"
-                                style={{ width: "100%" }}
+                                className="btn btn-primary patient-btn-full"
                                 isDirty={isDirty}
                                 isSaving={saving}
                                 text="Save Profile"

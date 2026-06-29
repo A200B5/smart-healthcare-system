@@ -1,0 +1,93 @@
+/* --- PatientHome.jsx --- */  
+.patient-home-error { padding: 12px 16px; margin-bottom: 16px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; color: var(--rejected, #ef4444); font-size: 14px; }  
+.patient-home-section-title { font-size: 24px; font-weight: 700; color: var(--text-primary); }  
+.patient-action-card { cursor: pointer; text-align: center; padding: 40px; }  
+.patient-action-icon { font-size: 60px; margin-bottom: 16px; }  
+.patient-action-title { font-size: 20px; margin-bottom: 8px; }  
+.patient-action-desc { color: var(--text-secondary); font-size: 14px; } 
+  
+/* --- PatientProfile.jsx --- */  
+.patient-profile-card { max-width: 600px; margin: 0 auto; padding: 32px; background: var(--bg-secondary, #f8fafc); border-radius: 16px; }  
+.patient-form-group { margin-bottom: 16px; }  
+.patient-input-disabled { background: #e2e8f0; cursor: not-allowed; }  
+.patient-form-hint { color: var(--text-secondary); }  
+.patient-form-group-lg { margin-bottom: 24px; }  
+.patient-btn-full { width: 100%; } 
+  
+/* --- PatientAppointments.jsx --- */  
+.patient-review-star-btn { background: none; border: none; cursor: pointer; font-size: 24px; padding: 2px; }  
+.patient-appt-list { display: flex; flex-direction: column; gap: 16px; }  
+.original-empty-state { text-align: center; padding: 60px 0; color: var(--text-secondary); }  
+.patient-appt-mt { margin-top: 16px; }  
+.patient-appt-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }  
+.patient-btn-cancel-outline { color: var(--rejected, #ef4444); border-color: var(--rejected, #ef4444); }  
+.patient-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }  
+.patient-modal-content { background: var(--bg-primary, #ffffff); border-radius: 16px; padding: 24px; max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); }  
+.patient-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }  
+.patient-modal-title { margin: 0; font-size: 22px; color: var(--text-primary); }  
+.patient-modal-close-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-secondary); padding: 4px 8px; }  
+.patient-review-status-text { color: var(--text-secondary); text-align: center; }  
+.patient-review-success-container { text-align: center; padding: 20px 0; }  
+.patient-review-success-icon { font-size: 48px; margin-bottom: 12px; }  
+.patient-review-success-title { color: var(--confirmed, #22c55e); font-weight: 600; font-size: 16px; }  
+.patient-modal-label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); }  
+.patient-review-stars-container { display: flex; gap: 4px; }  
+.patient-modal-textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color, #e2e8f0); border-radius: 8px; font-size: 14px; background: var(--bg-secondary, #f8fafc); color: var(--text-primary); resize: vertical; font-family: inherit; box-sizing: border-box; }  
+.patient-error-text { color: var(--rejected, #ef4444); font-size: 13px; margin: 0 0 12px 0; }  
+.patient-success-text { color: var(--confirmed, #22c55e); font-size: 13px; margin: 0 0 12px 0; } 
+  
+/* --- BookAppointment.jsx --- */  
+.patient-nf-icon { font-size: 60px; }  
+.patient-booking-error { color: var(--rejected, #ef4444); } 
+  
+/* --- PatientFindDoctor.jsx --- */  
+.patient-empty-icon { font-size: 48px; margin-bottom: 16px; } 
+  
+/* --- View Profile Modal Extractions --- */  
+.patient-modal-doc-info { display: flex; gap: 16px; margin-bottom: 20px; align-items: center; }  
+.patient-modal-avatar { font-size: 48px; }  
+.patient-modal-doc-name { margin: 0 0 4px 0; font-size: 20px; color: var(--text-primary); }  
+.patient-modal-doc-specialty { margin: 0 0 4px 0; color: var(--accent); font-weight: 500; }  
+.patient-modal-doc-location { margin: 0; color: var(--text-secondary); font-size: 14px; }  
+.patient-stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; } 
+.patient-stat-box { text-align: center; padding: 12px; background: var(--bg-secondary, #f8fafc); border-radius: 8px; }  
+.patient-stat-value { font-weight: 700; color: var(--text-primary); }  
+.patient-stat-value-accent { font-weight: 700; color: var(--accent); }  
+.patient-stat-label { font-size: 12px; color: var(--text-secondary); }  
+.patient-modal-section { margin-bottom: 20px; }  
+.patient-modal-section-title { margin: 0 0 8px 0; color: var(--text-primary); } 
+.patient-modal-about-text { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.6; }  
+.patient-reviews-section { border-top: 1px solid var(--border-color, #e2e8f0); padding-top: 16px; }  
+.patient-reviews-title { margin: 0 0 12px 0; color: var(--text-primary); }  
+.patient-reviews-msg { color: var(--text-secondary); font-size: 14px; }  
+.patient-reviews-list { max-height: 200px; overflow-y: auto; margin-bottom: 16px; } 
+.patient-review-card { padding: 12px; margin-bottom: 8px; background: var(--bg-secondary, #f8fafc); border-radius: 8px; font-size: 14px; }  
+.patient-review-header { display: flex; justify-content: space-between; margin-bottom: 6px; }  
+.patient-review-author { color: var(--text-primary); }  
+.patient-review-date { color: var(--text-secondary); font-size: 12px; }  
+.patient-review-stars-wrap { margin-bottom: 6px; }  
+.patient-review-text { margin: 0; color: var(--text-secondary); } 
+.patient-modal-book-btn { width: 100%; margin-bottom: 20px; } 
+.patient-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }  
+.patient-modal-title { margin: 0; font-size: 22px; color: var(--text-primary); }  
+.patient-modal-close-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-secondary); padding: 4px 8px; border-radius: 4px; } 
+  
+/* --- Book Appointment Modal Extractions --- */  
+.patient-booking-doc-summary { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; padding: 12px; background: var(--bg-secondary, #f8fafc); border-radius: 8px; }  
+.patient-booking-avatar { font-size: 36px; }  
+.patient-booking-doc-name { font-weight: 600; color: var(--text-primary); }  
+.patient-booking-doc-specialty { color: var(--accent); font-size: 14px; }  
+.patient-booking-doc-price { color: var(--text-secondary); font-size: 13px; } 
+.patient-booking-success-wrap { text-align: center; padding: 40px 0; }  
+.patient-booking-success-icon { font-size: 48px; margin-bottom: 12px; }  
+.patient-booking-success-title { color: var(--confirmed, #22c55e); font-weight: 600; font-size: 18px; margin: 0 0 16px 0; }  
+.patient-booking-success-desc { color: var(--text-secondary); font-size: 14px; } 
+.patient-booking-success-title { color: var(--confirmed, #22c55e); font-weight: 600; font-size: 18px; margin: initial; }  
+.patient-form-group { margin-bottom: 16px; }  
+.patient-slots-status-msg { color: var(--text-secondary); font-size: 14px; }  
+.patient-slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }  
+.patient-booking-error-msg { color: var(--rejected, #ef4444); font-size: 13px; margin: 0 0 12px 0; }  
+.patient-booking-submit-btn { width: 100%; } 
+.patient-modal-label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 500; color: var(--text-secondary); }  
+.patient-modal-input { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color, #e2e8f0); border-radius: 8px; font-size: 14px; background: var(--bg-secondary, #f8fafc); color: var(--text-primary); box-sizing: border-box; }  
+.patient-modal-textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color, #e2e8f0); border-radius: 8px; font-size: 14px; background: var(--bg-secondary, #f8fafc); color: var(--text-primary); resize: vertical; font-family: inherit; box-sizing: border-box; } 

@@ -6,6 +6,7 @@ import { getDoctorProfile, updateDoctor } from "../../services/doctorService";
 import { toast } from "react-toastify";
 import SaveButton from "../../components/SaveButton.jsx";
 import { useFormState } from "../../services/formUtils.js";
+import "./doctor.css";
 
 const splitName = (fullName) => {
   const parts = (fullName || "").trim().split(/\s+/).filter(Boolean);
@@ -153,69 +154,36 @@ function DoctorProfile() {
             Manage your professional information
           </p>
 
-          <div
-            className="auth-card"
-            style={{ maxWidth: "800px", margin: "0 auto" }}
-          >
+          <div className="auth-card doctor-profile-card">
             {/* Header */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "24px",
-                marginBottom: "32px",
-              }}
-            >
-              <div
-                style={{
-                  width: "100px",
-                  height: "100px",
-                  borderRadius: "50%",
-                  background: "var(--primary-teal)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "48px",
-                  color: "white",
-                }}
-              >
+            <div className="doctor-profile-header">
+              <div className="doctor-profile-avatar">
                 👨‍⚕️
               </div>
 
               <div>
-                <h2 style={{ fontSize: "24px", marginBottom: "4px" }}>
+                <h2 className="doctor-profile-name">
                   {doctor?.user?.name || "Doctor"}
                 </h2>
 
-                <p
-                  style={{
-                    color: "var(--primary-teal)",
-                    fontWeight: 600,
-                    marginBottom: "4px",
-                  }}
-                >
+                <p className="doctor-profile-specialty">
                   {doctor?.profile?.specialty || "Doctor"}
                 </p>
 
-                <p
-                  style={{
-                    color: "var(--text-secondary)",
-                    fontSize: "14px",
-                  }}
-                >
+                <p className="doctor-profile-location">
                   📍 {doctor?.profile?.location || "Not set"}
                 </p>
               </div>
             </div>
 
             {doctor?.profile?.verification_status === "pending" && (
-              <div style={{ background: "#FEF3C7", color: "#92400E", padding: "16px", borderRadius: "8px", marginBottom: "24px" }}>
+              <div className="doctor-dashboard-alert-pending">
                 <strong>⏳ Pending Approval:</strong> Your profile is currently under review by an administrator. Some features may be restricted until approved.
               </div>
             )}
 
             {doctor?.profile?.verification_status === "rejected" && (
-              <div style={{ background: "#FEE2E2", color: "#991B1B", padding: "16px", borderRadius: "8px", marginBottom: "24px" }}>
+              <div className="doctor-dashboard-alert-rejected">
                 <strong>❌ Application Rejected:</strong> {doctor?.profile?.rejection_reason || "Please update your profile information and contact support."}
               </div>
             )}
@@ -333,17 +301,17 @@ function DoctorProfile() {
                 />
               </div>
 
-              <div className="checkbox-wrapper" style={{ marginBottom: "12px", background: "var(--bg-secondary)", padding: "12px", borderRadius: "8px", border: "1px solid var(--border-color)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div className="checkbox-wrapper doctor-profile-checkbox-wrap">
+                <div className="doctor-profile-checkbox-inner">
                   <input
                     name="available"
                     id="profile-available"
                     type="checkbox"
                     checked={Boolean(form.available)}
                     onChange={handleChange}
-                    style={{ width: "18px", height: "18px" }}
+                    className="doctor-profile-checkbox-input"
                   />
-                  <label htmlFor="profile-available" style={{ fontWeight: 600 }}>Currently accepting appointments</label>
+                  <label htmlFor="profile-available" className="doctor-profile-checkbox-label">Currently accepting appointments</label>
                 </div>
               </div>
 

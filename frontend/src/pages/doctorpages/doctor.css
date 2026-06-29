@@ -1,0 +1,130 @@
+/* --- DoctorDashboard.jsx --- */
+.doctor-dashboard-alert-pending {
+    background: #FEF3C7;
+    color: #92400E;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+.doctor-dashboard-alert-rejected {
+    background: #FEE2E2;
+    color: #991B1B;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+.doctor-dashboard-stat-completed {
+    color: var(--completed);
+}
+.doctor-dashboard-filter-tabs {
+    margin: 0;
+}
+.doctor-dashboard-skeleton {
+    margin: 0;
+    height: 14px;
+}
+.doctor-dashboard-section {
+    margin-top: 24px;
+}
+.doctor-dashboard-schedule-info {
+    padding: 16px;
+    text-align: center;
+}
+.doctor-dashboard-schedule-text {
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+.doctor-dashboard-schedule-btn {
+    margin-bottom: 12px;
+}
+.doctor-dashboard-schedule-loader {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+}
+.doctor-dashboard-schedule-skeleton {
+    height: 30px;
+}
+.doctor-dashboard-reviews-summary {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+    align-items: center;
+}
+.doctor-dashboard-reviews-rating {
+    font-size: 48px;
+    font-weight: bold;
+    color: var(--primary-teal);
+}
+.doctor-dashboard-reviews-stars {
+    font-size: 20px;
+    color: #F59E0B;
+}
+.doctor-dashboard-reviews-count {
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+.doctor-dashboard-reviews-grid {
+    display: grid;
+    gap: 16px;
+}
+.doctor-dashboard-review-card {
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+.doctor-dashboard-review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.doctor-dashboard-review-stars-color {
+    color: #F59E0B;
+}
+.doctor-dashboard-review-text {
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+.doctor-dashboard-review-date {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+  
+/* --- DoctorProfile.jsx --- */  
+.doctor-profile-card { max-width: 800px; margin: 0 auto; }  
+.doctor-profile-header { display: flex; align-items: center; gap: 24px; margin-bottom: 32px; }  
+.doctor-profile-avatar { width: 100px; height: 100px; border-radius: 50%; background: var(--primary-teal); display: flex; align-items: center; justify-content: center; font-size: 48px; color: white; } 
+.doctor-profile-name { font-size: 24px; margin-bottom: 4px; }  
+.doctor-profile-specialty { color: var(--primary-teal); font-weight: 600; margin-bottom: 4px; }  
+.doctor-profile-location { color: var(--text-secondary); font-size: 14px; }  
+.doctor-profile-checkbox-wrap { margin-bottom: 12px; background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); }  
+.doctor-profile-checkbox-inner { display: flex; align-items: center; gap: 8px; }  
+.doctor-profile-checkbox-input { width: 18px; height: 18px; }  
+.doctor-profile-checkbox-label { font-weight: 600; } 
+  
+/* --- DoctorAvailability.jsx --- */  
+.doctor-availability-card { max-width: 800px; margin: 0 auto; }  
+.doctor-availability-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; align-items: center; }  
+.doctor-availability-day { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; padding: 16px 24px; background: var(--bg-secondary, #f8fafc); border: 1px solid var(--border-color, #e2e8f0); border-radius: 8px; width: 100%; max-width: 750px; } 
+.doctor-availability-checkbox-wrap { width: 140px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }  
+.doctor-availability-checkbox { width: 18px; height: 18px; cursor: pointer; }  
+.doctor-availability-label { font-weight: 600; font-size: 16px; cursor: pointer; }  
+.doctor-availability-controls { display: flex; align-items: center; gap: 24px; flex: 1; flex-wrap: wrap; justify-content: flex-end; }  
+.doctor-availability-time-wrap { display: flex; align-items: center; gap: 12px; }  
+.doctor-availability-time-input { padding: 8px 12px; width: 150px; }  
+.doctor-availability-time-separator { color: var(--text-secondary); font-weight: 500; min-width: 16px; text-align: center; } 
+.doctor-availability-slot-wrap { display: flex; align-items: center; gap: 8px; width: 130px; }  
+.doctor-availability-slot-label { font-size: 14px; color: var(--text-secondary); font-weight: 500; }  
+.doctor-availability-slot-input { padding: 8px; flex: 1; }  
+.doctor-availability-save-wrap { display: flex; justify-content: center; margin-bottom: 24px; }  
+.doctor-availability-save-btn { padding: 12px 32px; font-size: 16px; }  
+.doctor-availability-note { padding: 16px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; color: #1e3a8a; font-size: 14px; } 
+.doctor-availability-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }  
+.doctor-availability-modal-content { background: var(--bg-primary, #ffffff); border-radius: 16px; padding: 24px; max-width: 600px; width: 100%; box-shadow: var(--shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.3)); }  
+.doctor-availability-modal-header { margin-bottom: 16px; }  
+.doctor-availability-modal-title { margin: 0; font-size: 20px; color: var(--text-primary); } 
+.doctor-availability-modal-body { margin-bottom: 32px; color: var(--text-secondary); font-size: 15px; line-height: 1.5; }  
+.doctor-availability-modal-actions { margin-bottom: 0; }  
+.doctor-availability-btn-cancel { min-width: 100px; }  
+.doctor-availability-btn-leave { background: transparent; color: var(--rejected, #ef4444); border: 1px solid var(--rejected, #ef4444); } 

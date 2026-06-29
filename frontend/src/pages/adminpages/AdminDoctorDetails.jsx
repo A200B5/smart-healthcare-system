@@ -6,6 +6,7 @@ import { getDoctorById, updateDoctor } from "../../services/adminService.js";
 import { toast } from "react-toastify";
 import SaveButton from "../../components/SaveButton.jsx";
 import { useFormState } from "../../services/formUtils.js";
+import "./admin.css";
 
 function AdminDoctorDetails() {
     const { id } = useParams();
@@ -87,7 +88,7 @@ function AdminDoctorDetails() {
     };
 
     if (loading) return <><AdminNavbar /><div className="page"><div className="page-content"><ProfileSkeleton /></div></div></>;
-    if (error) return <><AdminNavbar /><div className="page"><div className="page-content"><p style={{ color: "red" }}>{error}</p><button className="btn-secondary" onClick={() => navigate(-1)}>Go Back</button></div></div></>;
+    if (error) return <><AdminNavbar /><div className="page"><div className="page-content"><p className="admin-dashboard-error">{error}</p><button className="btn-secondary" onClick={() => navigate(-1)}>Go Back</button></div></div></>;
     if (!doctor) return null;
 
     return (
@@ -95,24 +96,18 @@ function AdminDoctorDetails() {
             <AdminNavbar />
             <div className="page" id="page-admin-doctor-details">
                 <div className="page-content">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                    <div className="admin-doctor-details-header">
                         <div>
                             <h1 className="page-title">Doctor Details</h1>
                             <p className="page-subtitle">Detailed information and status</p>
                         </div>
-                        <div style={{ display: 'flex', gap: '1rem' }}>
+                        <div className="admin-doctor-details-actions">
                             {isEditing ? (
                                 <>
                                     <button 
                                         onClick={() => setIsEditing(false)} 
                                         disabled={isSaving}
-                                        style={{
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-                                            background: 'transparent', color: 'var(--text-primary)',
-                                            border: '2px solid var(--border-color)', borderRadius: '999px',
-                                            padding: '0 24px', fontSize: '15px', fontWeight: '600',
-                                            transition: 'all 0.2s ease', cursor: 'pointer', height: '44px'
-                                        }}
+                                        className="admin-doctor-details-btn-outline"
                                         onMouseEnter={(e) => { e.target.style.borderColor = 'var(--text-secondary)'; e.target.style.transform = 'translateY(-2px)'; }}
                                         onMouseLeave={(e) => { e.target.style.borderColor = 'var(--border-color)'; e.target.style.transform = 'none'; }}
                                     >
@@ -123,25 +118,13 @@ function AdminDoctorDetails() {
                                         isDirty={isDirty} 
                                         isSaving={isSaving} 
                                         text="Save Changes"
-                                        className=""
-                                        style={{ 
-                                            background: 'var(--primary-teal)', color: 'white',
-                                            border: 'none', borderRadius: '999px',
-                                            padding: '0 24px', fontSize: '15px', fontWeight: '600',
-                                            height: '44px'
-                                        }}
+                                        className="admin-doctor-details-btn-primary"
                                     />
                                 </>
                             ) : (
                                 <button 
                                     onClick={() => setIsEditing(true)}
-                                    style={{ 
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        background: 'var(--primary-teal)', color: 'white',
-                                        border: 'none', borderRadius: '999px',
-                                        padding: '0 24px', fontSize: '15px', fontWeight: '600',
-                                        transition: 'all 0.2s ease', cursor: 'pointer', height: '44px'
-                                    }}
+                                    className="admin-doctor-details-btn-primary"
                                     onMouseEnter={(e) => { e.target.style.transform = 'translateY(-2px)'; e.target.style.boxShadow = '0 6px 20px rgba(15, 95, 95, 0.3)'; }}
                                     onMouseLeave={(e) => { e.target.style.transform = 'none'; e.target.style.boxShadow = 'none'; }}
                                 >
@@ -150,13 +133,7 @@ function AdminDoctorDetails() {
                             )}
                             <button 
                                 onClick={() => navigate(-1)}
-                                style={{
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-                                    background: 'transparent', color: 'var(--text-primary)',
-                                    border: '2px solid var(--border-color)', borderRadius: '999px',
-                                    padding: '0 24px', fontSize: '15px', fontWeight: '600',
-                                    transition: 'all 0.2s ease', cursor: 'pointer', height: '44px'
-                                }}
+                                className="admin-doctor-details-btn-outline"
                                 onMouseEnter={(e) => { e.target.style.borderColor = 'var(--text-secondary)'; e.target.style.transform = 'translateY(-2px)'; }}
                                 onMouseLeave={(e) => { e.target.style.borderColor = 'var(--border-color)'; e.target.style.transform = 'none'; }}
                             >
@@ -165,13 +142,13 @@ function AdminDoctorDetails() {
                         </div>
                     </div>
 
-                    <div className="table-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
-                            <div style={{ fontSize: '4rem' }}>{doctor.avatar || '👤'}</div>
+                    <div className="table-card admin-doctor-details-card">
+                        <div className="admin-doctor-details-profile">
+                            <div className="admin-doctor-details-avatar">{doctor.avatar || '👤'}</div>
                             <div>
-                                <h2 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-primary)' }}>{doctor.name}</h2>
-                                <p style={{ margin: '0', color: 'var(--text-secondary)' }}>{doctor.email}</p>
-                                <div style={{ marginTop: '0.5rem' }}>
+                                <h2 className="admin-doctor-details-name">{doctor.name}</h2>
+                                <p className="admin-doctor-details-email">{doctor.email}</p>
+                                <div className="admin-doctor-details-status-wrap">
                                     <span className={`status-badge ${doctor.verification_status === 'approved' ? 'status-available' : doctor.verification_status === 'pending' ? 'status-busy' : 'status-rejected'}`}>
                                         Verification: {doctor.verification_status ? doctor.verification_status.toUpperCase() : 'UNKNOWN'}
                                     </span>
@@ -179,13 +156,13 @@ function AdminDoctorDetails() {
                             </div>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                        <div className="admin-doctor-details-grid">
                             <div>
-                                <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Specialty</label>
-                                <div style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{doctor.specialty || 'Not specified'}</div>
+                                <label className="admin-doctor-details-label">Specialty</label>
+                                <div className="admin-doctor-details-value">{doctor.specialty || 'Not specified'}</div>
                             </div>
                             <div>
-                                <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Experience</label>
+                                <label className="admin-doctor-details-label">Experience</label>
                                 {isEditing ? (
                                     <input 
                                         type="number" 
@@ -195,11 +172,11 @@ function AdminDoctorDetails() {
                                         onChange={handleChange}
                                     />
                                 ) : (
-                                    <div style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{doctor.experience ? `${doctor.experience} Years` : 'Not specified'}</div>
+                                    <div className="admin-doctor-details-value">{doctor.experience ? `${doctor.experience} Years` : 'Not specified'}</div>
                                 )}
                             </div>
                             <div>
-                                <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Consultation Fee</label>
+                                <label className="admin-doctor-details-label">Consultation Fee</label>
                                 {isEditing ? (
                                     <input 
                                         type="number" 
@@ -209,15 +186,15 @@ function AdminDoctorDetails() {
                                         onChange={handleChange}
                                     />
                                 ) : (
-                                    <div style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>${doctor.price || 0}</div>
+                                    <div className="admin-doctor-details-value">${doctor.price || 0}</div>
                                 )}
                             </div>
                             <div>
-                                <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>License Number</label>
-                                <div style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{doctor.license_number || 'N/A'}</div>
+                                <label className="admin-doctor-details-label">License Number</label>
+                                <div className="admin-doctor-details-value">{doctor.license_number || 'N/A'}</div>
                             </div>
                             <div>
-                                <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Current Availability</label>
+                                <label className="admin-doctor-details-label">Current Availability</label>
                                 {isEditing ? (
                                     <select 
                                         className="form-input" 
@@ -229,19 +206,19 @@ function AdminDoctorDetails() {
                                         <option value="false">Not Available</option>
                                     </select>
                                 ) : (
-                                    <div style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>
-                                        {doctor.available ? <span style={{ color: 'var(--primary-teal)' }}>Available for Bookings</span> : <span style={{ color: 'var(--text-secondary)' }}>Not Available</span>}
+                                    <div className="admin-doctor-details-value">
+                                        {doctor.available ? <span className="admin-doctor-details-available">Available for Bookings</span> : <span className="admin-doctor-details-unavailable">Not Available</span>}
                                     </div>
                                 )}
                             </div>
                             <div>
-                                <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Location</label>
-                                <div style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{doctor.location || 'Not specified'}</div>
+                                <label className="admin-doctor-details-label">Location</label>
+                                <div className="admin-doctor-details-value">{doctor.location || 'Not specified'}</div>
                             </div>
                         </div>
 
-                        <div style={{ marginTop: '1.5rem' }}>
-                            <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Professional Bio</label>
+                        <div className="admin-doctor-details-section">
+                            <label className="admin-doctor-details-label">Professional Bio</label>
                             {isEditing ? (
                                 <textarea 
                                     className="form-input" 
@@ -251,24 +228,24 @@ function AdminDoctorDetails() {
                                     onChange={handleChange}
                                 ></textarea>
                             ) : (
-                                <div style={{ color: 'var(--text-primary)', background: 'var(--bg-secondary)', padding: '1rem', borderRadius: '4px', minHeight: '80px' }}>
+                                <div className="admin-doctor-details-bio-box">
                                     {doctor.bio || 'No biography provided.'}
                                 </div>
                             )}
                         </div>
 
                         {doctor.createdAt && (
-                            <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
-                                <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Registration Information</h3>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                            <div className="admin-doctor-details-reg-wrap">
+                                <h3 className="admin-doctor-details-reg-title">Registration Information</h3>
+                                <div className="admin-doctor-details-grid">
                                     <div>
-                                        <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Account Created</label>
-                                        <div style={{ color: 'var(--text-primary)' }}>{new Date(doctor.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                                        <label className="admin-doctor-details-label">Account Created</label>
+                                        <div className="admin-doctor-details-reg-value">{new Date(doctor.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                                     </div>
                                     {doctor.verified_at && (
                                         <div>
-                                            <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Verification Date</label>
-                                            <div style={{ color: 'var(--text-primary)' }}>{new Date(doctor.verified_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                                            <label className="admin-doctor-details-label">Verification Date</label>
+                                            <div className="admin-doctor-details-reg-value">{new Date(doctor.verified_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                                         </div>
                                     )}
                                 </div>

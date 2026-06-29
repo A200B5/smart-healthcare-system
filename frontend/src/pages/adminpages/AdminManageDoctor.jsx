@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getDoctors, deleteDoctor, approveDoctor, rejectDoctor } from "../../services/adminService.js";
 import ConfirmationModal from "../../components/ConfirmationModal.jsx";
 import AlertModal from "../../components/AlertModal.jsx";
+import "./admin.css";
 
 function AdminManageDoctor() {
     const navigate = useNavigate();
@@ -141,21 +142,20 @@ function AdminManageDoctor() {
                         <div className="table-header">
                             <div className="table-title">All Doctors ({filteredDoctors.length})</div>
                             <input 
-                                className="form-input"
+                                className="form-input admin-doctors-search"
                                 type="text" 
                                 placeholder="Search by name, email, or specialty..." 
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                style={{ width: '300px' }}
                             />
                         </div>
 
                         {loading ? (
                             <TableSkeleton rows={5} columns={6} />
                         ) : error ? (
-                            <p style={{ padding: '1rem', color: 'red' }}>{error}</p>
+                            <p className="admin-dashboard-error">{error}</p>
                         ) : filteredDoctors.length === 0 ? (
-                            <p style={{ padding: '1rem' }}>No doctors found.</p>
+                            <p className="admin-doctors-empty">No doctors found.</p>
                         ) : (
                             <table>
                                 <thead>
@@ -197,23 +197,18 @@ function AdminManageDoctor() {
                                             )}
                                         </td>
                                         <td>
-                                            <div style={{ position: 'relative' }}>
+                                            <div className="admin-doctors-action-wrap">
                                                 <button 
                                                     onClick={() => toggleDropdown(doc.doctorId)} 
-                                                    style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '1.2rem', padding: '0.25rem 0.5rem', color: 'var(--text-primary)' }}
+                                                    className="admin-doctors-btn-dots"
                                                 >
                                                     ⋮
                                                 </button>
                                                 {openDropdownId === doc.doctorId && (
-                                                    <div style={{ 
-                                                        position: 'absolute', right: 0, top: '100%', 
-                                                        background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', 
-                                                        borderRadius: '8px', padding: '0.5rem', display: 'flex', flexDirection: 'column', 
-                                                        gap: '0.25rem', zIndex: 10, boxShadow: '0 10px 15px -3px rgba(0,0,0,0.5)', minWidth: '160px' 
-                                                    }}>
+                                                    <div className="admin-doctors-dropdown">
                                                         <button 
                                                             onClick={() => { navigate(`/admin/doctor/${doc.doctorId}`); toggleDropdown(null); }} 
-                                                            style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', textAlign: 'left', padding: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', borderRadius: '4px' }}
+                                                            className="admin-doctors-dropdown-item admin-doctors-item-default"
                                                             onMouseEnter={(e) => e.target.style.background = 'var(--bg-primary)'}
                                                             onMouseLeave={(e) => e.target.style.background = 'transparent'}
                                                         >
@@ -223,7 +218,7 @@ function AdminManageDoctor() {
                                                             <>
                                                                 <button 
                                                                     onClick={() => { handleApproveClick(doc.doctorId); toggleDropdown(null); }} 
-                                                                    style={{ background: 'transparent', border: 'none', color: '#10B981', textAlign: 'left', padding: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', borderRadius: '4px' }}
+                                                                    className="admin-doctors-dropdown-item admin-doctors-item-approve"
                                                                     onMouseEnter={(e) => e.target.style.background = 'var(--bg-primary)'}
                                                                     onMouseLeave={(e) => e.target.style.background = 'transparent'}
                                                                 >
@@ -231,7 +226,7 @@ function AdminManageDoctor() {
                                                                 </button>
                                                                 <button 
                                                                     onClick={() => { handleRejectClick(doc.doctorId); toggleDropdown(null); }} 
-                                                                    style={{ background: 'transparent', border: 'none', color: '#F59E0B', textAlign: 'left', padding: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', borderRadius: '4px' }}
+                                                                    className="admin-doctors-dropdown-item admin-doctors-item-reject"
                                                                     onMouseEnter={(e) => e.target.style.background = 'var(--bg-primary)'}
                                                                     onMouseLeave={(e) => e.target.style.background = 'transparent'}
                                                                 >
@@ -239,7 +234,7 @@ function AdminManageDoctor() {
                                                                 </button>
                                                             </>
                                                         )}
-                                                        <div style={{ height: '1px', background: 'var(--border-color)', margin: '0.25rem 0' }}></div>
+                                                        <div className="admin-doctors-divider"></div>
                                                         <button 
                                                             onClick={(e) => { 
                                                                 console.log("Delete button clicked!");
@@ -248,7 +243,7 @@ function AdminManageDoctor() {
                                                                 confirmDelete(doc); 
                                                                 toggleDropdown(null); 
                                                             }} 
-                                                            style={{ background: 'transparent', border: 'none', color: '#EF4444', textAlign: 'left', padding: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', borderRadius: '4px' }}
+                                                            className="admin-doctors-dropdown-item admin-doctors-item-delete"
                                                             onMouseEnter={(e) => e.target.style.background = 'var(--bg-primary)'}
                                                             onMouseLeave={(e) => e.target.style.background = 'transparent'}
                                                         >
@@ -291,7 +286,7 @@ function AdminManageDoctor() {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn-secondary" onClick={() => setShowRejectModal(false)}>Cancel</button>
-                                <button type="submit" className="btn-auth" style={{ background: '#EF4444', width: 'auto' }} disabled={isSubmitting}>
+                                <button type="submit" className="btn-auth admin-doctors-btn-confirm" disabled={isSubmitting}>
                                     {isSubmitting ? 'Submitting...' : 'Confirm Rejection'}
                                 </button>
                             </div>
