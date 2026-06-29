@@ -5,6 +5,7 @@ import { getUsers, deleteUser } from "../../services/adminService.js";
 import ConfirmationModal from "../../components/ConfirmationModal.jsx";
 import AlertModal from "../../components/AlertModal.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
+import "./admin.css";
 
 function AdminManageUser() {
     const [users, setUsers] = useState([]);
@@ -75,19 +76,18 @@ function AdminManageUser() {
                     <p className="page-subtitle">View and manage all platform users</p>
 
                     <div className="table-card">
-                        <div className="table-header" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                        <div className="table-header admin-users-header">
+                            <div className="admin-users-top-bar">
                                 <div className="table-title">All Users ({filteredUsers.length})</div>
                                 <input 
-                                    className="form-input"
+                                    className="form-input admin-users-search"
                                     type="text" 
                                     placeholder="Search by name or email..." 
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    style={{ width: '300px' }}
                                 />
                             </div>
-                            <div className="filter-tabs" style={{margin: "0"}}>
+                            <div className="filter-tabs admin-users-filters">
                                 <button className={`filter-tab ${roleFilter === "all" ? "active" : ""}`} onClick={() => setRoleFilter("all")}>All</button>
                                 <button className={`filter-tab ${roleFilter === "patient" ? "active" : ""}`} onClick={() => setRoleFilter("patient")}>Patients</button>
                                 <button className={`filter-tab ${roleFilter === "doctor" ? "active" : ""}`} onClick={() => setRoleFilter("doctor")}>Doctors</button>
@@ -98,9 +98,9 @@ function AdminManageUser() {
                         {loading ? (
                             <TableSkeleton rows={5} columns={6} />
                         ) : error ? (
-                            <p style={{ padding: '1rem', color: 'red' }}>{error}</p>
+                            <p className="admin-dashboard-error">{error}</p>
                         ) : filteredUsers.length === 0 ? (
-                            <p style={{ padding: '1rem' }}>No users found.</p>
+                            <p className="admin-users-empty">No users found.</p>
                         ) : (
                             <table>
                                 <thead>
@@ -136,22 +136,13 @@ function AdminManageUser() {
                                                 <span className="status-badge status-rejected">Inactive</span>
                                             )}
                                         </td>
-                                        <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                                        <td className="admin-users-action-cell">
                                             {user.id === currentUser?.id ? (
-                                                <span className="status-badge" style={{ background: 'var(--bg-secondary)', color: 'var(--text-secondary)' }}>Current Account</span>
+                                                <span className="status-badge admin-users-current-badge">Current Account</span>
                                             ) : (
                                                 <button 
-                                                    className="btn-auth" 
+                                                    className="btn-auth admin-users-btn-delete" 
                                                     onClick={() => confirmDelete(user)}
-                                                    style={{ 
-                                                        padding: '0.25rem 1rem', 
-                                                        background: '#EF4444', 
-                                                        width: 'fit-content', 
-                                                        minWidth: 'auto', 
-                                                        fontSize: '0.875rem',
-                                                        borderRadius: '999px',
-                                                        margin: '0 auto'
-                                                    }}
                                                 >
                                                     Delete
                                                 </button>

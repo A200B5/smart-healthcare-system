@@ -8,6 +8,7 @@ import {
 } from "../../services/appointmentService";
 import { getDoctorProfile, getDoctorReviews } from "../../services/doctorService";
 import { useAuth } from "../../context/AuthContext.jsx";
+import "./doctor.css";
 
 const dayOptions = [
   { value: 1, label: "Monday" },
@@ -167,13 +168,13 @@ function DoctorDashboard() {
           </div>
 
           {doctorProfile?.verification_status === "pending" && (
-            <div style={{ background: "#FEF3C7", color: "#92400E", padding: "16px", borderRadius: "8px", marginBottom: "24px" }}>
+            <div className="doctor-dashboard-alert-pending">
               <strong>⏳ Pending Approval:</strong> Your profile is currently under review by an administrator. You cannot accept or reject appointments until approved.
             </div>
           )}
 
           {doctorProfile?.verification_status === "rejected" && (
-            <div style={{ background: "#FEE2E2", color: "#991B1B", padding: "16px", borderRadius: "8px", marginBottom: "24px" }}>
+            <div className="doctor-dashboard-alert-rejected">
               <strong>❌ Application Rejected:</strong> {doctorProfile?.rejection_reason || "Please update your profile information and contact support."}
             </div>
           )}
@@ -199,7 +200,7 @@ function DoctorDashboard() {
             </div>
 
             <div className="stat-card-dash">
-              <div className="number " style={{ color: "var(--completed)" }}>{stats.completed}</div>
+              <div className="number doctor-dashboard-stat-completed">{stats.completed}</div>
               <div className="label">Completed</div>
             </div>
 
@@ -215,7 +216,7 @@ function DoctorDashboard() {
             <div className="table-header">
               <div className="table-title">Appointment Requests</div>
 
-              <div className="filter-tabs" style={{ margin: 0 }}>
+              <div className="filter-tabs doctor-dashboard-filter-tabs">
                 <button onClick={() => setFilter("all")} className={`filter-tab ${filter === "all" ? "active" : ""}`}>all</button>
                 <button onClick={() => setFilter("pending")} className={`filter-tab ${filter === "pending" ? "active" : ""}`}>pending</button>
                 <button onClick={() => setFilter("confirmed")} className={`filter-tab ${filter === "confirmed" ? "active" : ""}`}>confirmed</button>
@@ -242,7 +243,7 @@ function DoctorDashboard() {
                     <tr key={`sk-${i}`}>
                       {Array.from({ length: 6 }).map((_, j) => (
                         <td key={`sk-td-${i}-${j}`}>
-                          <div className="skeleton skeleton-text" style={{ margin: 0, height: '14px', width: j === 0 ? '80%' : '50%' }}></div>
+                          <div className="skeleton skeleton-text doctor-dashboard-skeleton" style={{ width: j === 0 ? '80%' : '50%' }}></div>
                         </td>
                       ))}
                     </tr>
@@ -337,26 +338,25 @@ function DoctorDashboard() {
             </table>
           </div>
 
-          <div className="table-card" style={{ marginTop: "24px" }}>
+          <div className="table-card doctor-dashboard-section">
             <div className="table-header">
               <div className="table-title">My Schedule</div>
             </div>
 
-            <div style={{ padding: "16px", textAlign: "center" }}>
-              <p style={{ marginBottom: "16px", color: "var(--text-secondary)" }}>
+            <div className="doctor-dashboard-schedule-info">
+              <p className="doctor-dashboard-schedule-text">
                 You are currently available on <strong>{stats.availableDays}</strong> days of the week.
               </p>
               <button
-                className="btn btn-primary"
-                style={{ marginBottom: "12px" }}
+                className="btn btn-primary doctor-dashboard-schedule-btn"
                 onClick={() => navigate("/doctor/schedule")}
               >
                 Manage Weekly Schedule
               </button>
               {scheduleLoading && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
-                  <div className="skeleton skeleton-text" style={{ height: '30px' }}></div>
-                  <div className="skeleton skeleton-text" style={{ height: '30px' }}></div>
+                <div className="doctor-dashboard-schedule-loader">
+                  <div className="skeleton skeleton-text doctor-dashboard-schedule-skeleton"></div>
+                  <div className="skeleton skeleton-text doctor-dashboard-schedule-skeleton"></div>
                 </div>
               )}
 
@@ -396,20 +396,20 @@ function DoctorDashboard() {
           </div>
 
           {/* Reviews Section */}
-          <div className="table-card" style={{ marginTop: "24px" }}>
+          <div className="table-card doctor-dashboard-section">
             <div className="table-header">
               <div className="table-title">Patient Reviews</div>
             </div>
 
-            <div style={{ display: "flex", gap: "24px", marginBottom: "24px", alignItems: "center" }}>
-              <div style={{ fontSize: "48px", fontWeight: "bold", color: "var(--primary-teal)" }}>
+            <div className="doctor-dashboard-reviews-summary">
+              <div className="doctor-dashboard-reviews-rating">
                 {doctorProfile?.rating || "0.0"}
               </div>
               <div>
-                <div style={{ fontSize: "20px", color: "#F59E0B" }}>
+                <div className="doctor-dashboard-reviews-stars">
                   {"★".repeat(Math.round(doctorProfile?.rating || 0))}{"☆".repeat(5 - Math.round(doctorProfile?.rating || 0))}
                 </div>
-                <p style={{ color: "var(--text-secondary)", marginTop: "4px" }}>
+                <p className="doctor-dashboard-reviews-count">
                   Based on {doctorProfile?.reviews || 0} reviews
                 </p>
               </div>
@@ -418,15 +418,15 @@ function DoctorDashboard() {
             {reviews.length === 0 ? (
               <p>No reviews yet.</p>
             ) : (
-              <div style={{ display: "grid", gap: "16px" }}>
+              <div className="doctor-dashboard-reviews-grid">
                 {reviews.map((review) => (
-                  <div key={review.id} style={{ padding: "16px", border: "1px solid var(--border-color)", borderRadius: "8px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                  <div key={review.id} className="doctor-dashboard-review-card">
+                    <div className="doctor-dashboard-review-header">
                       <strong>{review.patientName}</strong>
-                      <span style={{ color: "#F59E0B" }}>{"★".repeat(review.rating)}</span>
+                      <span className="doctor-dashboard-review-stars-color">{"★".repeat(review.rating)}</span>
                     </div>
-                    <p style={{ color: "var(--text-main)", marginBottom: "8px" }}>{review.comment}</p>
-                    <p style={{ color: "var(--text-secondary)", fontSize: "12px" }}>{review.daysAgo === 0 ? "Today" : `${review.daysAgo} days ago`}</p>
+                    <p className="doctor-dashboard-review-text">{review.comment}</p>
+                    <p className="doctor-dashboard-review-date">{review.daysAgo === 0 ? "Today" : `${review.daysAgo} days ago`}</p>
                   </div>
                 ))}
               </div>

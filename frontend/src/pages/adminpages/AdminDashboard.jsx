@@ -4,6 +4,7 @@ import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import { getPendingDoctors, approveDoctor, rejectDoctor, getAdminStats } from "../../services/adminService.js";
 import ConfirmationModal from "../../components/ConfirmationModal.jsx";
 import AlertModal from "../../components/AlertModal.jsx";
+import "./admin.css";
 
 function AdminDashboard() {
     const [pendingDoctors, setPendingDoctors] = useState([]);
@@ -140,15 +141,15 @@ function AdminDashboard() {
                     </div>
 
                     {/* Doctor Verification Section */}
-                    <div className="table-card" style={{ marginTop: '2rem' }}>
+                    <div className="table-card admin-dashboard-section">
                         <div className="table-title">Doctor Verification Management</div>
 
                         {loading ? (
                             <TableSkeleton rows={3} columns={5} />
                         ) : errorMsg ? (
-                            <p style={{ padding: '1rem', color: 'red' }}>{errorMsg}</p>
+                            <p className="admin-dashboard-error">{errorMsg}</p>
                         ) : pendingDoctors.length === 0 ? (
-                            <div className="success-msg" style={{ display: 'block', margin: '1rem' }}>
+                            <div className="success-msg admin-dashboard-success-wrap">
                                 ✅ <span>No pending verifications. All caught up!</span>
                             </div>
                         ) : (
@@ -178,18 +179,16 @@ function AdminDashboard() {
                                             <td>{doctor.licenseNumber}</td>
                                             <td>{new Date(doctor.createdAt).toLocaleDateString()}</td>
                                             <td>
-                                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                <div className="admin-dashboard-actions">
                                                     <button
                                                         onClick={() => handleApproveClick(doctor.doctorId)}
-                                                        className="btn-auth"
-                                                        style={{ padding: '0.25rem 0.5rem', background: '#10B981', minWidth: 'auto', fontSize: '0.875rem' }}
+                                                        className="btn-auth admin-dashboard-btn-approve"
                                                     >
                                                         Approve
                                                     </button>
                                                     <button
                                                         onClick={() => handleRejectClick(doctor.doctorId)}
-                                                        className="btn-auth"
-                                                        style={{ padding: '0.25rem 0.5rem', background: '#EF4444', minWidth: 'auto', fontSize: '0.875rem' }}
+                                                        className="btn-auth admin-dashboard-btn-reject"
                                                     >
                                                         Reject
                                                     </button>
@@ -202,45 +201,45 @@ function AdminDashboard() {
                         )}
                     </div>
 
-                    <div className="charts-grid" style={{ marginTop: '2rem' }}>
+                    <div className="charts-grid admin-dashboard-section">
                         <div className="chart-card">
                             <div className="chart-title">Appointment Status Breakdown</div>
                             {stats ? (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+                                <div className="admin-dashboard-chart-list">
                                     <div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '14px' }}>
+                                        <div className="admin-dashboard-chart-label-row">
                                             <span>Completed</span>
                                             <span>{stats.completedAppointments}</span>
                                         </div>
-                                        <div style={{ width: '100%', backgroundColor: 'var(--border-color)', height: '12px', borderRadius: '6px', overflow: 'hidden' }}>
-                                            <div style={{ width: `${stats.totalAppointments ? (stats.completedAppointments / stats.totalAppointments) * 100 : 0}%`, backgroundColor: 'var(--primary-teal)', height: '100%' }}></div>
+                                        <div className="admin-dashboard-progress-wrap">
+                                            <div className="admin-dashboard-progress-fill admin-dashboard-progress-teal" style={{ width: `${stats.totalAppointments ? (stats.completedAppointments / stats.totalAppointments) * 100 : 0}%` }}></div>
                                         </div>
                                     </div>
                                     <div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '14px' }}>
+                                        <div className="admin-dashboard-chart-label-row">
                                             <span>Confirmed</span>
                                             <span>{stats.confirmedAppointments}</span>
                                         </div>
-                                        <div style={{ width: '100%', backgroundColor: 'var(--border-color)', height: '12px', borderRadius: '6px', overflow: 'hidden' }}>
-                                            <div style={{ width: `${stats.totalAppointments ? (stats.confirmedAppointments / stats.totalAppointments) * 100 : 0}%`, backgroundColor: 'var(--confirmed)', height: '100%' }}></div>
+                                        <div className="admin-dashboard-progress-wrap">
+                                            <div className="admin-dashboard-progress-fill admin-dashboard-progress-confirmed" style={{ width: `${stats.totalAppointments ? (stats.confirmedAppointments / stats.totalAppointments) * 100 : 0}%` }}></div>
                                         </div>
                                     </div>
                                     <div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '14px' }}>
+                                        <div className="admin-dashboard-chart-label-row">
                                             <span>Pending</span>
                                             <span>{stats.pendingAppointments}</span>
                                         </div>
-                                        <div style={{ width: '100%', backgroundColor: 'var(--border-color)', height: '12px', borderRadius: '6px', overflow: 'hidden' }}>
-                                            <div style={{ width: `${stats.totalAppointments ? (stats.pendingAppointments / stats.totalAppointments) * 100 : 0}%`, backgroundColor: 'var(--pending)', height: '100%' }}></div>
+                                        <div className="admin-dashboard-progress-wrap">
+                                            <div className="admin-dashboard-progress-fill admin-dashboard-progress-pending" style={{ width: `${stats.totalAppointments ? (stats.pendingAppointments / stats.totalAppointments) * 100 : 0}%` }}></div>
                                         </div>
                                     </div>
                                     <div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '14px' }}>
+                                        <div className="admin-dashboard-chart-label-row">
                                             <span>Rejected</span>
                                             <span>{stats.rejectedAppointments}</span>
                                         </div>
-                                        <div style={{ width: '100%', backgroundColor: 'var(--border-color)', height: '12px', borderRadius: '6px', overflow: 'hidden' }}>
-                                            <div style={{ width: `${stats.totalAppointments ? (stats.rejectedAppointments / stats.totalAppointments) * 100 : 0}%`, backgroundColor: 'var(--rejected)', height: '100%' }}></div>
+                                        <div className="admin-dashboard-progress-wrap">
+                                            <div className="admin-dashboard-progress-fill admin-dashboard-progress-rejected" style={{ width: `${stats.totalAppointments ? (stats.rejectedAppointments / stats.totalAppointments) * 100 : 0}%` }}></div>
                                         </div>
                                     </div>
                                 </div>
@@ -252,18 +251,18 @@ function AdminDashboard() {
                         <div className="chart-card">
                             <div className="chart-title">System Overview</div>
                             {stats ? (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-                                    <div style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
-                                        <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--primary-teal)' }}>{stats.totalUsers}</div>
-                                        <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Registered Users</div>
+                                <div className="admin-dashboard-chart-list">
+                                    <div className="admin-dashboard-stat-box">
+                                        <div className="admin-dashboard-stat-number">{stats.totalUsers}</div>
+                                        <div className="admin-dashboard-stat-label">Registered Users</div>
                                     </div>
-                                    <div style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
-                                        <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--primary-teal)' }}>{stats.totalPatients}</div>
-                                        <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Active Patients</div>
+                                    <div className="admin-dashboard-stat-box">
+                                        <div className="admin-dashboard-stat-number">{stats.totalPatients}</div>
+                                        <div className="admin-dashboard-stat-label">Active Patients</div>
                                     </div>
-                                    <div style={{ padding: '1rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
-                                        <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--primary-teal)' }}>{stats.todayAppointments}</div>
-                                        <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Appointments Booked Today</div>
+                                    <div className="admin-dashboard-stat-box">
+                                        <div className="admin-dashboard-stat-number">{stats.todayAppointments}</div>
+                                        <div className="admin-dashboard-stat-label">Appointments Booked Today</div>
                                     </div>
                                 </div>
                             ) : (
@@ -277,30 +276,24 @@ function AdminDashboard() {
 
             {/* Reject Modal */}
             {showRejectModal && (
-                <div className="modal-overlay" style={{
-                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                    backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex',
-                    alignItems: 'center', justifyContent: 'center', zIndex: 1000
-                }}>
-                    <div className="auth-card" style={{ maxWidth: '400px', width: '100%', padding: '2rem' }}>
-                        <h2 className="auth-title" style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Reject Doctor Verification</h2>
+                <div className="modal-overlay admin-dashboard-modal-overlay">
+                    <div className="auth-card admin-dashboard-modal-card">
+                        <h2 className="auth-title admin-dashboard-modal-title">Reject Doctor Verification</h2>
                         <form onSubmit={handleRejectSubmit}>
                             <div className="form-group">
                                 <label className="form-label">Rejection Reason</label>
                                 <textarea
-                                    className="form-input"
-                                    style={{ minHeight: '100px', resize: 'vertical' }}
+                                    className="form-input admin-dashboard-textarea"
                                     placeholder="Please provide a clear reason for rejection..."
                                     required
                                     value={rejectReason}
                                     onChange={(e) => setRejectReason(e.target.value)}
                                 ></textarea>
                             </div>
-                            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+                            <div className="admin-dashboard-modal-actions">
                                 <button
                                     type="button"
-                                    className="btn-auth"
-                                    style={{ background: '#6B7280' }}
+                                    className="btn-auth admin-dashboard-btn-cancel"
                                     onClick={() => setShowRejectModal(false)}
                                     disabled={isSubmitting}
                                 >
@@ -308,8 +301,7 @@ function AdminDashboard() {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="btn-auth"
-                                    style={{ background: '#EF4444' }}
+                                    className="btn-auth admin-dashboard-btn-confirm"
                                     disabled={isSubmitting}
                                 >
                                     {isSubmitting ? "Submitting..." : "Confirm Reject"}

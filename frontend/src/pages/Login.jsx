@@ -53,13 +53,13 @@ function Login() {
                         <p className="auth-subtitle">Sign in to your MediCare Pro account</p>
 
                         {errorMsg && (
-                            <div className="error-msg" style={{ display: 'block' }}>
-                                ⚠️ <span style={{ whiteSpace: 'pre-line' }}>{errorMsg}</span>
+                            <div className="error-msg auth-msg-visible">
+                                ⚠️ <span className="auth-msg-pre-line">{errorMsg}</span>
                             </div>
                         )}
 
                         {successMsg && (
-                            <div className="success-msg" style={{ display: 'block' }}>
+                            <div className="success-msg auth-msg-visible">
                                 ✅ <span>{successMsg}</span>
                             </div>
                         )}

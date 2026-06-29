@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import "./components.css";
 
 const AlertModal = ({
     isOpen,
@@ -37,47 +38,24 @@ const AlertModal = ({
 
     return (
         <div
-            className="modal-overlay"
+            className="modal-overlay alert-modal-overlay"
             onClick={onClose}
-            style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: "rgba(0, 0, 0, 0.5)",
-                backdropFilter: "blur(4px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 1000,
-                padding: "20px",
-            }}
         >
             <div
-                className="modal-content"
+                className="modal-content alert-modal-content"
                 onClick={(e) => e.stopPropagation()}
                 ref={modalRef}
                 tabIndex={-1}
-                style={{
-                    background: "var(--bg-primary, #ffffff)",
-                    borderRadius: "16px",
-                    padding: "24px",
-                    maxWidth: "400px",
-                    width: "100%",
-                    boxShadow: "var(--shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.3))",
-                    outline: "none",
-                }}
             >
-                <div style={{ marginBottom: "16px" }}>
-                    <h2 style={{ margin: 0, fontSize: "20px", color: "var(--text-primary)" }}>
+                <div className="alert-modal-header">
+                    <h2 className="alert-modal-title">
                         {title}
                     </h2>
                 </div>
-                <div style={{ marginBottom: "24px", color: "var(--text-secondary)", fontSize: "15px", lineHeight: "1.5", whiteSpace: "pre-line" }}>
+                <div className="alert-modal-body">
                     {message}
                 </div>
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <div className="alert-modal-actions">
                     <button className="btn btn-primary" onClick={onClose}>
                         {buttonText}
                     </button>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PatientNavbar from "../../components/PatientNavbar.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { getMyAppointments } from "../../services/patientService.js";
+import "./patient.css";
 
 function PatientHome() {
     const { user } = useAuth();
@@ -50,15 +51,7 @@ function PatientHome() {
                     </div>
 
                     {error && (
-                        <div style={{
-                            padding: "12px 16px",
-                            marginBottom: "16px",
-                            background: "rgba(239, 68, 68, 0.1)",
-                            border: "1px solid rgba(239, 68, 68, 0.3)",
-                            borderRadius: "8px",
-                            color: "var(--rejected, #ef4444)",
-                            fontSize: "14px"
-                        }}>
+                        <div className="patient-home-error">
                             ⚠️ {error}
                         </div>
                     )}
@@ -83,34 +76,25 @@ function PatientHome() {
 
                     <div className="page-header">
                         <div>
-                            <h2 style={{ fontSize: "24px", fontWeight: 700, color: "var(--text-primary)" }}>Quick
-                                Actions</h2>
+                            <h2 className="patient-home-section-title">Quick Actions</h2>
                         </div>
                     </div>
 
                     <div className="doctors-grid">
-                        <div className="doctor-card"
-                            onClick={() => navigate("/patient/finddoctor")}
-                            style={{ cursor: "pointer", textAlign: "center", padding: "40px" }}>
-                            <div style={{ fontSize: "60px", marginBottom: "16px" }}>🔍</div>
-                            <h3 style={{ fontSize: "20px", marginBottom: "8px" }}>Find a Doctor</h3>
-                            <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>Browse our network of verified
-                                specialists</p>
+                        <div className="doctor-card patient-action-card" onClick={() => navigate("/patient/finddoctor")}>
+                            <div className="patient-action-icon">🔍</div>
+                            <h3 className="patient-action-title">Find a Doctor</h3>
+                            <p className="patient-action-desc">Browse our network of verified specialists</p>
                         </div>
-                        <div className="doctor-card"
-                            onClick={() => navigate("/patient/appointment")}
-                            style={{ cursor: "pointer", textAlign: "center", padding: "40px" }}>
-                            <div style={{ fontSize: "60px", marginBottom: "16px" }}>📋</div>
-                            <h3 style={{ fontSize: "20px", marginBottom: "8px" }}>My Appointments</h3>
-                            <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>View and manage your scheduled
-                                visits</p>
+                        <div className="doctor-card patient-action-card" onClick={() => navigate("/patient/appointment")}>
+                            <div className="patient-action-icon">📋</div>
+                            <h3 className="patient-action-title">My Appointments</h3>
+                            <p className="patient-action-desc">View and manage your scheduled visits</p>
                         </div>
-                        <div className="doctor-card"
-                            onClick={() => navigate("/patient/finddoctor")}
-                            style={{ cursor: "pointer", textAlign: "center", padding: "40px" }}>
-                            <div style={{ fontSize: "60px", marginBottom: "16px" }}>📊</div>
-                            <h3 style={{ fontSize: "20px", marginBottom: "8px" }}>Health Records</h3>
-                            <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>Track your medical history</p>
+                        <div className="doctor-card patient-action-card" onClick={() => navigate("/patient/finddoctor")}>
+                            <div className="patient-action-icon">📊</div>
+                            <h3 className="patient-action-title">Health Records</h3>
+                            <p className="patient-action-desc">Track your medical history</p>
                         </div>
                     </div>
                 </div>

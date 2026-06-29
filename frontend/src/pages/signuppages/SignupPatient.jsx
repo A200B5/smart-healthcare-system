@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navigation from "../../components/Navigation.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
+import "./signup.css";
 
 function SignupPatient() {
     const { register } = useAuth();
@@ -64,20 +65,20 @@ function SignupPatient() {
                 <div className="auth-wrapper">
                     <div className="auth-card">
                         <Link to="/signuprole" className="back-link">← Back to role selection</Link>
-                        <div style={{ textAlign: "center" }}>
+                        <div className="signup-role-badge-container">
                             <div className="role-badge">🧑 Patient Account</div>
                         </div>
                         <h1 className="auth-title">Create Patient Account</h1>
                         <p className="auth-subtitle">Fill in your details to get started</p>
                         
                         {errorMsg && (
-                            <div className="error-msg" style={{ display: 'block' }}>
+                            <div className="error-msg signup-msg-visible">
                                 ⚠️ <span>{errorMsg}</span>
                             </div>
                         )}
                         
                         {successMsg && (
-                            <div className="success-msg" style={{ display: 'block' }}>
+                            <div className="success-msg signup-msg-visible">
                                 ✅ <span>{successMsg}</span>
                             </div>
                         )}

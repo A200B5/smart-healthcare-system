@@ -1,6 +1,7 @@
 import { useTheme } from "../context/ThemeContext.jsx";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import "./components.css";
 
 function AdminNavbar({ pendingCount = 0 }) {
     const { theme, toggleTheme } = useTheme();
@@ -19,20 +20,10 @@ function AdminNavbar({ pendingCount = 0 }) {
                 <ul className="navbar-links">
                     <li><NavLink to="/admin/dashboard"
                         data-link="admin-dashboard">Dashboard</NavLink></li>
-                    <li style={{ position: 'relative' }}>
+                    <li className="nav-item-with-badge">
                         <NavLink to="/admin/managedoctor" data-link="admin-doctors">Doctors</NavLink>
                         {pendingCount > 0 && (
-                            <span style={{
-                                position: 'absolute',
-                                top: '-8px',
-                                right: '-12px',
-                                background: '#EF4444',
-                                color: 'white',
-                                fontSize: '0.7rem',
-                                fontWeight: 'bold',
-                                padding: '2px 6px',
-                                borderRadius: '10px'
-                            }}>
+                            <span className="nav-badge">
                                 {pendingCount}
                             </span>
                         )}
@@ -44,7 +35,7 @@ function AdminNavbar({ pendingCount = 0 }) {
                     <button className="theme-toggle-nav" onClick={toggleTheme}>
                         {theme === "light" ? "🌙" : "☀️"}</button>
                     <div className="user-badge">
-                        <div className="user-avatar" style={{ background: "#F5A623" }}>🔑</div>
+                        <div className="user-avatar user-avatar-admin">🔑</div>
                         <div>
                             <div className="user-name" id="admin-name">{user?.name || "Admin"}</div>
                             <div className="role-tag">Admin</div>

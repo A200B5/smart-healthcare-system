@@ -4,6 +4,7 @@ import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import { getAppointments, deleteAppointment } from "../../services/adminService.js";
 import ConfirmationModal from "../../components/ConfirmationModal.jsx";
 import AlertModal from "../../components/AlertModal.jsx";
+import "./admin.css";
 
 function AdminManageAppiontment() {
     const [appointments, setAppointments] = useState([]);
@@ -89,24 +90,23 @@ function AdminManageAppiontment() {
                     </div>
 
                     <div className="table-card">
-                        <div className="table-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                        <div className="table-header admin-appointments-top-bar">
                             <div className="table-title">Appointments List</div>
                             <input 
-                                className="form-input"
+                                className="form-input admin-appointments-search"
                                 type="text" 
                                 placeholder="Search patient, doctor, or specialty..." 
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                style={{ width: '300px' }}
                             />
                         </div>
                         
                         {loading ? (
                             <TableSkeleton rows={5} columns={6} />
                         ) : error ? (
-                            <p style={{ padding: '1rem', color: 'red' }}>{error}</p>
+                            <p className="admin-dashboard-error">{error}</p>
                         ) : filteredAppointments.length === 0 ? (
-                            <p style={{ padding: '1rem' }}>No appointments found.</p>
+                            <p className="admin-appointments-empty">No appointments found.</p>
                         ) : (
                             <table>
                                 <thead>
@@ -139,9 +139,8 @@ function AdminManageAppiontment() {
                                         </td>
                                         <td>
                                             <button 
-                                                className="btn-auth" 
+                                                className="btn-auth admin-appointments-btn-delete" 
                                                 onClick={() => confirmDelete(app)}
-                                                style={{ padding: '0.25rem 0.5rem', background: '#EF4444', minWidth: 'auto', fontSize: '0.875rem' }}
                                             >
                                                 Delete
                                             </button>

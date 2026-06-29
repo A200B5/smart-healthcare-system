@@ -1,0 +1,55 @@
+.save-button-base { display: flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); }  
+.save-spinner { width: 16px; height: 16px; border: 2px solid rgba(255, 255, 255, 0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; }  
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } 
+  
+/* --- AlertModal.jsx --- */  
+.alert-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }  
+.alert-modal-content { background: var(--bg-primary, #ffffff); border-radius: 16px; padding: 24px; max-width: 400px; width: 100%; box-shadow: var(--shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.3)); outline: none; }  
+.alert-modal-header { margin-bottom: 16px; }  
+.alert-modal-title { margin: 0; font-size: 20px; color: var(--text-primary); }  
+.alert-modal-body { margin-bottom: 24px; color: var(--text-secondary); font-size: 15px; line-height: 1.5; white-space: pre-line; }  
+.alert-modal-actions { display: flex; justify-content: flex-end; } 
+  
+/* --- ConfirmationModal.jsx --- */  
+.confirm-modal-actions { display: flex; justify-content: flex-end; gap: 12px; } 
+  
+/* --- ConfirmModal.jsx --- */  
+.confirm-modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 9999; }  
+.confirm-modal-content-wrap { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; max-width: 450px; width: 90%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }  
+.confirm-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }  
+.confirm-modal-title { margin: 0; color: var(--text-primary); font-size: 1.25rem; font-weight: bold; }  
+.confirm-modal-body-wrap { margin-bottom: 2rem; }  
+.confirm-modal-text { margin: 0; color: var(--text-secondary); font-size: 1rem; line-height: 1.5; }  
+.confirm-modal-btns { display: flex; justify-content: flex-end; gap: 1rem; }  
+.confirm-modal-btn-cancel { padding: 12px 28px; border-radius: 999px; border: 2px solid var(--border-color); background: transparent; color: var(--text-primary); font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }  
+.confirm-modal-btn-cancel:hover:not(:disabled) { border-color: var(--text-secondary); color: var(--text-primary); transform: translateY(-2px); }  
+.confirm-modal-btn-confirm { padding: 12px 28px; border-radius: 999px; border: none; color: white; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; }  
+.confirm-modal-btn-confirm:hover:not(:disabled) { transform: translateY(-2px); }  
+.confirm-modal-btn-confirm.destructive { background: #EF4444; }  
+.confirm-modal-btn-confirm.destructive:hover:not(:disabled) { box-shadow: 0 8px 24px rgba(239, 68, 68, 0.35); }  
+.confirm-modal-btn-confirm.primary { background: var(--primary-teal); }  
+.confirm-modal-btn-confirm.primary:hover:not(:disabled) { box-shadow: 0 8px 24px rgba(15, 95, 95, 0.35); }  
+.confirm-modal-close { background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; line-height: 1; border-radius: 50%; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; }  
+.confirm-modal-close:hover { background: var(--bg-primary); color: var(--text-primary); } 
+  
+/* --- PatientNavbar.jsx --- */  
+.nav-item-pointer { cursor: pointer; } 
+  
+/* --- DoctorNavbar.jsx --- */  
+.user-avatar-doctor { background: #3B82F6; } 
+  
+/* --- AdminNavbar.jsx --- */  
+.nav-item-with-badge { position: relative; }  
+.nav-badge { position: absolute; top: -8px; right: -12px; background: #EF4444; color: white; font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 10px; }  
+.user-avatar-admin { background: #F5A623; } 
+  
+/* --- AlreadyAuthenticated.jsx --- */  
+.already-auth-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--bg-secondary); }  
+.already-auth-card { text-align: center; padding: 2.5rem; max-width: 400px; width: 100%; background-color: var(--bg-primary); border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }  
+.already-auth-icon { font-size: 3rem; margin-bottom: 1rem; }  
+.already-auth-title { margin-bottom: 1rem; color: var(--text-primary); font-size: 1.5rem; margin-top: 0; }  
+.already-auth-text { margin-bottom: 2rem; color: var(--text-secondary); font-size: 1rem; margin-top: 0; }  
+.already-auth-actions { display: flex; flex-direction: column; gap: 0.75rem; }  
+.already-auth-btn-primary { width: 100%; padding: 0.75rem; border-radius: 8px; cursor: pointer; background-color: var(--primary-teal); color: white; border: none; font-size: 1rem; font-weight: 500; transition: background-color 0.2s; }  
+.already-auth-btn-outline { width: 100%; padding: 0.75rem; border-radius: 8px; cursor: pointer; background-color: transparent; border: 1px solid var(--border-color); color: var(--text-primary); font-size: 1rem; font-weight: 500; transition: all 0.2s; }  
+.already-auth-btn-cancel { width: 100%; padding: 0.75rem; border-radius: 8px; cursor: pointer; background: none; border: none; color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; text-decoration: underline; }  

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { getCurrentUser } from "../services/authService";
 import { useAuth } from "../context/AuthContext.jsx";
+import "./components.css";
 
 function DoctorNavbar() {
     const { theme, toggleTheme } = useTheme();
@@ -91,10 +92,7 @@ function DoctorNavbar() {
                 </button>
 
                 <div className="user-badge">
-                    <div
-                        className="user-avatar"
-                        style={{ background: "#3B82F6" }}
-                    >
+                    <div className="user-avatar user-avatar-doctor">
                         👨‍⚕️
                     </div>
 
