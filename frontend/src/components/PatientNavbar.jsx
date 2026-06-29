@@ -19,6 +19,7 @@ function PatientNavbar() {
         { path: "/patient/profile", label: "My Profile", page: "patient-profile" },
         { path: "/patient/finddoctor", label: "Find Doctors", page: "patient-doctors" },
         { path: "/patient/appointment", label: "My Appointments", page: "patient-appointments" },
+        { path: "/patient/payments", label: "My Payments", page: "patient-payments" },
     ];
 
     const displayName = user?.name || "Patient";

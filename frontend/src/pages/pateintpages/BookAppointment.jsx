@@ -4,7 +4,7 @@ import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 
 import PatientNavbar from "../../components/PatientNavbar.jsx";
 import { getDoctorById } from "../../services/doctorService.js";
-import { bookAppointment } from "../../services/appointmentService.js";
+// import { bookAppointment } from "../../services/appointmentService.js"; // Moved to checkout
 import { getAvailableSlots } from "../../services/patientService.js";
 import { toast } from "react-toastify";
 import "./patient.css";
@@ -170,15 +170,16 @@ function BookAppointment() {
                 notes: formData.notes.trim(),
             };
 
-            await bookAppointment(appointmentData);
-
-            toast.success("Appointment booked successfully");
-
-            setTimeout(() => {
-                navigate("/patient/appointment");
-            }, 1200);
+            // Phase 1: Navigate to checkout instead of creating the appointment directly
+            navigate("/patient/checkout", {
+                state: {
+                    doctor: normalizedDoctor,
+                    appointmentData: appointmentData
+                }
+            });
+            
         } catch (error) {
-            toast.error(error.message || "Failed to book appointment");
+            toast.error(error.message || "Failed to proceed to checkout");
         } finally {
             setBookingLoading(false);
         }
@@ -470,7 +471,7 @@ function BookAppointment() {
                                     isDoctorBusy
                                 }
                             >
-                                {bookingLoading ? "Booking..." : "Confirm Appointment"}
+                                {bookingLoading ? "Proceeding..." : "Proceed to Checkout"}
                             </button>
 
                             {isDoctorBusy && (

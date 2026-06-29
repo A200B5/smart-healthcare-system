@@ -139,23 +139,22 @@ function PatientFindDoctor() {
         try {
             setBookingSubmitting(true);
             setBookingError(null);
-            setBookingSuccess("");
 
-            await bookAppointment({
+            const appointmentData = {
                 doctorId: bookingDoctor.id,
                 date: bookingDate,
                 time: selectedSlot,
                 notes: bookingNotes,
-            });
+            };
 
-            setBookingSuccess("Appointment booked successfully!");
-            setTimeout(() => {
-                setBookingDoctor(null);
-                setBookingSuccess("");
-            }, 2000);
+            navigate("/patient/checkout", {
+                state: {
+                    doctor: bookingDoctor,
+                    appointmentData: appointmentData
+                }
+            });
         } catch (err) {
-            setBookingError(err.message || "Failed to book appointment");
-        } finally {
+            setBookingError(err.message || "Failed to proceed to checkout");
             setBookingSubmitting(false);
         }
     };
@@ -496,7 +495,7 @@ function PatientFindDoctor() {
                                     className="btn btn-primary patient-booking-submit-btn"
                                     disabled={bookingSubmitting || !bookingDate || !selectedSlot}
                                 >
-                                    {bookingSubmitting ? "Booking..." : "Confirm Booking"}
+                                    {bookingSubmitting ? "Proceeding..." : "Review & Continue"}
                                 </button>
                             </form>
                         )}
