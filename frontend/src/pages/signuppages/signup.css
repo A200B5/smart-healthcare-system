@@ -9,3 +9,43 @@
 .signup-msg-visible {
     display: block;
 }
+
+/* Phone Input Wrapper */
+.phone-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--bg-input);
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.phone-input-wrapper:focus-within {
+    border-color: var(--primary-teal);
+    box-shadow: 0 0 0 4px rgba(15, 95, 95, 0.1);
+}
+
+.phone-prefix {
+    padding: 14px 0 14px 18px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    user-select: none;
+}
+
+.phone-input-field {
+    flex: 1;
+    padding: 14px 18px 14px 8px;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    color: var(--text-primary);
+    outline: none;
+}
+
+.phone-input-field:disabled,
+.phone-input-field[readonly] {
+    cursor: not-allowed;
+    background: transparent;
+}

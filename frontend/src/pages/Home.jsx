@@ -18,9 +18,9 @@ function Home(){
         return <Navigate to={getRoleHomeRoute(user)} replace />;
     }
 
-    const handleAction = (patientRoute) => {
+    const handleAction = (patientRoute, redirectRoute) => {
         if (!isAuthenticated) {
-            navigate("/login", { state: { redirect: patientRoute } });
+            navigate("/login", { state: { redirect: redirectRoute || patientRoute } });
         } else if (user?.role === "patient") {
             navigate(patientRoute);
         } else {
@@ -28,9 +28,9 @@ function Home(){
         }
     };
 
-    const handleFindDoctor = () => handleAction("/patient/finddoctor");
-    const handleMakeAppointment = () => handleAction("/patient/appointment");
-    const handleGetTreatment = () => handleAction("/patient/home");
+    const handleFindDoctor = () => handleAction("/patient/finddoctor", "/patient/finddoctor");
+    const handleMakeAppointment = () => handleAction("/patient/appointment", "/patient/appointment");
+    const handleGetTreatment = () => handleAction("/patient/home", "/patient/finddoctor");
 
     return (
         <>

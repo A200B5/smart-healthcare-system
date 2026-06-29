@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navigation from "../../components/Navigation.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { toast } from "react-toastify";
 import "./signup.css";
 
 function SignupDoctor() {
@@ -29,6 +30,22 @@ function SignupDoctor() {
         setErrorMsg("");
         setSuccessMsg("");
 
+        if (!phone || phone.trim() === "") {
+            toast.error("Phone number is required.");
+            return;
+        }
+
+        const egyptianPhoneRegex = /^1[0125][0-9]{8}$/;
+        if (!egyptianPhoneRegex.test(phone.trim())) {
+            toast.error("Please enter a valid Egyptian mobile number.");
+            return;
+        }
+
+        if (password.length < 8) {
+            toast.error("Password must be at least 8 characters long.");
+            return;
+        }
+
         if (password !== confirmPassword) {
             setErrorMsg("Passwords do not match.");
             return;
@@ -41,7 +58,7 @@ function SignupDoctor() {
             email,
             password,
             role: "doctor",
-            phone,
+            phone: "+20" + phone.trim(),
             specialty,
             experience: parseInt(experience, 10),
             location,
@@ -127,14 +144,17 @@ function SignupDoctor() {
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Phone Number</label>
-                                <input
-                                    type="tel" 
-                                    className="form-input" 
-                                    placeholder="+20 100 000 0000" 
-                                    required
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                />
+                                <div className="phone-input-wrapper">
+                                    <span className="phone-prefix">+20</span>
+                                    <input
+                                        type="tel" 
+                                        className="phone-input-field" 
+                                        placeholder="100 000 0000" 
+                                        required
+                                        value={phone}
+                                        onChange={(e) => setPhone(e.target.value)}
+                                    />
+                                </div>
                             </div>
                             <div className="form-group">
                                 <label className="form-label">Medical Specialty</label>

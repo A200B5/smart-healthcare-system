@@ -51,6 +51,17 @@ router.post('/register', async (req, res) => {
       return res.status(409).json({ success: false, message: 'Email already registered' });
     }
 
+    // Reject duplicate phone numbers
+    if (phone && String(phone).trim() !== '') {
+      const existingPhone = await pool.request()
+        .input('phone', sql.NVarChar, phone)
+        .query('SELECT id FROM Users WHERE phone = @phone');
+
+      if (existingPhone.recordset.length > 0) {
+        return res.status(409).json({ success: false, message: 'Phone number already exists.' });
+      }
+    }
+
     // Validate and check license number for doctors
     if (validatedData.role === 'doctor') {
       if (!licenseNumber || String(licenseNumber).trim() === '') {

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import Navigation from "../components/Navigation.jsx";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { toast } from "react-toastify";
 
 function Login() {
     const { login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -21,7 +22,10 @@ function Login() {
             toast.success("Welcome back!");
 
             // Redirect based on role
-            if (user.role === "admin") {
+            const redirectPath = location.state?.redirect;
+            if (redirectPath) {
+                navigate(redirectPath);
+            } else if (user.role === "admin") {
                 navigate("/admin/dashboard");
             } else if (user.role === "doctor") {
                 navigate("/doctor/dashboard");
@@ -30,9 +34,9 @@ function Login() {
             }
         } catch (error) {
             const errorMsgStr = error.originalMessage || error.message || "";
-            const isAccountStatusError = 
-                errorMsgStr.toLowerCase().includes("profile not found") || 
-                errorMsgStr.toLowerCase().includes("pending") || 
+            const isAccountStatusError =
+                errorMsgStr.toLowerCase().includes("profile not found") ||
+                errorMsgStr.toLowerCase().includes("pending") ||
                 errorMsgStr.toLowerCase().includes("rejected");
 
             const toastOptions = isAccountStatusError ? {
@@ -69,7 +73,7 @@ function Login() {
                                     type="email"
                                     className="form-input"
                                     placeholder="you@example.com"
-                                    autoComplete="off"
+                                    autoComplete="on"
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -81,7 +85,7 @@ function Login() {
                                     type="password"
                                     className="form-input"
                                     placeholder="••••••••"
-                                    autoComplete="new-password"
+                                    autoComplete="current-password"
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
