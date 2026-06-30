@@ -150,7 +150,7 @@ const validateAppointmentBooking = (doctorId, date, time, notes) => {
 
 // Validate appointment status update
 const validateAppointmentStatus = (status) => {
-  const validStatuses = ['pending', 'confirmed', 'completed', 'rejected'];
+  const validStatuses = ['confirmed', 'completed', 'rejected', 'cancelled'];
   const errors = [];
 
   if (!status || typeof status !== 'string') {

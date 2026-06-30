@@ -21,7 +21,7 @@ function PatientHome() {
                 const appointments = data?.appointments || [];
                 const now = new Date();
                 const upcoming = appointments.filter(
-                    (a) => (a.status === "pending" || a.status === "confirmed") && new Date(a.date) >= new Date(now.toISOString().split("T")[0])
+                    (a) => (a.status === "confirmed") && new Date(a.date) >= new Date(now.toISOString().split("T")[0])
                 ).length;
                 const completed = appointments.filter((a) => a.status === "completed").length;
                 setStats({ upcoming, completed, total: appointments.length });

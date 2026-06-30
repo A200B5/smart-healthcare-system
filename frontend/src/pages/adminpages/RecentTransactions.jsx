@@ -11,8 +11,8 @@ const TransactionDetailsModal = ({ transaction, onClose, onRefundSuccess }) => {
 
     if (!transaction) return null;
 
-    const isRefundable = (transaction.paymentStatus === 'paid' || transaction.paymentStatus === 'succeeded') && 
-                         transaction.refundStatus !== 'refunded';
+    const isRefundable = (transaction.paymentStatus === 'paid' || transaction.paymentStatus === 'succeeded') &&
+        transaction.refundStatus !== 'refunded';
 
     const handleRefundConfirm = async () => {
         setIsRefunding(true);
@@ -41,7 +41,7 @@ const TransactionDetailsModal = ({ transaction, onClose, onRefundSuccess }) => {
                 showCloseIcon={true}
                 customActions={
                     isRefundable ? (
-                        <button 
+                        <button
                             className="btn btn-primary admin-refund-action-btn"
                             onClick={() => setShowRefundConfirm(true)}
                         >
@@ -88,13 +88,9 @@ const TransactionDetailsModal = ({ transaction, onClose, onRefundSuccess }) => {
                     <div>
                         <div className="form-label">Payment Status</div>
                         <div>
-                            <span className={`status-badge ${(transaction.paymentStatus === 'succeeded' || transaction.paymentStatus === 'paid') ? 'badge-completed' :
-                                    (transaction.paymentStatus === 'refunded') ? 'badge-rejected' :
-                                    (transaction.paymentStatus === 'pending' || transaction.paymentStatus === 'unpaid') ? 'badge-pending' : 'badge-rejected'
+                            <span className={`status-badge ${(transaction.paymentStatus === 'succeeded' || transaction.paymentStatus === 'paid') ? 'badge-completed' : 'badge-rejected'
                                 }`}>
-                                {(transaction.paymentStatus === 'succeeded' || transaction.paymentStatus === 'paid') ? 'Paid' :
-                                    (transaction.paymentStatus === 'refunded') ? 'Refunded' :
-                                    (transaction.paymentStatus === 'pending' || transaction.paymentStatus === 'unpaid') ? 'Pending' : 'Failed'}
+                                {(transaction.paymentStatus === 'succeeded' || transaction.paymentStatus === 'paid') ? 'Paid' : 'Refunded'}
                             </span>
                         </div>
                     </div>
@@ -201,22 +197,22 @@ const RecentTransactions = ({ refreshTrigger, onRefundSuccess }) => {
 
     const handleTransactionRefunded = (refundData) => {
         if (onRefundSuccess) onRefundSuccess();
-        
+
         // Also update local state to hide modal immediately and show accurate data before refetch
-        setTransactions(prev => prev.map(t => 
-            t.paymentId === refundData.paymentId 
-                ? { ...t, paymentStatus: 'refunded', refundStatus: refundData.refundStatus, refundAmount: refundData.refundAmount, refundedAt: refundData.refundedAt, refundId: refundData.refundId, stripeRefundId: refundData.stripeRefundId } 
+        setTransactions(prev => prev.map(t =>
+            t.paymentId === refundData.paymentId
+                ? { ...t, paymentStatus: 'refunded', refundStatus: refundData.refundStatus, refundAmount: refundData.refundAmount, refundedAt: refundData.refundedAt, refundId: refundData.refundId, stripeRefundId: refundData.stripeRefundId }
                 : t
         ));
-        
-        setSelectedTx(prev => ({ 
-            ...prev, 
-            paymentStatus: 'refunded', 
-            refundStatus: refundData.refundStatus, 
-            refundAmount: refundData.refundAmount, 
-            refundedAt: refundData.refundedAt, 
-            refundId: refundData.refundId, 
-            stripeRefundId: refundData.stripeRefundId 
+
+        setSelectedTx(prev => ({
+            ...prev,
+            paymentStatus: 'refunded',
+            refundStatus: refundData.refundStatus,
+            refundAmount: refundData.refundAmount,
+            refundedAt: refundData.refundedAt,
+            refundId: refundData.refundId,
+            stripeRefundId: refundData.stripeRefundId
         }));
     };
 
@@ -242,8 +238,6 @@ const RecentTransactions = ({ refreshTrigger, onRefundSuccess }) => {
                 >
                     <option value="All">All Statuses</option>
                     <option value="succeeded">Paid</option>
-                    <option value="pending">Pending</option>
-                    <option value="failed">Failed</option>
                     <option value="refunded">Refunded</option>
                 </select>
 
@@ -265,7 +259,7 @@ const RecentTransactions = ({ refreshTrigger, onRefundSuccess }) => {
                 <p className="admin-dashboard-error">{errorMsg}</p>
             ) : transactions.length === 0 ? (
                 <div className="admin-transaction-empty">
-                    <div className="admin-transaction-empty-icon">📭</div>
+
                     <h3>No Transactions Found</h3>
                     <p>Try adjusting your filters or search query.</p>
                 </div>
@@ -292,13 +286,9 @@ const RecentTransactions = ({ refreshTrigger, onRefundSuccess }) => {
                                         {tx.amount.toLocaleString(undefined, { style: "currency", currency: tx.currency.toUpperCase() })}
                                     </td>
                                     <td>
-                                        <span className={`status-badge ${(tx.paymentStatus === 'succeeded' || tx.paymentStatus === 'paid') ? 'badge-completed' :
-                                                (tx.paymentStatus === 'refunded') ? 'badge-rejected' :
-                                                (tx.paymentStatus === 'pending' || tx.paymentStatus === 'unpaid') ? 'badge-pending' : 'badge-rejected'
+                                        <span className={`status-badge ${(tx.paymentStatus === 'succeeded' || tx.paymentStatus === 'paid') ? 'badge-completed' : 'badge-rejected'
                                             }`}>
-                                            {(tx.paymentStatus === 'succeeded' || tx.paymentStatus === 'paid') ? 'Paid' :
-                                                (tx.paymentStatus === 'refunded') ? 'Refunded' :
-                                                (tx.paymentStatus === 'pending' || tx.paymentStatus === 'unpaid') ? 'Pending' : 'Failed'}
+                                            {(tx.paymentStatus === 'succeeded' || tx.paymentStatus === 'paid') ? 'Paid' : 'Refunded'}
                                         </span>
                                     </td>
                                     <td>

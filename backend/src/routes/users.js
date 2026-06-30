@@ -34,7 +34,6 @@ router.get('/stats', authMiddleware, requireRole('admin'), async (req, res) => {
         },
         appointments: {
           total:     stats.totalAppointments,
-          pending:   stats.pendingAppointments,
           confirmed: stats.confirmedAppointments,
           completed: stats.completedAppointments,
           rejected:  stats.rejectedAppointments,

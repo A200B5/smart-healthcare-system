@@ -44,7 +44,7 @@ const normalizeAppointments = (payload) => {
       specialty: app.specialty || app.type || app.doctorSpecialty || "General",
       date: dateStr,
       time: app.time || app.appointmentTime || "-",
-      status: (app.status || "pending").toLowerCase(),
+      status: (app.status || "confirmed").toLowerCase(),
     };
   });
 };
@@ -145,7 +145,6 @@ function DoctorDashboard() {
 
   const stats = {
     total: appointments.length,
-    pending: appointments.filter((a) => a.status === "pending").length,
     confirmed: appointments.filter((a) => a.status === "confirmed").length,
     completed: appointments.filter((a) => a.status === "completed").length,
     availableDays: schedule.filter((s) => s.isAvailable).length,
@@ -187,11 +186,7 @@ function DoctorDashboard() {
               <div className="label">Total Appointments</div>
             </div>
 
-            <div className="stat-card-dash">
 
-              <div className="number yellow">{stats.pending}</div>
-              <div className="label">Pending</div>
-            </div>
 
             <div className="stat-card-dash">
 
@@ -218,7 +213,7 @@ function DoctorDashboard() {
 
               <div className="filter-tabs doctor-dashboard-filter-tabs">
                 <button onClick={() => setFilter("all")} className={`filter-tab ${filter === "all" ? "active" : ""}`}>all</button>
-                <button onClick={() => setFilter("pending")} className={`filter-tab ${filter === "pending" ? "active" : ""}`}>pending</button>
+
                 <button onClick={() => setFilter("confirmed")} className={`filter-tab ${filter === "confirmed" ? "active" : ""}`}>confirmed</button>
                 <button onClick={() => setFilter("completed")} className={`filter-tab ${filter === "completed" ? "active" : ""}`}>completed</button>
                 <button onClick={() => setFilter("rejected")} className={`filter-tab ${filter === "rejected" ? "active" : ""}`}>rejected</button>
@@ -290,27 +285,7 @@ function DoctorDashboard() {
                       <td>
                         {doctorProfile?.verification_status === "approved" ? (
                           <>
-                            {app.status === "pending" && (
-                              <div className="action-btns">
-                                <button
-                                  className="action-btn btn-accept"
-                                  onClick={() =>
-                                    handleStatusUpdate(app.id, "confirmed")
-                                  }
-                                >
-                                  Accept
-                                </button>
 
-                                <button
-                                  className="action-btn btn-reject"
-                                  onClick={() =>
-                                    handleStatusUpdate(app.id, "rejected")
-                                  }
-                                >
-                                  Reject
-                                </button>
-                              </div>
-                            )}
 
                             {app.status === "confirmed" && (
                               <button
