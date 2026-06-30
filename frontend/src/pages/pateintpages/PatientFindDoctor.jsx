@@ -10,6 +10,8 @@ import {
     getAvailableSlots,
     bookAppointment,
 } from "../../services/patientService.js";
+import { validateAppointment } from "../../services/appointmentService.js";
+import { toast } from "react-toastify";
 
 function PatientFindDoctor() {
     const navigate = useNavigate();
@@ -118,7 +120,7 @@ function PatientFindDoctor() {
         try {
             setBookingSlotsLoading(true);
             const data = await getAvailableSlots(bookingDoctor.id, date);
-            const slots = (data?.availableSlots || []).filter((s) => !s.isBooked);
+            const slots = data?.availableSlots || [];
             setBookingSlots(slots);
             if (slots.length === 0) {
                 setBookingError("No available slots for this date. Please try another date.");
@@ -147,6 +149,8 @@ function PatientFindDoctor() {
                 notes: bookingNotes,
             };
 
+            await validateAppointment(appointmentData);
+
             navigate("/patient/checkout", {
                 state: {
                     doctor: bookingDoctor,
@@ -154,7 +158,7 @@ function PatientFindDoctor() {
                 }
             });
         } catch (err) {
-            setBookingError(err.message || "Failed to proceed to checkout");
+            toast.error(err.message || "Failed to proceed to checkout");
             setBookingSubmitting(false);
         }
     };
@@ -455,17 +459,19 @@ function PatientFindDoctor() {
                                                     <button
                                                         key={slot.time}
                                                         type="button"
-                                                        onClick={() => setSelectedSlot(slot.time)}
+                                                        onClick={() => !slot.isBooked && setSelectedSlot(slot.time)}
+                                                        disabled={slot.isBooked}
                                                         style={{
                                                             padding: "10px 8px",
                                                             border: selectedSlot === slot.time ? "2px solid var(--accent, #0ea5e9)" : "1px solid var(--border-color, #e2e8f0)",
                                                             background: selectedSlot === slot.time ? "rgba(14, 165, 233, 0.1)" : "var(--bg-secondary, #f8fafc)",
                                                             borderRadius: "8px",
-                                                            cursor: "pointer",
+                                                            cursor: slot.isBooked ? "not-allowed" : "pointer",
                                                             fontSize: "14px",
                                                             fontWeight: selectedSlot === slot.time ? 600 : 400,
                                                             color: "var(--text-primary)",
                                                             transition: "all 0.2s",
+                                                            opacity: slot.isBooked ? 0.5 : 1
                                                         }}
                                                     >
                                                         {slot.time}

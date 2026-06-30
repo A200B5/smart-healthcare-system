@@ -1,10 +1,37 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import PatientNavbar from "../../components/PatientNavbar.jsx";
+import { toast } from "react-toastify";
 import "./patient.css";
 
 function PaymentFailed() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const hasToasted = useRef(false);
+
+    useEffect(() => {
+        if (!hasToasted.current) {
+            hasToasted.current = true;
+            
+            const reason = location.state?.reason;
+
+            if (reason === "verify_failed" || reason === "no_session") {
+                toast.error(
+                    <div>
+                        <strong>Payment Failed</strong><br />
+                        Your payment could not be completed. Please try again.
+                    </div>
+                );
+            } else {
+                toast.warning(
+                    <div>
+                        <strong>Payment Cancelled</strong><br />
+                        No payment has been charged.
+                    </div>
+                );
+            }
+        }
+    }, [location]);
 
     const handleRetry = () => {
         const stored = sessionStorage.getItem("pendingPayment");

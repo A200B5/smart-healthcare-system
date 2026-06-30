@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { authMiddleware } = require('../middleware/auth');
+const { authMiddleware, requireRole } = require('../middleware/auth');
 const { getPool, sql } = require('../config/db');
+const { processStripeRefund } = require('../services/paymentService');
+const { validateAppointmentConflict } = require('../services/appointmentService');
 
 // POST /api/payments/create-session
 // Creates a Stripe Checkout Session for booking an appointment
@@ -13,6 +15,11 @@ router.post('/create-session', authMiddleware, async (req, res) => {
         
         // Calculate amount in cents (Stripe expects smallest currency unit)
         const unitAmount = Math.round(fee * 100);
+
+        const validationResult = await validateAppointmentConflict(patientId, doctorId, date, time);
+        if (!validationResult.success) {
+            return res.status(409).json(validationResult);
+        }
 
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
@@ -82,6 +89,11 @@ router.get('/verify/:sessionId', authMiddleware, async (req, res) => {
         const paymentStatus = session.payment_status;
         const paymentMethod = 'card'; // Simplified for now
 
+        const validationResult = await validateAppointmentConflict(patientId, doctorId, date, time);
+        if (!validationResult.success) {
+            return res.status(409).json(validationResult);
+        }
+
         // 3. Process payment and appointment idempotently via Stored Procedure
         const pool = getPool();
         const result = await pool.request()
@@ -141,6 +153,89 @@ router.get('/history', authMiddleware, async (req, res) => {
     } catch (error) {
         console.error('Fetch Payment History Error:', error);
         res.status(500).json({ success: false, message: 'Failed to fetch payment history' });
+    }
+});
+
+// POST /api/payments/refund
+// Processes a refund for a successful payment via Stripe Sandbox
+router.post('/refund', authMiddleware, requireRole('admin'), async (req, res) => {
+    try {
+        const { paymentId, reason } = req.body;
+        const adminId = req.user.id;
+
+        if (!paymentId) {
+            return res.status(400).json({ success: false, message: 'paymentId is required' });
+        }
+
+        const pool = getPool();
+        
+        // 1. Fetch Payment and Validate Eligibility
+        const paymentRes = await pool.request()
+            .input('paymentId', sql.Int, paymentId)
+            .query(`
+                SELECT id, stripe_payment_intent, amount, payment_status, appointment_id, patient_id
+                FROM Payments
+                WHERE id = @paymentId
+            `);
+            
+        if (paymentRes.recordset.length === 0) {
+            return res.status(404).json({ success: false, message: 'Payment not found' });
+        }
+
+        const payment = paymentRes.recordset[0];
+
+        if (payment.payment_status !== 'paid' && payment.payment_status !== 'succeeded') {
+            return res.status(400).json({ success: false, message: 'Payment must be paid to be refunded' });
+        }
+
+        const refundResult = await processStripeRefund(payment, reason, adminId);
+        
+        res.json({ 
+            success: true, 
+            message: 'Refund processed successfully',
+            refund: refundResult 
+        });
+
+    } catch (error) {
+        console.error('Refund Error:', error);
+        // Do not expose internal Stripe errors completely, but log them
+        res.status(500).json({ success: false, message: 'Failed to process refund. Ensure the payment is valid.' });
+    }
+});
+
+// GET /api/payments/refund/:paymentId
+// Get refund details for a payment
+router.get('/refund/:paymentId', authMiddleware, requireRole('admin'), async (req, res) => {
+    try {
+        const { paymentId } = req.params;
+        const pool = getPool();
+        
+        const result = await pool.request()
+            .input('paymentId', sql.Int, paymentId)
+            .query(`
+                SELECT TOP 1
+                    r.id AS refundId,
+                    r.payment_id AS paymentId,
+                    r.stripe_refund_id AS stripeRefundId,
+                    r.refund_amount AS refundAmount,
+                    r.refund_reason AS refundReason,
+                    r.refund_status AS refundStatus,
+                    r.refunded_at AS refundedAt,
+                    p.payment_status AS paymentStatus
+                FROM Refunds r
+                JOIN Payments p ON r.payment_id = p.id
+                WHERE r.payment_id = @paymentId
+                ORDER BY r.created_at DESC
+            `);
+            
+        if (result.recordset.length === 0) {
+            return res.status(404).json({ success: false, message: 'Refund not found for this payment' });
+        }
+        
+        res.json({ success: true, refund: result.recordset[0] });
+    } catch (error) {
+        console.error('Fetch Refund Error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch refund details' });
     }
 });
 

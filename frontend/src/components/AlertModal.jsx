@@ -5,8 +5,12 @@ const AlertModal = ({
     isOpen,
     title,
     message,
+    children,
     buttonText = "OK",
     onClose,
+    maxWidth = "400px",
+    showCloseIcon = false,
+    customActions,
 }) => {
     const modalRef = useRef(null);
 
@@ -43,6 +47,7 @@ const AlertModal = ({
         >
             <div
                 className="modal-content alert-modal-content"
+                style={{ maxWidth }}
                 onClick={(e) => e.stopPropagation()}
                 ref={modalRef}
                 tabIndex={-1}
@@ -51,11 +56,15 @@ const AlertModal = ({
                     <h2 className="alert-modal-title">
                         {title}
                     </h2>
+                    {showCloseIcon && (
+                        <button onClick={onClose} className="confirm-modal-close">&times;</button>
+                    )}
                 </div>
                 <div className="alert-modal-body">
-                    {message}
+                    {children || message}
                 </div>
                 <div className="alert-modal-actions">
+                    {customActions}
                     <button className="btn btn-primary" onClick={onClose}>
                         {buttonText}
                     </button>

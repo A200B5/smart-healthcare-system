@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import {useState ,useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PatientNavbar from "../../components/PatientNavbar.jsx";
 import { toast } from "react-toastify";
@@ -6,7 +6,7 @@ import { createCheckoutSession } from "../../services/paymentService.js";
 import "./patient.css";
 
 function PatientCheckout() {
-    const [isProcessing, setIsProcessing] = React.useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const { doctor, appointmentData } = location.state || {};

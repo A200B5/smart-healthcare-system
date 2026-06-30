@@ -2468,6 +2468,7 @@ textarea {
   opacity: 0.7 !important;
   align-self: flex-start !important;
 }
+
 .Toastify__close-button:hover {
   opacity: 1 !important;
   color: var(--text-primary) !important;
@@ -2477,12 +2478,15 @@ textarea {
 .Toastify__toast--success .Toastify__toast-icon svg {
   fill: var(--confirmed) !important;
 }
+
 .Toastify__toast--error .Toastify__toast-icon svg {
   fill: var(--rejected) !important;
 }
+
 .Toastify__toast--warning .Toastify__toast-icon svg {
   fill: var(--pending) !important;
 }
+
 .Toastify__toast--info .Toastify__toast-icon svg {
   fill: var(--completed) !important;
 }
@@ -2490,4 +2494,39 @@ textarea {
 /* Position adjustment for fixed Navbar (80px) + spacing (24px) */
 .Toastify__toast-container--top-right {
   top: 104px !important;
+}
+
+/* ============================================
+   GLOBAL SCROLLBAR CUSTOMIZATION
+   ============================================ */
+
+/* Global configuration for Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #14B8A6 #18181B;
+}
+
+/* Chrome, Edge, Safari, Brave, Opera */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #18181B;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #14B8A6;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #2DD4BF;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: #0F766E;
 }
