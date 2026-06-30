@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CardSkeleton from "../../components/loaders/CardSkeleton.jsx";
 import PatientNavbar from "../../components/PatientNavbar.jsx";
 import { getPaymentHistory } from "../../services/paymentService.js";
+import { toast } from "react-toastify";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { useAuth } from "../../context/AuthContext.jsx";
 import "./patient.css";
 
 function PatientPayments() {
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const patientName = user?.name || "Patient";
 
     // ── State ────────────────────────────────
     const [payments, setPayments] = useState([]);
@@ -14,6 +20,7 @@ function PatientPayments() {
     const [error, setError] = useState(null);
     const [filter, setFilter] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
+    const [sortOrder, setSortOrder] = useState("newest");
 
     // Modal State
     const [selectedPayment, setSelectedPayment] = useState(null);
@@ -43,15 +50,28 @@ function PatientPayments() {
         // Filter by status
         if (filter !== "all" && p.paymentStatus !== filter) return false;
 
-        // Search by Doctor Name or Transaction ID
+        // Search by Doctor Name, Transaction ID, or Payment Method
         if (searchQuery.trim() !== "") {
             const query = searchQuery.toLowerCase();
             const doctorMatch = (p.doctorName || "").toLowerCase().includes(query);
             const txnMatch = (p.transactionId || "").toLowerCase().includes(query);
-            if (!doctorMatch && !txnMatch) return false;
+            const methodMatch = (p.paymentMethod || "").toLowerCase().includes(query);
+            if (!doctorMatch && !txnMatch && !methodMatch) return false;
         }
 
         return true;
+    });
+
+    // Sort Payments
+    filteredPayments.sort((a, b) => {
+        const dateA = new Date(a.paidAt || a.date || 0);
+        const dateB = new Date(b.paidAt || b.date || 0);
+        
+        if (sortOrder === "newest") return dateB - dateA;
+        if (sortOrder === "oldest") return dateA - dateB;
+        if (sortOrder === "highest") return (b.amount || 0) - (a.amount || 0);
+        if (sortOrder === "lowest") return (a.amount || 0) - (b.amount || 0);
+        return 0;
     });
 
     const statusCounts = {
@@ -82,6 +102,118 @@ function PatientPayments() {
         }
     };
 
+    const handleDownloadReceipt = (payment) => {
+        if (!payment) {
+            toast.error("Payment data is unavailable.");
+            return;
+        }
+        
+        try {
+            const doc = new jsPDF();
+            const pageWidth = doc.internal.pageSize.width;
+
+            // Colors
+            const bgDark = [24, 24, 27];
+            const bgCard = [39, 39, 42];
+            const accentTeal = [20, 184, 166];
+            const textWhite = [255, 255, 255];
+            const textGray = [161, 161, 170];
+
+            // Background
+            doc.setFillColor(...bgDark);
+            doc.rect(0, 0, pageWidth, 297, "F");
+
+            // Header Section
+            doc.setFillColor(...accentTeal);
+            doc.rect(0, 0, pageWidth, 40, "F");
+
+            doc.setTextColor(...textWhite);
+            doc.setFontSize(24);
+            doc.setFont("helvetica", "bold");
+            doc.text("MediCare Pro", 20, 25);
+
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "normal");
+            doc.text("Payment Receipt", pageWidth - 20, 25, { align: "right" });
+
+            // Patient Information
+            doc.setFillColor(...bgCard);
+            doc.roundedRect(20, 50, pageWidth - 40, 60, 5, 5, "F");
+
+            doc.setTextColor(...accentTeal);
+            doc.setFontSize(16);
+            doc.setFont("helvetica", "bold");
+            doc.text("Patient Information", 25, 65);
+
+            doc.setTextColor(...textGray);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Patient Name:`, 25, 80);
+            doc.text(`Doctor Name:`, 25, 90);
+            doc.text(`Specialty:`, 25, 100);
+            doc.text(`Appointment Date:`, pageWidth / 2, 80);
+            doc.text(`Appointment Time:`, pageWidth / 2, 90);
+
+            doc.setTextColor(...textWhite);
+            doc.setFont("helvetica", "bold");
+            doc.text(patientName, 60, 80);
+            doc.text(payment.doctorName || "N/A", 60, 90);
+            doc.text(payment.doctorSpecialty || "N/A", 60, 100);
+            doc.text(formatDate(payment.date), pageWidth / 2 + 40, 80);
+            doc.text(payment.time || "N/A", pageWidth / 2 + 40, 90);
+
+            // Payment Information
+            doc.setTextColor(...accentTeal);
+            doc.setFontSize(16);
+            doc.setFont("helvetica", "bold");
+            doc.text("Payment Information", 25, 130);
+
+            autoTable(doc, {
+                startY: 140,
+                margin: { left: 20, right: 20 },
+                styles: { fillColor: bgCard, textColor: textWhite, font: "helvetica", fontSize: 10, lineColor: bgDark, lineWidth: 0.1 },
+                headStyles: { fillColor: accentTeal, textColor: textWhite, fontStyle: 'bold' },
+                alternateRowStyles: { fillColor: [45, 45, 48] },
+                body: [
+                    ["Transaction ID", payment.transactionId || "N/A"],
+                    ["Stripe Session ID", payment.sessionId || "N/A"],
+                    ["Payment Method", payment.paymentMethod?.toUpperCase() || "N/A"],
+                    ["Payment Status", payment.paymentStatus?.toUpperCase() || "N/A"],
+                    ["Paid At", formatDateTime(payment.paidAt)],
+                ],
+                theme: 'grid'
+            });
+
+            const finalY = doc.lastAutoTable.finalY || 190;
+
+            // Amount Paid Highlight
+            doc.setFillColor(...bgCard);
+            doc.roundedRect(20, finalY + 10, pageWidth - 40, 40, 5, 5, "F");
+            doc.setTextColor(...textWhite);
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "normal");
+            doc.text("Amount Paid", 30, finalY + 35);
+            
+            doc.setTextColor(...accentTeal);
+            doc.setFontSize(24);
+            doc.setFont("helvetica", "bold");
+            doc.text(`$${payment.amount} ${payment.currency?.toUpperCase()}`, pageWidth - 30, finalY + 36, { align: "right" });
+
+            // Footer
+            doc.setTextColor(...textGray);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "italic");
+            doc.text("Thank you for choosing MediCare Pro.", pageWidth / 2, 270, { align: "center" });
+            doc.text("This receipt was automatically generated by the MediCare Pro Healthcare System.", pageWidth / 2, 280, { align: "center" });
+
+            doc.save(`Receipt_${payment.transactionId || "Unknown"}.pdf`);
+            toast.success("Receipt downloaded successfully!");
+        } catch (err) {
+            console.error("PDF Generation Error:", err);
+            toast.error("Failed to generate receipt PDF.");
+        }
+    };
+
     return (
         <>
             <PatientNavbar />
@@ -95,16 +227,25 @@ function PatientPayments() {
                     </div>
 
                     {/* Filter and Search Controls */}
-                    <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginBottom: "20px" }}>
-                        <div className="search-bar" style={{ maxWidth: "400px" }}>
+                    <div className="patient-payments-header-controls">
+                        <div className="patient-payments-search-wrapper">
                             <input
                                 type="text"
-                                placeholder="Search by Doctor or Transaction ID..."
+                                placeholder="Search by Doctor, Transaction ID, or Payment Method..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="form-input"
-                                style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid var(--border-color)" }}
+                                className="form-input patient-payment-search"
                             />
+                            <select 
+                                className="form-select patient-payment-sort" 
+                                value={sortOrder} 
+                                onChange={(e) => setSortOrder(e.target.value)}
+                            >
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="highest">Highest Amount</option>
+                                <option value="lowest">Lowest Amount</option>
+                            </select>
                         </div>
 
                         <div className="filter-tabs">
@@ -178,17 +319,15 @@ function PatientPayments() {
                                     {/* Actions */}
                                     <div className="patient-appt-actions">
                                         <button
-                                            className="btn-sm btn-sm-outline"
+                                            className="btn-sm btn-sm-primary"
                                             onClick={() => setSelectedPayment(payment)}
                                         >
                                             View Details
                                         </button>
 
                                         <button
-                                            className="btn-sm btn-sm-outline"
-                                            disabled
-                                            title="Coming Soon"
-                                            style={{ opacity: 0.6, cursor: "not-allowed" }}
+                                            className="btn-sm btn-sm-outline patient-payment-outline-btn"
+                                            onClick={() => handleDownloadReceipt(payment)}
                                         >
                                             Download Receipt
                                         </button>
@@ -207,9 +346,8 @@ function PatientPayments() {
                     onClick={() => setSelectedPayment(null)}
                 >
                     <div
-                        className="modal-content patient-modal-content"
+                        className="modal-content patient-modal-content patient-payments-modal-content"
                         onClick={(e) => e.stopPropagation()}
-                        style={{ maxWidth: "500px" }}
                     >
                         <div className="patient-modal-header">
                             <h2 className="patient-modal-title">
@@ -223,7 +361,7 @@ function PatientPayments() {
                             </button>
                         </div>
 
-                        <div className="payment-details-card" style={{ marginTop: "15px" }}>
+                        <div className="payment-details-card patient-payments-modal-body">
                             <div className="summary-row">
                                 <span>Doctor</span>
                                 <strong>{selectedPayment.doctorName} ({selectedPayment.doctorSpecialty})</strong>
@@ -236,7 +374,7 @@ function PatientPayments() {
                                 <span>Appointment Time</span>
                                 <strong>{selectedPayment.time}</strong>
                             </div>
-                            <hr style={{ margin: "10px 0", border: "none", borderTop: "1px solid var(--border-color)" }} />
+                            <hr className="patient-payments-modal-divider" />
                             <div className="summary-row">
                                 <span>Transaction ID</span>
                                 <strong>{selectedPayment.transactionId}</strong>
@@ -244,7 +382,7 @@ function PatientPayments() {
                             {selectedPayment.sessionId && (
                                 <div className="summary-row">
                                     <span>Stripe Session</span>
-                                    <strong style={{ fontSize: "0.85em", wordBreak: "break-all", marginLeft: "10px", textAlign: "right" }}>{selectedPayment.sessionId}</strong>
+                                    <strong className="patient-payments-session-val">{selectedPayment.sessionId}</strong>
                                 </div>
                             )}
                             <div className="summary-row">
@@ -253,7 +391,7 @@ function PatientPayments() {
                             </div>
                             <div className="summary-row">
                                 <span>Status</span>
-                                <strong className={`status-badge badge-${selectedPayment.paymentStatus === 'paid' ? 'completed' : selectedPayment.paymentStatus === 'failed' ? 'rejected' : 'pending'}`} style={{ padding: "2px 6px", fontSize: "0.9em" }}>
+                                <strong className={`status-badge badge-${selectedPayment.paymentStatus === 'paid' ? 'completed' : selectedPayment.paymentStatus === 'failed' ? 'rejected' : 'pending'} patient-payments-status-val`}>
                                     {selectedPayment.paymentStatus?.toUpperCase()}
                                 </strong>
                             </div>
@@ -261,14 +399,14 @@ function PatientPayments() {
                                 <span>Paid At</span>
                                 <strong>{formatDateTime(selectedPayment.paidAt)}</strong>
                             </div>
-                            <hr style={{ margin: "10px 0", border: "none", borderTop: "1px solid var(--border-color)" }} />
+                            <hr className="patient-payments-modal-divider" />
                             <div className="summary-row total">
                                 <span>Amount Paid</span>
                                 <strong>${selectedPayment.amount} {selectedPayment.currency?.toUpperCase()}</strong>
                             </div>
                         </div>
 
-                        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }}>
+                        <div className="patient-payments-modal-footer">
                             <button className="btn btn-primary" onClick={() => setSelectedPayment(null)}>
                                 Close
                             </button>

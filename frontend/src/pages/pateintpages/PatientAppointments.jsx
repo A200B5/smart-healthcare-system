@@ -11,6 +11,7 @@ import {
 } from "../../services/patientService.js";
 import "./patient.css";
 import ConfirmationModal from "../../components/ConfirmationModal.jsx";
+import AlertModal from "../../components/AlertModal.jsx";
 
 function PatientAppointments() {
     const navigate = useNavigate();
@@ -62,13 +63,17 @@ function PatientAppointments() {
         loadAppointments();
     }, []);
 
-    // ── Confirmation Modal State ──────────────────────────
+    // ── Confirmation Modal State ────────────────────────────────
     const [confirmModal, setConfirmModal] = useState({
         isOpen: false,
         appointmentId: null,
     });
+    const [alertModal, setAlertModal] = useState({
+        isOpen: false,
+        message: "",
+    });
 
-    // ── Cancel Appointment Handler ────────────────────────
+    // ── Cancel Appointment Handler ──────────────────────────────
     const handleCancelClick = (appointmentId) => {
         setConfirmModal({ isOpen: true, appointmentId });
     };
@@ -81,8 +86,18 @@ function PatientAppointments() {
         try {
             setCancellingId(appointmentId);
             setError(null);
-            await cancelAppointment(appointmentId);
-            setAppointments((prev) => prev.filter((a) => a.id !== appointmentId));
+            const res = await cancelAppointment(appointmentId);
+            
+            setAppointments((prev) => 
+                prev.map(a => a.id === appointmentId ? { ...a, status: 'cancelled' } : a)
+            );
+            
+            let alertMsg = "Appointment cancelled successfully.";
+            if (res && res.refunded) {
+                alertMsg += " Your payment has been refunded successfully.";
+            }
+            setAlertModal({ isOpen: true, message: alertMsg });
+            
         } catch (err) {
             setError(err.message || "Failed to cancel appointment");
         } finally {
@@ -365,16 +380,24 @@ function PatientAppointments() {
                 </div>
             )}
 
-            {/* ── Confirmation Modal ───────────────────────── */}
+            {/* ── Confirmation Modal ─────────────────────────────── */}
             <ConfirmationModal
                 isOpen={confirmModal.isOpen}
                 title="Cancel Appointment"
-                message="Are you sure you want to cancel this appointment?&#10;&#10;This action cannot be undone."
+                message="Are you sure you want to cancel this appointment?&#10;&#10;If this appointment has already been paid, your payment will be refunded automatically."
                 confirmText="Cancel Appointment"
                 cancelText="Keep Appointment"
                 onConfirm={handleConfirmCancel}
                 onCancel={handleCancelClose}
                 isDanger={true}
+            />
+
+            {/* ── Alert Modal ────────────────────────────────────── */}
+            <AlertModal
+                isOpen={alertModal.isOpen}
+                title="Notice"
+                message={alertModal.message}
+                onClose={() => setAlertModal({ isOpen: false, message: "" })}
             />
         </>
     );

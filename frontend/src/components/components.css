@@ -5,9 +5,9 @@
 /* --- AlertModal.jsx --- */  
 .alert-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }  
 .alert-modal-content { background: var(--bg-primary, #ffffff); border-radius: 16px; padding: 24px; max-width: 400px; width: 100%; box-shadow: var(--shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.3)); outline: none; }  
-.alert-modal-header { margin-bottom: 16px; }  
-.alert-modal-title { margin: 0; font-size: 20px; color: var(--text-primary); }  
-.alert-modal-body { margin-bottom: 24px; color: var(--text-secondary); font-size: 15px; line-height: 1.5; white-space: pre-line; }  
+.alert-modal-header { margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+.alert-modal-title { margin: 0; font-size: 20px; color: var(--text-primary); }
+.alert-modal-body { margin-bottom: 24px; color: var(--text-secondary); font-size: 15px; line-height: 1.5; white-space: pre-line; max-height: 60vh; overflow-y: auto; }
 .alert-modal-actions { display: flex; justify-content: flex-end; } 
   
 /* --- ConfirmationModal.jsx --- */  

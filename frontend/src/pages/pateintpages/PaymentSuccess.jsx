@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import {useState , useEffect , useRef} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PatientNavbar from "../../components/PatientNavbar.jsx";
 import { toast } from "react-toastify";
@@ -13,14 +13,13 @@ function PaymentSuccess() {
     const queryParams = new URLSearchParams(location.search);
     const sessionId = queryParams.get("session_id");
 
-    const [paymentDetails, setPaymentDetails] = React.useState(null);
-    const [bookingStatus, setBookingStatus] = React.useState("loading");
-    const bookingAttempted = React.useRef(false);
+    const [paymentDetails, setPaymentDetails] = useState(null);
+    const [bookingStatus, setBookingStatus] = useState("loading");
+    const bookingAttempted = useRef(false);
 
     useEffect(() => {
         if (!sessionId) {
-            toast.error("No payment session found.");
-            navigate("/patient/payment-failed");
+            navigate("/patient/payment-failed", { state: { reason: "no_session" } });
             return;
         }
 
@@ -33,8 +32,7 @@ function PaymentSuccess() {
                     const verifyRes = await verifyPayment(sessionId);
                     
                     if (!verifyRes.success || !verifyRes.payment) {
-                        toast.error("Payment verification failed.");
-                        navigate("/patient/payment-failed");
+                        navigate("/patient/payment-failed", { state: { reason: "verify_failed" } });
                         return;
                     }
 
@@ -42,10 +40,25 @@ function PaymentSuccess() {
                     setPaymentDetails(verifyRes.payment);
                     setBookingStatus("success");
                     sessionStorage.removeItem("pendingPayment"); // Clean up if any
+                    
+                    if (verifyRes.payment.paymentStatus === 'refunded') {
+                        toast.info(
+                            <div>
+                                <strong>Payment Refunded</strong><br />
+                                Your payment has been refunded automatically because the selected appointment is no longer available.
+                            </div>
+                        );
+                    } else {
+                        toast.success(
+                            <div>
+                                <strong>Payment Successful</strong><br />
+                                Your appointment has been booked successfully. Your receipt is now available in My Payments.
+                            </div>
+                        );
+                    }
                 } catch (error) {
                     setBookingStatus("error");
-                    toast.error("An error occurred during payment verification.");
-                    navigate("/patient/payment-failed");
+                    navigate("/patient/payment-failed", { state: { reason: "verify_failed" } });
                 }
             };
             

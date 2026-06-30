@@ -47,9 +47,19 @@ export const cancelAppointment = async (appointmentId) => {
 	}
 }
 
+export const validateAppointment = async (appointmentData) => {
+	try {
+		const response = await API.post("/appointments/validate", appointmentData)
+		return response.data
+	} catch (error) {
+		errorHandle(error, "Failed to validate appointment")
+	}
+}
+
 export default {
 	getAppointments,
 	bookAppointment,
 	updateAppointmentStatus,
 	cancelAppointment,
+	validateAppointment,
 }

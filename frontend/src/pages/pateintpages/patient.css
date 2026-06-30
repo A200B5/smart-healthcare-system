@@ -110,3 +110,45 @@
 .payment-failed-message { color: var(--text-secondary); line-height: 1.6; text-align: center; }
 .payment-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
 .payment-actions .btn { min-width: 150px; }
+/* Phase 7 Extracted Inline Styles */
+.patient-payments-header-controls { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+.patient-payments-search-wrapper { display: flex; gap: 15px; align-items: center; width: 100%; max-width: 800px; }
+.patient-payment-search { flex: 1; padding: 10px !important; border-radius: 8px !important; font-size: 1rem !important; min-width: 0; }
+.patient-payment-sort { width: auto !important; flex: 0 0 auto !important; padding: 10px !important; border-radius: 8px !important; font-size: 1rem !important; }
+.appointment-card .patient-payment-outline-btn:hover:not(:disabled) { background: var(--primary-teal) !important; color: white !important; border-color: var(--primary-teal) !important; }
+.appointment-card .patient-payment-outline-btn:disabled:hover { background: transparent !important; color: var(--text-secondary) !important; border-color: var(--border-color) !important; }
+.patient-payments-modal-content { max-width: 500px; }
+.patient-payments-modal-body { margin-top: 15px; }
+.patient-payments-modal-divider { margin: 10px 0; border: none; border-top: 1px solid var(--border-color); }
+.patient-payments-session-val { font-size: 0.85em; word-break: break-all; margin-left: 10px; text-align: right; }
+.patient-payments-status-val { padding: 2px 6px; font-size: 0.9em; }
+.patient-payments-modal-footer { display: flex; justify-content: flex-end; margin-top: 20px; }
+
+/* Custom Scrollbar for Payment Details Modal */
+.patient-payments-modal-content {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-teal-dark, #0d9488) transparent;
+}
+
+.patient-payments-modal-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.patient-payments-modal-content::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 8px;
+}
+
+.patient-payments-modal-content::-webkit-scrollbar-thumb {
+    background: var(--primary-teal-dark, #0d9488);
+    border-radius: 8px;
+}
+
+.patient-payments-modal-content::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-teal, #14b8a6);
+}
+
+.patient-payments-modal-content::-webkit-scrollbar-thumb:active {
+    background: #2dd4bf;
+}

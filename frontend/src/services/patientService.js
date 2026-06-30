@@ -103,7 +103,7 @@ export const bookAppointment = async (appointmentData) => {
 
 export const cancelAppointment = async (appointmentId) => {
 	try {
-		const response = await API.delete(`/appointments/${appointmentId}`)
+		const response = await API.post(`/appointments/cancel`, { appointmentId })
 		return response.data
 	} catch (error) {
 		errorHandle(error, "Failed to cancel appointment")

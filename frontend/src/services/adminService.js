@@ -138,6 +138,42 @@ export const rejectDoctor = async (doctorId, rejectionReason) => {
 	}
 }
 
+export const getRevenueStats = async () => {
+	try {
+		const response = await API.get("/admin/revenue-stats")
+		return response.data
+	} catch (error) {
+		errorHandle(error, "Failed to fetch revenue stats")
+	}
+}
+
+export const getRecentTransactions = async (params = {}) => {
+	try {
+		const response = await API.get("/admin/recent-transactions", { params })
+		return response.data
+	} catch (error) {
+		errorHandle(error, "Failed to fetch recent transactions")
+	}
+}
+
+export const getTopDoctors = async () => {
+	try {
+		const response = await API.get("/admin/top-doctors")
+		return response.data
+	} catch (error) {
+		errorHandle(error, "Failed to fetch top doctors")
+	}
+}
+
+export const refundPayment = async (paymentId, reason = "requested_by_customer") => {
+    try {
+        const response = await API.post("/payments/refund", { paymentId, reason });
+        return response.data;
+    } catch (error) {
+        errorHandle(error, "Failed to refund payment");
+    }
+}
+
 export default {
 	getAdminStats,
 	getUsers,
@@ -152,5 +188,9 @@ export default {
 	deleteAppointment,
 	getPendingDoctors,
 	approveDoctor,
-	rejectDoctor
+	rejectDoctor,
+	getRevenueStats,
+	getRecentTransactions,
+	getTopDoctors,
+	refundPayment
 }

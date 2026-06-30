@@ -5,6 +5,7 @@ import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 import PatientNavbar from "../../components/PatientNavbar.jsx";
 import { getDoctorById } from "../../services/doctorService.js";
 // import { bookAppointment } from "../../services/appointmentService.js"; // Moved to checkout
+import { validateAppointment } from "../../services/appointmentService.js";
 import { getAvailableSlots } from "../../services/patientService.js";
 import { toast } from "react-toastify";
 import "./patient.css";
@@ -169,6 +170,8 @@ function BookAppointment() {
                 time: formData.time,
                 notes: formData.notes.trim(),
             };
+
+            await validateAppointment(appointmentData);
 
             // Phase 1: Navigate to checkout instead of creating the appointment directly
             navigate("/patient/checkout", {

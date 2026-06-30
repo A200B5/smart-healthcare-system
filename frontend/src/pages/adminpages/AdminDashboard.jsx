@@ -4,6 +4,11 @@ import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import { getPendingDoctors, approveDoctor, rejectDoctor, getAdminStats } from "../../services/adminService.js";
 import ConfirmationModal from "../../components/ConfirmationModal.jsx";
 import AlertModal from "../../components/AlertModal.jsx";
+import RevenueOverview from "./RevenueOverview.jsx";
+import RevenueSummary from "./RevenueSummary.jsx";
+import RecentTransactions from "./RecentTransactions.jsx";
+import TopDoctorsRevenue from "./TopDoctorsRevenue.jsx";
+import { getRevenueStats } from "../../services/adminService.js";
 import "./admin.css";
 
 function AdminDashboard() {
@@ -11,6 +16,9 @@ function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [errorMsg, setErrorMsg] = useState("");
     const [stats, setStats] = useState(null);
+    const [revenueStats, setRevenueStats] = useState(null);
+    const [revenueLoading, setRevenueLoading] = useState(true);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     // Modal State
     const [showRejectModal, setShowRejectModal] = useState(false);
@@ -48,10 +56,29 @@ function AdminDashboard() {
         }
     };
 
+    const fetchRevenueStats = async () => {
+        setRevenueLoading(true);
+        try {
+            const res = await getRevenueStats();
+            if (res && res.success) {
+                setRevenueStats(res.data);
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setRevenueLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchPendingDoctors();
         fetchStats();
     }, []);
+
+    useEffect(() => {
+        fetchStats();
+        fetchRevenueStats();
+    }, [refreshTrigger]);
 
     const handleApproveClick = (doctorId) => {
         setConfirmApprove({ isOpen: true, doctorId });
@@ -269,7 +296,23 @@ function AdminDashboard() {
                                 <p>Loading stats...</p>
                             )}
                         </div>
+                        
+                        {/* Revenue Summary Integration */}
+                        <RevenueSummary stats={revenueStats} loading={revenueLoading} />
                     </div>
+
+                    {/* Revenue Overview Module */}
+                    <div className="admin-dashboard-section" style={{ marginTop: '2rem' }}>
+                        <div className="table-title" style={{ marginBottom: '0.4rem' }}>Revenue Overview</div>
+                        <RevenueOverview stats={revenueStats} loading={revenueLoading} />
+                    </div>
+
+                    {/* Top Doctors by Revenue Module */}
+                    <TopDoctorsRevenue refreshTrigger={refreshTrigger} />
+
+                    {/* Recent Transactions Module */}
+                    <RecentTransactions refreshTrigger={refreshTrigger} onRefundSuccess={() => setRefreshTrigger(prev => prev + 1)} />
+
 
                 </div>
             </div>
