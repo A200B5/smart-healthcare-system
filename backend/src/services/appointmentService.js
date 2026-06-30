@@ -24,7 +24,7 @@ const validateAppointmentConflict = async (patientId, doctorId, appointmentDate,
                 WHERE doctor_id = @doctorId 
                   AND appointment_date = @date 
                   AND appointment_time = @time 
-                  AND status IN ('pending', 'confirmed')
+                  AND status = 'confirmed'
             `);
 
         if (doctorConflict.recordset.length > 0) {
@@ -45,7 +45,7 @@ const validateAppointmentConflict = async (patientId, doctorId, appointmentDate,
                 WHERE patient_id = @patientId 
                   AND appointment_date = @date 
                   AND appointment_time = @time 
-                  AND status IN ('pending', 'confirmed')
+                  AND status = 'confirmed'
             `);
 
         if (patientConflict.recordset.length > 0) {

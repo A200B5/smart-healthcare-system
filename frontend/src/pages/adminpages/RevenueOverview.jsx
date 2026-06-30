@@ -25,21 +25,6 @@ const RevenueOverview = ({ stats, loading }) => {
                 <div className="sublabel">Current Month</div>
             </div>
             <div className="stat-card-dash">
-                <div className="number green">{stats.successfulPayments?.toLocaleString() || 0}</div>
-                <div className="label">Successful Payments</div>
-                <div className="sublabel">Completed</div>
-            </div>
-            <div className="stat-card-dash">
-                <div className="number text-warning">{stats.pendingPayments?.toLocaleString() || 0}</div>
-                <div className="label">Pending Payments</div>
-                <div className="sublabel">Awaiting Payment</div>
-            </div>
-            <div className="stat-card-dash">
-                <div className="number text-danger">{stats.failedPayments?.toLocaleString() || 0}</div>
-                <div className="label">Failed Payments</div>
-                <div className="sublabel">Unsuccessful</div>
-            </div>
-            <div className="stat-card-dash">
                 <div className="number gold">${stats.averagePaymentAmount?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || 0}</div>
                 <div className="label">Average Payment</div>
                 <div className="sublabel">Per transaction</div>
@@ -48,6 +33,16 @@ const RevenueOverview = ({ stats, loading }) => {
                 <div className="number teal">{stats.totalTransactions?.toLocaleString() || 0}</div>
                 <div className="label">Total Transactions</div>
                 <div className="sublabel">All time</div>
+            </div>
+            <div className="stat-card-dash">
+                <div className="number green">{stats.successfulPayments?.toLocaleString() || 0}</div>
+                <div className="label">Successful Payments</div>
+                <div className="sublabel">Completed</div>
+            </div>
+            <div className="stat-card-dash">
+                <div className="number" style={{ color: "var(--rejected)" }}>{stats.refundedPayments?.toLocaleString() || 0}</div>
+                <div className="label">Refunded Payments</div>
+                <div className="sublabel">Successfully Refunded</div>
             </div>
         </div>
     );

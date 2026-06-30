@@ -235,15 +235,6 @@ function AdminDashboard() {
                                 <div className="admin-dashboard-chart-list">
                                     <div>
                                         <div className="admin-dashboard-chart-label-row">
-                                            <span>Completed</span>
-                                            <span>{stats.completedAppointments}</span>
-                                        </div>
-                                        <div className="admin-dashboard-progress-wrap">
-                                            <div className="admin-dashboard-progress-fill admin-dashboard-progress-teal" style={{ width: `${stats.totalAppointments ? (stats.completedAppointments / stats.totalAppointments) * 100 : 0}%` }}></div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div className="admin-dashboard-chart-label-row">
                                             <span>Confirmed</span>
                                             <span>{stats.confirmedAppointments}</span>
                                         </div>
@@ -253,20 +244,20 @@ function AdminDashboard() {
                                     </div>
                                     <div>
                                         <div className="admin-dashboard-chart-label-row">
-                                            <span>Pending</span>
-                                            <span>{stats.pendingAppointments}</span>
+                                            <span>Completed</span>
+                                            <span>{stats.completedAppointments}</span>
                                         </div>
                                         <div className="admin-dashboard-progress-wrap">
-                                            <div className="admin-dashboard-progress-fill admin-dashboard-progress-pending" style={{ width: `${stats.totalAppointments ? (stats.pendingAppointments / stats.totalAppointments) * 100 : 0}%` }}></div>
+                                            <div className="admin-dashboard-progress-fill admin-dashboard-progress-teal" style={{ width: `${stats.totalAppointments ? (stats.completedAppointments / stats.totalAppointments) * 100 : 0}%` }}></div>
                                         </div>
                                     </div>
                                     <div>
                                         <div className="admin-dashboard-chart-label-row">
-                                            <span>Rejected</span>
-                                            <span>{stats.rejectedAppointments}</span>
+                                            <span>Refunded</span>
+                                            <span>{revenueStats?.refundedPayments || 0}</span>
                                         </div>
                                         <div className="admin-dashboard-progress-wrap">
-                                            <div className="admin-dashboard-progress-fill admin-dashboard-progress-rejected" style={{ width: `${stats.totalAppointments ? (stats.rejectedAppointments / stats.totalAppointments) * 100 : 0}%` }}></div>
+                                            <div className="admin-dashboard-progress-fill admin-dashboard-progress-rejected" style={{ width: `${stats.totalAppointments ? ((revenueStats?.refundedPayments || 0) / stats.totalAppointments) * 100 : 0}%` }}></div>
                                         </div>
                                     </div>
                                 </div>

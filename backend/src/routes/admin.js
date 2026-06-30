@@ -199,9 +199,8 @@ router.get('/revenue-stats', async (req, res) => {
           ISNULL(SUM(CASE WHEN payment_status IN ('paid', 'succeeded') AND DATEDIFF(week, paid_at, GETDATE()) = 0 THEN (amount - ISNULL(refunded_amount, 0)) ELSE 0 END), 0) AS revenueThisWeek,
           ISNULL(SUM(CASE WHEN payment_status IN ('paid', 'succeeded') AND DATEDIFF(month, paid_at, GETDATE()) = 0 THEN (amount - ISNULL(refunded_amount, 0)) ELSE 0 END), 0) AS revenueThisMonth,
           SUM(CASE WHEN payment_status IN ('paid', 'succeeded') THEN 1 ELSE 0 END) AS successfulPayments,
-          SUM(CASE WHEN payment_status = 'unpaid' OR payment_status = 'pending' THEN 1 ELSE 0 END) AS pendingPayments,
-          SUM(CASE WHEN payment_status = 'failed' THEN 1 ELSE 0 END) AS failedPayments,
           ISNULL(AVG(CASE WHEN payment_status IN ('paid', 'succeeded') AND (amount - ISNULL(refunded_amount, 0)) > 0 THEN (amount - ISNULL(refunded_amount, 0)) ELSE NULL END), 0) AS averagePaymentAmount,
+          SUM(CASE WHEN payment_status = 'refunded' THEN 1 ELSE 0 END) AS refundedPayments,
           COUNT(*) AS totalTransactions
         FROM Payments
       `);

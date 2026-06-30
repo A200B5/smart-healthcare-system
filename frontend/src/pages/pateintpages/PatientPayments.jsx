@@ -77,8 +77,7 @@ function PatientPayments() {
     const statusCounts = {
         all: payments.length,
         paid: payments.filter((p) => p.paymentStatus === "paid").length,
-        pending: payments.filter((p) => p.paymentStatus === "pending").length,
-        failed: payments.filter((p) => p.paymentStatus === "failed").length,
+        refunded: payments.filter((p) => p.paymentStatus === "refunded").length,
     };
 
     // ── Format Date ───────────────────────────────────────
@@ -249,7 +248,7 @@ function PatientPayments() {
                         </div>
 
                         <div className="filter-tabs">
-                            {["all", "paid", "pending", "failed"].map((status) => (
+                            {["all", "paid", "refunded"].map((status) => (
                                 <button
                                     key={status}
                                     className={`filter-tab ${filter === status ? "active" : ""}`}
@@ -292,7 +291,7 @@ function PatientPayments() {
                     ) : (
                         <div className="patient-appt-list">
                             {filteredPayments.map((payment) => (
-                                <div className={`appointment-card ${payment.paymentStatus === 'paid' ? 'completed' : payment.paymentStatus === 'failed' ? 'rejected' : 'pending'}`} key={payment.paymentId}>
+                                <div className={`appointment-card ${payment.paymentStatus === 'paid' ? 'completed' : 'rejected'}`} key={payment.paymentId}>
                                     <div className="appt-doctor">
                                         <div className="appt-avatar">💳</div>
                                         <div>
@@ -311,7 +310,7 @@ function PatientPayments() {
                                             <div className="appt-detail-label">Paid At</div>
                                             <div className="appt-detail-value">{formatDate(payment.paidAt)}</div>
                                         </div>
-                                        <span className={`status-badge badge-${payment.paymentStatus === 'paid' ? 'completed' : payment.paymentStatus === 'failed' ? 'rejected' : 'pending'}`}>
+                                        <span className={`status-badge badge-${payment.paymentStatus === 'paid' ? 'completed' : 'rejected'}`}>
                                             {payment.paymentStatus?.toUpperCase()}
                                         </span>
                                     </div>
@@ -391,7 +390,7 @@ function PatientPayments() {
                             </div>
                             <div className="summary-row">
                                 <span>Status</span>
-                                <strong className={`status-badge badge-${selectedPayment.paymentStatus === 'paid' ? 'completed' : selectedPayment.paymentStatus === 'failed' ? 'rejected' : 'pending'} patient-payments-status-val`}>
+                                <strong className={`status-badge badge-${selectedPayment.paymentStatus === 'paid' ? 'completed' : 'rejected'} patient-payments-status-val`}>
                                     {selectedPayment.paymentStatus?.toUpperCase()}
                                 </strong>
                             </div>

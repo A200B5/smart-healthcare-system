@@ -67,7 +67,6 @@ function AdminManageAppiontment() {
 
     const statusCounts = {
         all: appointments.length,
-        pending: appointments.filter(a => a.status === 'pending').length,
         confirmed: appointments.filter(a => a.status === 'confirmed').length,
         completed: appointments.filter(a => a.status === 'completed').length,
         rejected: appointments.filter(a => a.status === 'rejected').length
@@ -83,7 +82,6 @@ function AdminManageAppiontment() {
 
                     <div className="filter-tabs">
                         <button className={`filter-tab ${statusFilter === "all" ? "active" : ""}`} onClick={() => setStatusFilter("all")}>All ({statusCounts.all})</button>
-                        <button className={`filter-tab ${statusFilter === "pending" ? "active" : ""}`} onClick={() => setStatusFilter("pending")}>Pending ({statusCounts.pending})</button>
                         <button className={`filter-tab ${statusFilter === "confirmed" ? "active" : ""}`} onClick={() => setStatusFilter("confirmed")}>Confirmed ({statusCounts.confirmed})</button>
                         <button className={`filter-tab ${statusFilter === "completed" ? "active" : ""}`} onClick={() => setStatusFilter("completed")}>Completed ({statusCounts.completed})</button>
                         <button className={`filter-tab ${statusFilter === "rejected" ? "active" : ""}`} onClick={() => setStatusFilter("rejected")}>Rejected ({statusCounts.rejected})</button>

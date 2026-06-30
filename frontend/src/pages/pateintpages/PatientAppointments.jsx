@@ -47,7 +47,7 @@ function PatientAppointments() {
                     doctorId: a.doctorId || a.doctor_id,
                     date: a.date || "-",
                     time: a.time || "-",
-                    status: (a.status || "pending").toLowerCase(),
+                    status: (a.status || "confirmed").toLowerCase(),
                     notes: a.notes || "",
                 }))
             );
@@ -165,7 +165,6 @@ function PatientAppointments() {
 
     const statusCounts = {
         all: appointments.length,
-        pending: appointments.filter((a) => a.status === "pending").length,
         confirmed: appointments.filter((a) => a.status === "confirmed").length,
         completed: appointments.filter((a) => a.status === "completed").length,
         rejected: appointments.filter((a) => a.status === "rejected").length,
@@ -217,7 +216,7 @@ function PatientAppointments() {
 
                     {/* Filter Tabs */}
                     <div className="filter-tabs">
-                        {["all", "pending", "confirmed", "completed", "rejected"].map((status) => (
+                        {["all", "confirmed", "completed", "rejected"].map((status) => (
                             <button
                                 key={status}
                                 className={`filter-tab ${filter === status ? "active" : ""}`}
@@ -277,8 +276,8 @@ function PatientAppointments() {
 
                                 {/* Actions */}
                                 <div className="patient-appt-actions">
-                                    {/* Cancel for pending/confirmed */}
-                                    {(appt.status === "pending" || appt.status === "confirmed") && (
+                                    {/* Cancel for confirmed */}
+                                    {(appt.status === "confirmed") && (
                                         <button
                                             className="btn-sm btn-sm-outline patient-btn-cancel-outline"
                                             onClick={() => handleCancelClick(appt.id)}
