@@ -4,6 +4,7 @@ import TableSkeleton from "../../components/loaders/TableSkeleton.jsx";
 import { getAppointments, deleteAppointment } from "../../services/adminService.js";
 import ConfirmationModal from "../../components/ConfirmationModal.jsx";
 import AlertModal from "../../components/AlertModal.jsx";
+import { toast } from "react-toastify";
 import "./admin.css";
 
 function AdminManageAppiontment() {
@@ -43,6 +44,7 @@ function AdminManageAppiontment() {
         try {
             const res = await deleteAppointment(appointmentToDelete.id);
             if (res && res.success) {
+                toast.success(res.message || "Appointment deleted successfully.");
                 setShowDeleteModal(false);
                 setAppointmentToDelete(null);
                 fetchAppointments();
@@ -69,7 +71,7 @@ function AdminManageAppiontment() {
         all: appointments.length,
         confirmed: appointments.filter(a => a.status === 'confirmed').length,
         completed: appointments.filter(a => a.status === 'completed').length,
-        rejected: appointments.filter(a => a.status === 'rejected').length
+        cancelled: appointments.filter(a => a.status === 'cancelled').length
     };
 
     return (
@@ -84,7 +86,7 @@ function AdminManageAppiontment() {
                         <button className={`filter-tab ${statusFilter === "all" ? "active" : ""}`} onClick={() => setStatusFilter("all")}>All ({statusCounts.all})</button>
                         <button className={`filter-tab ${statusFilter === "confirmed" ? "active" : ""}`} onClick={() => setStatusFilter("confirmed")}>Confirmed ({statusCounts.confirmed})</button>
                         <button className={`filter-tab ${statusFilter === "completed" ? "active" : ""}`} onClick={() => setStatusFilter("completed")}>Completed ({statusCounts.completed})</button>
-                        <button className={`filter-tab ${statusFilter === "rejected" ? "active" : ""}`} onClick={() => setStatusFilter("rejected")}>Rejected ({statusCounts.rejected})</button>
+                        <button className={`filter-tab ${statusFilter === "cancelled" ? "active" : ""}`} onClick={() => setStatusFilter("cancelled")}>Cancelled ({statusCounts.cancelled})</button>
                     </div>
 
                     <div className="table-card">

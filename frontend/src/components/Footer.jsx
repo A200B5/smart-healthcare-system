@@ -3,7 +3,7 @@ function Footer() {
     return (
         <>
             <footer className="footer">
-                <div className="footer-brand">🏥 MediCare Pro — Smart Healthcare Management System</div>
+                <div className="footer-brand"><img src="/logo.png" alt="Logo" className="footer-logo-img" /> MediCare Pro — Smart Healthcare Management System</div>
                 <p className="footer-copy">© 2026 Built by Ahmed Bakr, Ahmed Sabry, Ibrahim Mohamed & Ahmed Hany</p>
             </footer>
         </>

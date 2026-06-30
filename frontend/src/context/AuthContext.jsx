@@ -43,6 +43,9 @@ export const AuthProvider = ({ children }) => {
             try {
                 const data = await getCurrentUser()
                 if (data && data.user) {
+                    if (data.adminDeletedRefunds) {
+                        data.user.adminDeletedRefunds = data.adminDeletedRefunds;
+                    }
                     setUser(data.user)
                 }
             } catch (error) {
@@ -68,7 +71,6 @@ export const AuthProvider = ({ children }) => {
         };
     } , [])
 
-    // Login
     const login = async (userData) => {
         setError(null)
         try {
@@ -76,6 +78,10 @@ export const AuthProvider = ({ children }) => {
             
             if (data.user?.role === 'doctor' && (data.user?.verification_status === 'pending' || data.user?.verificationStatus === 'pending')) {
                 throw new Error("Your account is currently awaiting administrator approval.");
+            }
+
+            if (data.adminDeletedRefunds) {
+                data.user.adminDeletedRefunds = data.adminDeletedRefunds;
             }
 
             saveAuthData(data)

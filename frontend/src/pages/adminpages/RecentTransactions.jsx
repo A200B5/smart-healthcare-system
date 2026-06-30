@@ -12,7 +12,10 @@ const TransactionDetailsModal = ({ transaction, onClose, onRefundSuccess }) => {
     if (!transaction) return null;
 
     const isRefundable = (transaction.paymentStatus === 'paid' || transaction.paymentStatus === 'succeeded') &&
-        transaction.refundStatus !== 'refunded';
+        transaction.refundStatus !== 'refunded' &&
+        transaction.appointmentStatus !== 'completed' &&
+        transaction.appointmentStatus !== 'cancelled' &&
+        transaction.appointmentStatus !== 'rejected';
 
     const handleRefundConfirm = async () => {
         setIsRefunding(true);

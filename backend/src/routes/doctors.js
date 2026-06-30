@@ -191,7 +191,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
             price      = @price,
             location   = @location,
             bio        = @bio,
-            schedule   = @schedule
+            schedule   = COALESCE(@schedule, schedule)
         WHERE id = @id
       `);
 

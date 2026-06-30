@@ -204,11 +204,27 @@ router.post('/login', async (req, res) => {
     const token = signToken(user);
     const { password: _removed, ...safeUser } = user;
 
+    let adminDeletedRefunds = [];
+    if (user.role === 'patient') {
+      const notifCheck = await pool.request()
+        .input('patientId', sql.Int, user.id)
+        .query(`
+            SELECT a.id 
+            FROM Appointments a
+            JOIN Payments p ON a.id = p.appointment_id
+            WHERE a.patient_id = @patientId 
+            AND a.status = 'admin_deleted' 
+            AND p.payment_status = 'refunded'
+        `);
+      adminDeletedRefunds = notifCheck.recordset.map(r => r.id);
+    }
+
     res.json({
       success: true,
       message: 'Login successful',
       token,
       user: safeUser,
+      adminDeletedRefunds
     });
   } catch (err) {
     console.error('Login error:', err);
@@ -230,7 +246,23 @@ router.get('/me', authMiddleware, async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    res.json({ success: true, user: result.recordset[0] });
+    const user = result.recordset[0];
+    let adminDeletedRefunds = [];
+    if (user.role === 'patient') {
+      const notifCheck = await pool.request()
+        .input('patientId', sql.Int, req.user.id)
+        .query(`
+            SELECT a.id 
+            FROM Appointments a
+            JOIN Payments p ON a.id = p.appointment_id
+            WHERE a.patient_id = @patientId 
+            AND a.status = 'admin_deleted' 
+            AND p.payment_status = 'refunded'
+        `);
+      adminDeletedRefunds = notifCheck.recordset.map(r => r.id);
+    }
+
+    res.json({ success: true, user: user, adminDeletedRefunds });
   } catch (err) {
     console.error('GetMe error:', err);
     res.status(500).json({ success: false, message: 'Server error' });

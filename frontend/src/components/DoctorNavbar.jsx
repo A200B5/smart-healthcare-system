@@ -38,7 +38,7 @@ function DoctorNavbar() {
                 className="navbar-logo"
                 onClick={() => handleNavigation("/doctor/dashboard")}
             >
-                <span>🏥</span> MediCare Pro
+                <img src="/logo.png" alt="MediCare Pro Logo" className="navbar-logo-img" /> MediCare Pro
             </div>
 
             <ul className="navbar-links">

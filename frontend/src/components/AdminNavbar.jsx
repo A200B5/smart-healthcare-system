@@ -15,7 +15,7 @@ function AdminNavbar({ pendingCount = 0 }) {
         <>
             <nav className="navbar hidden" id="navbar-admin">
                 <NavLink to="/admin/dashboard" className="navbar-logo" >
-                    <span>🏥</span> MediCare Pro
+                    <img src="/logo.png" alt="MediCare Pro Logo" className="navbar-logo-img" /> MediCare Pro
                 </NavLink>
                 <ul className="navbar-links">
                     <li><NavLink to="/admin/dashboard"

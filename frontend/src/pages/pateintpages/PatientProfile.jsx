@@ -29,115 +29,122 @@ function PatientProfile() {
                 setLoading(true);
                 const data = await getCurrentUser();
                 if (data && data.user) {
-                    setInitialForm({
-                        name: data.user.name || "",
-                        email: data.user.email || "",
-                        phone: data.user.phone || "",
-                        gender: data.user.gender || "",
-                        dateOfBirth: data.user.dateOfBirth || "",
-                    });
+                        setInitialForm({
+                            name: data.user.name || "",
+                            email: data.user.email || "",
+                            phone: data.user.phone ? data.user.phone.replace(/^\+20/, "") : "",
+                            gender: data.user.gender || "",
+                            dateOfBirth: data.user.dateOfBirth || "",
+                        });
+                    }
+                } catch (err) {
+                    toast.error("Failed to load profile information.");
+                } finally {
+                    setLoading(false);
+                }
+            };
+            loadProfile();
+        }, []);
+
+
+
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+
+            if (!/^\d{10}$/.test(formData.phone)) {
+                toast.error("Phone number must contain exactly 10 digits.");
+                return;
+            }
+
+            setSaving(true);
+
+            try {
+                const data = await updateProfile({
+                    name: formData.name,
+                    phone: `+20${formData.phone}`,
+                    gender: formData.gender,
+                    dateOfBirth: formData.dateOfBirth,
+                });
+
+                if (data && data.success) {
+                    toast.success("Profile updated successfully.");
+                    syncSavedData();
+                    if (data.user) {
+                        localStorage.setItem("user", JSON.stringify(data.user));
+                    }
                 }
             } catch (err) {
-                toast.error("Failed to load profile information.");
+                toast.error(err.message || "Failed to update profile.");
             } finally {
-                setLoading(false);
+                setSaving(false);
             }
         };
-        loadProfile();
-    }, []);
 
-
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setSaving(true);
-
-        try {
-            const data = await updateProfile({
-                name: formData.name,
-                phone: formData.phone,
-                gender: formData.gender,
-                dateOfBirth: formData.dateOfBirth,
-            });
-
-            if (data && data.success) {
-                toast.success("Profile updated successfully.");
-                syncSavedData();
-                // Also update local storage if necessary so AuthContext picks it up
-                if (data.user) {
-                    localStorage.setItem("user", JSON.stringify(data.user));
-                    // We may need to force context reload or just let it be handled by next page load
-                }
-            }
-        } catch (err) {
-            toast.error(err.message || "Failed to update profile.");
-        } finally {
-            setSaving(false);
+        if (loading) {
+            return (
+                <>
+                    <PatientNavbar />
+                    <div className="page" id="page-patient-profile">
+                        <div className="page-content">
+                            <ProfileSkeleton />
+                        </div>
+                    </div>
+                </>
+            );
         }
-    };
 
-    if (loading) {
         return (
             <>
                 <PatientNavbar />
                 <div className="page" id="page-patient-profile">
                     <div className="page-content">
-                        <ProfileSkeleton />
-                    </div>
-                </div>
-            </>
-        );
-    }
-
-    return (
-        <>
-            <PatientNavbar />
-            <div className="page" id="page-patient-profile">
-                <div className="page-content">
-                    <div className="page-header">
-                        <div>
-                            <h1 className="page-title">My Profile</h1>
-                            <p className="page-subtitle">Manage your personal information</p>
+                        <div className="page-header">
+                            <div>
+                                <h1 className="page-title">My Profile</h1>
+                                <p className="page-subtitle">Manage your personal information</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="auth-card patient-profile-card">
-                        <form onSubmit={handleSubmit}>
-                            <div className="form-group patient-form-group">
-                                <label className="form-label">Full Name</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    className="form-input"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
+                        <div className="auth-card patient-profile-card">
+                            <form onSubmit={handleSubmit}>
+                                <div className="form-group patient-form-group">
+                                    <label className="form-label">Full Name</label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        className="form-input"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
 
-                            <div className="form-group patient-form-group">
-                                <label className="form-label">Email Address</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    className="form-input patient-input-disabled"
-                                    value={formData.email}
-                                    disabled
-                                />
-                                <small className="patient-form-hint">Email cannot be changed.</small>
-                            </div>
+                                <div className="form-group patient-form-group">
+                                    <label className="form-label">Email Address</label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        className="form-input patient-input-disabled"
+                                        value={formData.email}
+                                        disabled
+                                    />
+                                    <small className="patient-form-hint">Email cannot be changed.</small>
+                                </div>
 
-                            <div className="form-group patient-form-group">
-                                <label className="form-label">Phone Number</label>
-                                <input
-                                    type="tel"
-                                    name="phone"
-                                    className="form-input"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                    placeholder="e.g. +1234567890"
-                                />
-                            </div>
+                                <div className="form-group patient-form-group">
+                                    <label className="form-label">Phone Number</label>
+                                    <div className="phone-input-wrapper">
+                                        <span className="phone-prefix">+20</span>
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            className="form-input phone-input"
+                                            value={formData.phone}
+                                            onChange={handleChange}
+                                            placeholder="1099841660"
+                                        />
+                                    </div>
+                                </div>
 
                             <div className="form-group patient-form-group">
                                 <label className="form-label">Gender</label>

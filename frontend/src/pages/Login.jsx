@@ -66,7 +66,7 @@ function Login() {
             <div className="page" id="page-login">
                 <div className="auth-wrapper">
                     <div className="auth-card">
-                        <div className="auth-icon">🏥</div>
+                        <div className="auth-icon"><img src="/logo.png" alt="Logo" className="auth-logo-img" /></div>
                         <h1 className="auth-title">Welcome Back</h1>
                         <p className="auth-subtitle">Sign in to your MediCare Pro account</p>
 

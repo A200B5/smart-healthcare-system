@@ -173,9 +173,10 @@ router.post('/refund', authMiddleware, requireRole('admin'), async (req, res) =>
         const paymentRes = await pool.request()
             .input('paymentId', sql.Int, paymentId)
             .query(`
-                SELECT id, stripe_payment_intent, amount, payment_status, appointment_id, patient_id
-                FROM Payments
-                WHERE id = @paymentId
+                SELECT p.id, p.stripe_payment_intent, p.amount, p.payment_status, p.appointment_id, p.patient_id, a.status AS appointment_status
+                FROM Payments p
+                LEFT JOIN Appointments a ON p.appointment_id = a.id
+                WHERE p.id = @paymentId
             `);
             
         if (paymentRes.recordset.length === 0) {
@@ -186,6 +187,13 @@ router.post('/refund', authMiddleware, requireRole('admin'), async (req, res) =>
 
         if (payment.payment_status !== 'paid' && payment.payment_status !== 'succeeded') {
             return res.status(400).json({ success: false, message: 'Payment must be paid to be refunded' });
+        }
+
+        if (payment.appointment_status === 'completed') {
+            return res.status(400).json({
+                success: false,
+                message: 'Completed appointments cannot be refunded.'
+            });
         }
 
         const refundResult = await processStripeRefund(payment, reason, adminId);

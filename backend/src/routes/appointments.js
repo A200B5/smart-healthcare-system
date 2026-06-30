@@ -50,7 +50,7 @@ router.get('/', authMiddleware, async (req, res) => {
         SELECT v.*, d.price AS doctorPrice
         FROM vw_AppointmentDetails v
         JOIN Doctors d ON v.doctorId = d.id
-        WHERE v.patientId = @userId
+        WHERE v.patientId = @userId AND v.status != 'admin_deleted'
         ORDER BY [date] DESC
       `;
     } else if (req.user.role === 'doctor') {
@@ -59,12 +59,12 @@ router.get('/', authMiddleware, async (req, res) => {
         SELECT v.*, d.price AS doctorPrice
         FROM vw_AppointmentDetails v
         JOIN Doctors d ON v.doctorId = d.id
-        WHERE v.doctorId IN (SELECT id FROM Doctors WHERE user_id = @userId)
+        WHERE v.doctorId IN (SELECT id FROM Doctors WHERE user_id = @userId) AND v.status != 'admin_deleted'
         ORDER BY [date] DESC
       `;
     } else {
-      // admin sees everything
-      query = 'SELECT v.*, d.price AS doctorPrice FROM vw_AppointmentDetails v JOIN Doctors d ON v.doctorId = d.id ORDER BY [date] DESC';
+      // admin sees everything except admin_deleted
+      query = "SELECT v.*, d.price AS doctorPrice FROM vw_AppointmentDetails v JOIN Doctors d ON v.doctorId = d.id WHERE v.status != 'admin_deleted' ORDER BY [date] DESC";
     }
 
     const result = await request.query(query);
@@ -296,7 +296,7 @@ router.delete('/:id', authMiddleware, async (req, res) => {
     // Verify the appointment exists and belongs to the caller (if patient)
     const check = await pool.request()
       .input('id', sql.Int, appointmentId)
-      .query('SELECT id, patient_id FROM Appointments WHERE id = @id');
+      .query('SELECT id, patient_id, status FROM Appointments WHERE id = @id');
 
     if (check.recordset.length === 0) {
       return res.status(404).json({ success: false, message: 'Appointment not found' });
@@ -329,6 +329,40 @@ router.delete('/:id', authMiddleware, async (req, res) => {
       }
     }
 
+    // Admin Delete Flow
+    if (req.user.role === 'admin') {
+      let refunded = false;
+      if (appt.status === 'confirmed') {
+        const paymentCheck = await pool.request()
+          .input('appointmentId', sql.Int, appointmentId)
+          .query('SELECT * FROM Payments WHERE appointment_id = @appointmentId');
+
+        if (paymentCheck.recordset.length > 0) {
+          const paymentRecord = paymentCheck.recordset[0];
+          if ((paymentRecord.payment_status === 'paid' || paymentRecord.payment_status === 'succeeded') && paymentRecord.refund_status !== 'refunded') {
+            try {
+              const refundResult = await processStripeRefund(paymentRecord, 'requested_by_customer', req.user.id);
+              refunded = true;
+            } catch (refundError) {
+              console.error('Stripe refund error during admin delete:', refundError);
+              return res.status(500).json({ success: false, message: 'Admin delete aborted: refund failed.' });
+            }
+          }
+        }
+      }
+
+      await pool.request()
+        .input('id', sql.Int, appointmentId)
+        .query("UPDATE Appointments SET status = 'admin_deleted' WHERE id = @id");
+
+      const msg = refunded 
+        ? "Appointment deleted successfully. The patient's payment has been refunded." 
+        : "Appointment deleted successfully.";
+      
+      return res.json({ success: true, message: msg });
+    }
+
+    // Patient and Doctor Hard Delete (Existing Behavior)
     await pool.request()
       .input('id', sql.Int, appointmentId)
       .query('DELETE FROM Appointments WHERE id = @id');
