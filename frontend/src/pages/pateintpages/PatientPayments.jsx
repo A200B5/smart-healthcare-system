@@ -291,7 +291,7 @@ function PatientPayments() {
                     ) : (
                         <div className="patient-appt-list">
                             {filteredPayments.map((payment) => (
-                                <div className={`appointment-card ${payment.paymentStatus === 'paid' ? 'completed' : 'rejected'}`} key={payment.paymentId}>
+                                <div className={`appointment-card ${payment.paymentStatus === 'refunded' ? 'refunded' : 'completed'}`} key={payment.paymentId}>
                                     <div className="appt-doctor">
                                         <div className="appt-avatar">💳</div>
                                         <div>
@@ -310,7 +310,7 @@ function PatientPayments() {
                                             <div className="appt-detail-label">Paid At</div>
                                             <div className="appt-detail-value">{formatDate(payment.paidAt)}</div>
                                         </div>
-                                        <span className={`status-badge badge-${payment.paymentStatus === 'paid' ? 'completed' : 'rejected'}`}>
+                                        <span className={`status-badge badge-${payment.paymentStatus === 'paid' || payment.paymentStatus === 'succeeded' ? 'completed' : payment.paymentStatus === 'refunded' ? 'refunded' : 'rejected'}`}>
                                             {payment.paymentStatus?.toUpperCase()}
                                         </span>
                                     </div>
@@ -390,7 +390,7 @@ function PatientPayments() {
                             </div>
                             <div className="summary-row">
                                 <span>Status</span>
-                                <strong className={`status-badge badge-${selectedPayment.paymentStatus === 'paid' ? 'completed' : 'rejected'} patient-payments-status-val`}>
+                                <strong className={`status-badge badge-${selectedPayment.paymentStatus === 'paid' || selectedPayment.paymentStatus === 'succeeded' ? 'completed' : selectedPayment.paymentStatus === 'refunded' ? 'refunded' : 'rejected'} patient-payments-status-val`}>
                                     {selectedPayment.paymentStatus?.toUpperCase()}
                                 </strong>
                             </div>

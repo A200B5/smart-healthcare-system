@@ -13,7 +13,7 @@ function Navigation() {
         <>
             <nav className="navbar" id="navbar-public">
                 <Link to="/" className="navbar-logo" >
-                    <span>🏥</span> MediCare Pro
+                    <img src="/logo.png" alt="MediCare Pro Logo" className="navbar-logo-img" /> MediCare Pro
                 </Link>
                 <div className="navbar-actions">
                     <button className="theme-toggle-nav" onClick={toggleTheme} id="themeToggle"

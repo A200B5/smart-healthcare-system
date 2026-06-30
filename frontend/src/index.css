@@ -174,6 +174,30 @@ ul {
   font-size: 28px;
 }
 
+.navbar-logo-img {
+  height: 28px;
+  width: auto;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.auth-logo-img {
+  height: 64px;
+  width: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.footer-logo-img {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
 .navbar-links {
   display: flex;
   align-items: center;
@@ -1256,6 +1280,11 @@ ul {
   color: var(--rejected);
 }
 
+.badge-refunded {
+  background: var(--pending-bg);
+  color: var(--pending);
+}
+
 /* Stats Grid */
 .stats-grid {
   display: grid;
@@ -1455,6 +1484,10 @@ ul {
 
 .appointment-card.rejected {
   border-left-color: var(--rejected);
+}
+
+.appointment-card.refunded {
+  border-left-color: var(--pending);
 }
 
 .appt-doctor {
@@ -2529,4 +2562,48 @@ textarea {
 
 ::-webkit-scrollbar-thumb:active {
   background-color: #0F766E;
+}
+
+/* ============================================
+   SHARED PHONE INPUT STYLES
+   ============================================ */
+.phone-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bg-card);
+    transition: var(--transition);
+}
+
+.phone-input-wrapper:focus-within {
+    border-color: var(--primary-teal);
+    box-shadow: 0 0 0 3px rgba(15, 95, 95, 0.1);
+}
+
+.phone-prefix {
+    padding: 12px 24px 12px 10px;
+    min-width: 70px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    font-weight: 500;
+    border-right: 1px solid var(--border-color);
+    user-select: none;
+}
+
+.phone-input-wrapper .phone-input {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    flex: 1;
+}
+
+.phone-input-wrapper .phone-input:focus {
+    box-shadow: none;
+    outline: none;
 }

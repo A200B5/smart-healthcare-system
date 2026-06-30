@@ -167,7 +167,7 @@ function PatientAppointments() {
         all: appointments.length,
         confirmed: appointments.filter((a) => a.status === "confirmed").length,
         completed: appointments.filter((a) => a.status === "completed").length,
-        rejected: appointments.filter((a) => a.status === "rejected").length,
+        cancelled: appointments.filter((a) => a.status === "cancelled").length,
     };
 
     // ── Format Date ───────────────────────────────────────
@@ -216,7 +216,7 @@ function PatientAppointments() {
 
                     {/* Filter Tabs */}
                     <div className="filter-tabs">
-                        {["all", "confirmed", "completed", "rejected"].map((status) => (
+                        {["all", "confirmed", "completed", "cancelled"].map((status) => (
                             <button
                                 key={status}
                                 className={`filter-tab ${filter === status ? "active" : ""}`}

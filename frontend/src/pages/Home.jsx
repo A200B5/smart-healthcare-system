@@ -40,7 +40,7 @@ function Home(){
                  {/*Hero Section*/}
                 <section className="hero">
                     <div className="hero-content">
-                        <div className="hero-badge">🏆 Egypt's #1 Healthcare Platform</div>
+                        <div className="hero-badge"> Egypt's #1 Healthcare Platform</div>
                         <h1 className="hero-title">
                             <span className="white">Your Health,</span><br/>
                             <span className="gold">Our Priority</span>

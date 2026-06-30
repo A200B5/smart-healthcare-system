@@ -216,7 +216,7 @@ function DoctorDashboard() {
 
                 <button onClick={() => setFilter("confirmed")} className={`filter-tab ${filter === "confirmed" ? "active" : ""}`}>confirmed</button>
                 <button onClick={() => setFilter("completed")} className={`filter-tab ${filter === "completed" ? "active" : ""}`}>completed</button>
-                <button onClick={() => setFilter("rejected")} className={`filter-tab ${filter === "rejected" ? "active" : ""}`}>rejected</button>
+                <button onClick={() => setFilter("cancelled")} className={`filter-tab ${filter === "cancelled" ? "active" : ""}`}>cancelled</button>
               </div>
             </div>
 

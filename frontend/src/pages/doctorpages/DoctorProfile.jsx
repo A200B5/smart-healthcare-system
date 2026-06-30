@@ -28,12 +28,13 @@ function DoctorProfile() {
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
+    license_number: "",
     specialty: "",
     experience: "",
     fee: "",
     location: "",
     bio: "",
-    schedule: "",
     available: true,
     avatar: "👨‍⚕️",
   });
@@ -62,12 +63,13 @@ function DoctorProfile() {
           firstName,
           lastName,
           email: user?.email || "",
+          phone: matchedDoctor?.phone ? matchedDoctor.phone.replace(/^\+20/, "") : user?.phone ? user.phone.replace(/^\+20/, "") : "",
+          license_number: matchedDoctor?.license_number || "",
           specialty: matchedDoctor?.specialty || "",
           experience: matchedDoctor?.experience ?? "",
           fee: matchedDoctor?.price ?? matchedDoctor?.fee ?? "",
           location: matchedDoctor?.location || "",
           bio: matchedDoctor?.bio || "",
-          schedule: matchedDoctor?.schedule || "",
           available:
             typeof matchedDoctor?.available === "boolean"
               ? matchedDoctor.available
@@ -94,10 +96,16 @@ function DoctorProfile() {
       return;
     }
 
+    if (!/^\d{10}$/.test(form.phone)) {
+      toast.error("Phone number must contain exactly 10 digits.");
+      return;
+    }
+
     try {
       setSaving(true);
 
       await updateDoctor(doctorRecordId, {
+        phone: `+20${form.phone}`,
         specialty: form.specialty,
         experience: form.experience === "" ? undefined : Number(form.experience),
         available: Boolean(form.available),
@@ -105,7 +113,6 @@ function DoctorProfile() {
         price: form.fee === "" ? undefined : Number(form.fee),
         location: form.location,
         bio: form.bio,
-        schedule: form.schedule,
       });
 
       toast.success("Profile updated successfully.");
@@ -228,6 +235,33 @@ function DoctorProfile() {
               </div>
 
               <div className="form-group">
+                <label className="form-label">License Number</label>
+                <input
+                  name="license_number"
+                  type="text"
+                  className="form-input"
+                  value={form.license_number || ""}
+                  onChange={handleChange}
+                  readOnly
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Phone Number</label>
+                <div className="phone-input-wrapper">
+                  <span className="phone-prefix">+20</span>
+                  <input
+                    name="phone"
+                    type="tel"
+                    className="form-input phone-input"
+                    value={form.phone || ""}
+                    onChange={handleChange}
+                    placeholder="1099841660"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
                 <label className="form-label">Specialty</label>
                 <input
                   name="specialty"
@@ -290,16 +324,7 @@ function DoctorProfile() {
                 />
               </div>
 
-              <div className="form-group">
-                <label className="form-label">Schedule Notes</label>
-                <textarea
-                  name="schedule"
-                  className="form-input"
-                  value={form.schedule || ""}
-                  onChange={handleChange}
-                  rows={3}
-                />
-              </div>
+
 
               <div className="checkbox-wrapper doctor-profile-checkbox-wrap">
                 <div className="doctor-profile-checkbox-inner">

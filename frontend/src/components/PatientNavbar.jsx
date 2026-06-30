@@ -29,7 +29,7 @@ function PatientNavbar() {
         <>
             <nav className="navbar" id="navbar-patient">
                 <div className="navbar-logo nav-item-pointer" onClick={() => navigate("/patient/home")}>
-                    <span>🏥</span> MediCare Pro
+                    <img src="/logo.png" alt="MediCare Pro Logo" className="navbar-logo-img" /> MediCare Pro
                 </div>
                 <ul className="navbar-links">
                     {navItems.map((item) => (

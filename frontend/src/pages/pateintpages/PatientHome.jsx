@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PatientNavbar from "../../components/PatientNavbar.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { getMyAppointments } from "../../services/patientService.js";
+import { toast } from "react-toastify";
 import "./patient.css";
 
 function PatientHome() {
@@ -11,6 +12,27 @@ function PatientHome() {
     const [stats, setStats] = useState({ upcoming: 0, completed: 0, total: 0 });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (user?.adminDeletedRefunds && Array.isArray(user.adminDeletedRefunds)) {
+            const notifiedRefunds = JSON.parse(localStorage.getItem('notifiedAdminRefunds') || '[]');
+            let hasNew = false;
+            
+            user.adminDeletedRefunds.forEach(appointmentId => {
+                if (!notifiedRefunds.includes(appointmentId)) {
+                    toast.info("One of your appointments was cancelled by the administrator. Your payment has been refunded successfully.", {
+                        toastId: `admin-refund-${appointmentId}`
+                    });
+                    notifiedRefunds.push(appointmentId);
+                    hasNew = true;
+                }
+            });
+            
+            if (hasNew) {
+                localStorage.setItem('notifiedAdminRefunds', JSON.stringify(notifiedRefunds));
+            }
+        }
+    }, [user?.adminDeletedRefunds]);
 
     useEffect(() => {
         const loadStats = async () => {
