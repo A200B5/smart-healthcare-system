@@ -116,8 +116,8 @@ The project was designed with scalability, maintainability, and user experience 
 # ⚡ Quick Navigation
 
 - [✨ Features](#-features)
-- [🛠 Tech Stack](#-technology-stack)
-- [🏗 System Architecture](#-system-architecture)
+- [🛠 Tech Stack](#%EF%B8%8F-technology-stack)
+- [🏗 System Architecture](#%EF%B8%8F-system-architecture)
 - [🗄 Database Design](#-database-design)
 - [🔌 API Overview](#-rest-api-overview)
 - [📂 Project Structure](#-project-structure)
