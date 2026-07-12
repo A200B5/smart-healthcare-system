@@ -59,7 +59,7 @@ A Modern Full-Stack Healthcare Platform for Patients, Doctors, and Administrator
 
 ---
 
-# 🏥 About MediCare Pro
+# <img src="frontend/public/favicon-32x32.png"> About MediCare Pro
 
 **MediCare Pro** is a production-style **Full-Stack Healthcare Management Platform** designed to modernize the healthcare appointment lifecycle through secure authentication, online payments, intelligent scheduling, and role-based dashboards.
 
@@ -116,15 +116,15 @@ The project was designed with scalability, maintainability, and user experience 
 # ⚡ Quick Navigation
 
 - [✨ Features](#-features)
-- [🛠 Tech Stack](#-tech-stack)
+- [🛠 Tech Stack](#-technology-stack)
 - [🏗 System Architecture](#-system-architecture)
 - [🗄 Database Design](#-database-design)
-- [🔌 API Overview](#-api-overview)
+- [🔌 API Overview](#-rest-api-overview)
 - [📂 Project Structure](#-project-structure)
-- [🖼 User Interface](#-user-interface)
-- [🚀 Installation](#-installation)
-- [🔐 Security](#-security)
-- [👥 Team](#-team)
+- [🖼 User Interface](#-user-interface-showcase)
+- [🚀 Installation](#-getting-started)
+- [🔐 Security](#-security-features)
+- [👥 Team](#-team-contributions)
 - [🔮 Future Enhancements](#-future-enhancements)
 - [📜 License](#-license)
 
