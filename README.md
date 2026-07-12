@@ -43,15 +43,11 @@ A Modern Full-Stack Healthcare Platform for Patients, Doctors, and Administrator
 
 <p align="center">
 
-<a href="YOUR_DEMO_LINK">
-<img src="https://img.shields.io/badge/🚀%20Live%20Demo-Visit-success?style=for-the-badge">
-</a>
-
-<a href="YOUR_PRESENTATION_LINK">
+<a href="docs/MediCare_Pro_Presentation.pdf">
 <img src="https://img.shields.io/badge/📄%20Presentation-View-blue?style=for-the-badge">
 </a>
 
-<a href="YOUR_FIGMA_LINK">
+<a href="https://www.figma.com/make/TcvVfONZwWwlhTc98y32yA/Refine-Application-Based-on-Code?code-node-id=0-9&p=f&t=AiTVKepENoArQwjV-0&fullscreen=1">
 <img src="https://img.shields.io/badge/🎨%20Figma-Design-F24E1E?style=for-the-badge&logo=figma">
 </a>
 
