@@ -67,7 +67,7 @@ export const getPaymentHistory = async () => {
  * @returns {Promise<Blob>} Mock receipt data
  */
 export const downloadReceipt = async (transactionId) => {
-    // TODO: Integrate with backend endpoint
+
     return new Promise((resolve) => {
         setTimeout(() => {
             console.log(`Downloading mock receipt for ${transactionId}`);

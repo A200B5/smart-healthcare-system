@@ -1,19 +1,19 @@
-import React, { createContext, useContext, useEffect, useState, useMemo } from "react";
+import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { toast } from "react-toastify";
 import GlobalLoader from "../components/loaders/GlobalLoader.jsx";
 import SessionManager from "../components/SessionManager.jsx";
 import { isTokenExpired } from "../services/jwtUtils.js";
 
-import {loginUser , registerUser , getCurrentUser , logoutUser} from "../services/authService.js";
+import { loginUser, registerUser, getCurrentUser, logoutUser } from "../services/authService.js";
 
 const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
 
-    const [user , setUser] = useState( () => {
+    const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem('user')
         return savedUser ? JSON.parse(savedUser) : null;
-    } )
+    })
 
     const [loading, setLoading] = useState(true)
 
@@ -69,13 +69,13 @@ export const AuthProvider = ({ children }) => {
         return () => {
             window.removeEventListener('auth:logout', handleLogoutEvent);
         };
-    } , [])
+    }, [])
 
     const login = async (userData) => {
         setError(null)
         try {
             const data = await loginUser(userData)
-            
+
             if (data.user?.role === 'doctor' && (data.user?.verification_status === 'pending' || data.user?.verificationStatus === 'pending')) {
                 throw new Error("Your account is currently awaiting administrator approval.");
             }
@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }) => {
 
             saveAuthData(data)
             return data.user
-        }catch (error) {
+        } catch (error) {
             setError(error.message || "Login Failed");
             throw error;
         }
@@ -101,7 +101,7 @@ export const AuthProvider = ({ children }) => {
                 saveAuthData(data)
             }
             return data.user
-        }catch (error) {
+        } catch (error) {
             setError(
                 error.response?.data?.message || "Register Failed"
             )
@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }) => {
         logoutUser(reason)
         clearAuthData()
         setError(null)
-        
+
         if (reason === 'manual') {
             toast.success("Thanks for using MediCare Pro.\nSee you again soon! 👋");
         }
@@ -126,7 +126,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     // Use Values
-    const value = useMemo( () => (
+    const value = useMemo(() => (
         {
             user,
             loading,
@@ -140,19 +140,19 @@ export const AuthProvider = ({ children }) => {
             isDoctor: user?.role === "doctor",
             isAdmin: user?.role === "admin"
         }
-    ) , [user , loading , error ] )
+    ), [user, loading, error])
 
     // Loading Screen
-    if(loading) {
+    if (loading) {
         return <GlobalLoader />;
     }
 
     return (
         <AuthContext.Provider value={value}>
             {children}
-            <SessionManager 
-                token={localStorage.getItem("token")} 
-                onLogout={logout} 
+            <SessionManager
+                token={localStorage.getItem("token")}
+                onLogout={logout}
             />
         </AuthContext.Provider>
     )
@@ -161,7 +161,7 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
     const context = useContext(AuthContext)
-    if(!context) {
+    if (!context) {
         throw new Error(
             "useAuth must be used inside AuthProvider"
         );

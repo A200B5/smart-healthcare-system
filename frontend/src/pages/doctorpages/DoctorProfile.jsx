@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 import DoctorNavbar from "../../components/DoctorNavbar.jsx";
 import { getCurrentUser } from "../../services/authService";
-import { getDoctorProfile, updateDoctor } from "../../services/doctorService";
+import { getDoctorProfile, updateDoctor, getSpecialties } from "../../services/doctorService";
 import { toast } from "react-toastify";
 import SaveButton from "../../components/SaveButton.jsx";
 import { useFormState } from "../../services/formUtils.js";
@@ -21,6 +21,7 @@ const splitName = (fullName) => {
 function DoctorProfile() {
   const [doctor, setDoctor] = useState(null);
   const [doctorRecordId, setDoctorRecordId] = useState(null);
+  const [specialties, setSpecialties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -38,7 +39,7 @@ function DoctorProfile() {
     available: true,
     avatar: "👨‍⚕️",
   });
-  
+
   const { formData: form, handleChange, isDirty, syncSavedData } = useFormState(initialForm);
 
   useEffect(() => {
@@ -47,9 +48,10 @@ function DoctorProfile() {
         setLoading(true);
         setError(null);
 
-        const [currentUserData, doctorProfileData] = await Promise.all([
+        const [currentUserData, doctorProfileData, specialtiesData] = await Promise.all([
           getCurrentUser(),
           getDoctorProfile(),
+          getSpecialties(),
         ]);
 
         const user = currentUserData?.user || currentUserData;
@@ -59,6 +61,7 @@ function DoctorProfile() {
 
         setDoctor({ user, profile: matchedDoctor || null });
         setDoctorRecordId(matchedDoctor?.id || matchedDoctor?._id || null);
+        setSpecialties(specialtiesData?.specialties || []);
         setInitialForm({
           firstName,
           lastName,
@@ -256,20 +259,26 @@ function DoctorProfile() {
                     className="form-input phone-input"
                     value={form.phone || ""}
                     onChange={handleChange}
-                    placeholder="1099841660"
+                    placeholder="1234567890"
                   />
                 </div>
               </div>
 
               <div className="form-group">
                 <label className="form-label">Specialty</label>
-                <input
+                <select
                   name="specialty"
-                  type="text"
                   className="form-input"
                   value={form.specialty || ""}
                   onChange={handleChange}
-                />
+                >
+                  <option value="" disabled>Select your specialty...</option>
+                  {specialties.map((spec) => (
+                    <option key={spec} value={spec}>
+                      {spec}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="form-row">

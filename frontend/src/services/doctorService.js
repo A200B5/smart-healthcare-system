@@ -18,6 +18,15 @@ export const getDoctors = async () => {
 	}
 }
 
+export const getSpecialties = async () => {
+	try {
+		const response = await API.get("/doctors/specialties")
+		return response.data
+	} catch (error) {
+		errorHandle(error, "Failed to fetch specialties")
+	}
+}
+
 export const getDoctorProfile = async () => {
 	try {
 		const response = await API.get("/doctors/me")
@@ -92,6 +101,7 @@ export const updateSchedule = async (doctorId, scheduleData) => {
 
 export default {
 	getDoctors,
+	getSpecialties,
 	getDoctorProfile,
 	getDoctorReviews,
 	getDoctorById,

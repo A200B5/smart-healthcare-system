@@ -66,7 +66,7 @@ function PatientPayments() {
     filteredPayments.sort((a, b) => {
         const dateA = new Date(a.paidAt || a.date || 0);
         const dateB = new Date(b.paidAt || b.date || 0);
-        
+
         if (sortOrder === "newest") return dateB - dateA;
         if (sortOrder === "oldest") return dateA - dateB;
         if (sortOrder === "highest") return (b.amount || 0) - (a.amount || 0);
@@ -106,7 +106,7 @@ function PatientPayments() {
             toast.error("Payment data is unavailable.");
             return;
         }
-        
+
         try {
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.width;
@@ -114,7 +114,7 @@ function PatientPayments() {
             // Colors
             const bgDark = [24, 24, 27];
             const bgCard = [39, 39, 42];
-            const accentTeal = [20, 184, 166];
+            const accentTeal = [20, 184, 166];  // primary color
             const textWhite = [255, 255, 255];
             const textGray = [161, 161, 170];
 
@@ -192,7 +192,7 @@ function PatientPayments() {
             doc.setFontSize(14);
             doc.setFont("helvetica", "normal");
             doc.text("Amount Paid", 30, finalY + 35);
-            
+
             doc.setTextColor(...accentTeal);
             doc.setFontSize(24);
             doc.setFont("helvetica", "bold");
@@ -235,9 +235,9 @@ function PatientPayments() {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="form-input patient-payment-search"
                             />
-                            <select 
-                                className="form-select patient-payment-sort" 
-                                value={sortOrder} 
+                            <select
+                                className="form-select patient-payment-sort"
+                                value={sortOrder}
                                 onChange={(e) => setSortOrder(e.target.value)}
                             >
                                 <option value="newest">Newest First</option>

@@ -13,9 +13,8 @@ const TransactionDetailsModal = ({ transaction, onClose, onRefundSuccess }) => {
 
     const isRefundable = (transaction.paymentStatus === 'paid' || transaction.paymentStatus === 'succeeded') &&
         transaction.refundStatus !== 'refunded' &&
-        transaction.appointmentStatus !== 'completed' &&
         transaction.appointmentStatus !== 'cancelled' &&
-        transaction.appointmentStatus !== 'rejected';
+        transaction.appointmentStatus !== 'completed';
 
     const handleRefundConfirm = async () => {
         setIsRefunding(true);
@@ -113,14 +112,6 @@ const TransactionDetailsModal = ({ transaction, onClose, onRefundSuccess }) => {
                                 <div className="admin-transaction-val-amount" style={{ color: "var(--danger-color, #ef4444)" }}>
                                     {(transaction.refundAmount || transaction.amount).toLocaleString(undefined, { style: "currency", currency: transaction.currency.toUpperCase() })}
                                 </div>
-                            </div>
-                            <div>
-                                <div className="form-label">Refund Date</div>
-                                <div>{transaction.refundedAt ? new Date(transaction.refundedAt).toLocaleString() : "N/A"}</div>
-                            </div>
-                            <div>
-                                <div className="form-label">Refund ID</div>
-                                <div className="admin-transaction-val-sub">{transaction.refundId || "N/A"}</div>
                             </div>
                             {transaction.stripeRefundId && (
                                 <div>

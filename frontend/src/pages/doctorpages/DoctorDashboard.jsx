@@ -299,7 +299,7 @@ function DoctorDashboard() {
                             )}
 
                             {(app.status === "completed" ||
-                              app.status === "rejected") && (
+                              app.status === "cancelled") && (
                                 <span className="no-action">—</span>
                               )}
                           </>

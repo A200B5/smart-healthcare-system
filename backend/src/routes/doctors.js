@@ -6,7 +6,7 @@ const express  = require('express');
 const router   = express.Router();
 const { getPool, sql } = require('../config/db');
 const { authMiddleware, requireRole } = require('../middleware/auth');
-const { validateDoctorCreation, validateDoctorUpdate, validationError, sanitizeNumber } = require('../middleware/validators');
+const { validateDoctorCreation, validateDoctorUpdate, validationError, sanitizeNumber, VALID_SPECIALTIES } = require('../middleware/validators');
 
 // ── GET /api/doctors  ──────────────────────────────────────────
 // Returns all active doctors sorted by rating (public route).
@@ -46,6 +46,12 @@ router.get('/me', authMiddleware, requireRole('doctor'), async (req, res) => {
     console.error('Get doctor profile error:', err);
     res.status(500).json({ success: false, message: 'Server error' });
   }
+});
+
+// ── GET /api/doctors/specialties ───────────────────────────────
+// Returns the list of valid specialties.
+router.get('/specialties', (req, res) => {
+  res.json({ success: true, specialties: VALID_SPECIALTIES });
 });
 
 // ── GET /api/doctors/:id  ──────────────────────────────────────
@@ -143,14 +149,14 @@ router.post('/', authMiddleware, requireRole('admin'), async (req, res) => {
 // ── PUT /api/doctors/:id  ──────────────────────────────────────
 // Updates an existing doctor profile. Admin or the doctor themselves.
 router.put('/:id', authMiddleware, async (req, res) => {
-  const { specialty, experience, available, avatar, price, location, bio, schedule } = req.body;  
+  const { specialty, experience, available, avatar, price, location, bio, schedule, phone } = req.body;  
   const doctorId = sanitizeNumber(req.params.id);
   if (doctorId === null) {
     return res.status(400).json(validationError('Invalid doctor ID', ['Doctor ID must be a valid integer']));
   }
 
   // Validate doctor update input
-  const validation = validateDoctorUpdate(specialty, experience, available, avatar, price, location, bio, schedule);
+  const validation = validateDoctorUpdate(specialty, experience, available, avatar, price, location, bio, schedule, phone);
   if (!validation.isValid) {
     return res.status(400).json(validationError('Doctor update validation failed', validation.errors));
   }
@@ -194,6 +200,17 @@ router.put('/:id', authMiddleware, async (req, res) => {
             schedule   = COALESCE(@schedule, schedule)
         WHERE id = @id
       `);
+
+    if (phone) {
+      await pool.request()
+        .input('id', sql.Int, doctorUserId)
+        .input('phone', sql.NVarChar, phone)
+        .query(`
+          UPDATE Users
+          SET phone = @phone
+          WHERE id = @id
+        `);
+    }
 
     res.json({ success: true, message: 'Doctor updated successfully' });
   } catch (err) {

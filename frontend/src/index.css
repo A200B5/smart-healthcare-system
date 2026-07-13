@@ -1280,6 +1280,11 @@ ul {
   color: var(--rejected);
 }
 
+.badge-cancelled {
+  background: var(--rejected-bg);
+  color: var(--rejected);
+}
+
 .badge-refunded {
   background: var(--pending-bg);
   color: var(--pending);
@@ -1482,7 +1487,7 @@ ul {
   border-left-color: var(--completed);
 }
 
-.appointment-card.rejected {
+.appointment-card.cancelled {
   border-left-color: var(--rejected);
 }
 

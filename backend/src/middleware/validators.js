@@ -2,12 +2,22 @@
 // Reusable validation helpers for input sanitization and data validation.
 // Returns consistent error responses across all routes.
 
-// ── Validation Helper: Format consistent error response ──────────
 const validationError = (message, errors = []) => ({
   success: false,
   message,
   errors,
 });
+
+const VALID_SPECIALTIES = [
+  'Cardiology',
+  'Neurology',
+  'Pediatrics',
+  'Orthopedics',
+  'Dermatology',
+  'Ophthalmology',
+  'Gynecology',
+  'Psychiatry'
+];
 
 // ── Email Validation ──────────────────────────────────────────
 const isValidEmail = (email) => {
@@ -150,7 +160,7 @@ const validateAppointmentBooking = (doctorId, date, time, notes) => {
 
 // Validate appointment status update
 const validateAppointmentStatus = (status) => {
-  const validStatuses = ['confirmed', 'completed', 'rejected', 'cancelled'];
+  const validStatuses = ['confirmed', 'completed', 'cancelled'];
   const errors = [];
 
   if (!status || typeof status !== 'string') {
@@ -217,10 +227,8 @@ const validateDoctorCreation = (user_id, specialty, experience, price, location,
   // Validate specialty
   if (!specialty || typeof specialty !== 'string') {
     errors.push('Specialty is required and must be a string');
-  } else if (specialty.trim().length === 0) {
-    errors.push('Specialty cannot be empty');
-  } else if (specialty.trim().length > 100) {
-    errors.push('Specialty must not exceed 100 characters');
+  } else if (!VALID_SPECIALTIES.includes(specialty.trim())) {
+    errors.push(`Specialty must be one of: ${VALID_SPECIALTIES.join(', ')}`);
   }
 
   // Validate experience
@@ -284,17 +292,24 @@ const validateDoctorCreation = (user_id, specialty, experience, price, location,
 };
 
 // Validate doctor update
-const validateDoctorUpdate = (specialty, experience, available, avatar, price, location, bio, schedule) => {
+const validateDoctorUpdate = (specialty, experience, available, avatar, price, location, bio, schedule, phone) => {
   const errors = [];
 
   // Validate specialty (if provided)
   if (specialty !== undefined && specialty !== null) {
     if (typeof specialty !== 'string') {
       errors.push('Specialty must be a string');
-    } else if (specialty.trim().length === 0) {
-      errors.push('Specialty cannot be empty');
-    } else if (specialty.trim().length > 100) {
-      errors.push('Specialty must not exceed 100 characters');
+    } else if (!VALID_SPECIALTIES.includes(specialty.trim())) {
+      errors.push(`Specialty must be one of: ${VALID_SPECIALTIES.join(', ')}`);
+    }
+  }
+
+  // Validate phone (if provided)
+  if (phone !== undefined && phone !== null) {
+    if (typeof phone !== 'string') {
+      errors.push('Phone must be a string');
+    } else if (phone.trim() !== '' && !/^\+201[0125][0-9]{8}$/.test(phone.trim())) {
+      errors.push('Phone must be a valid Egyptian mobile number starting with +20');
     }
   }
 
@@ -437,6 +452,7 @@ module.exports = {
   sanitizeNumber,
   sanitizeDecimal,
   isValidEmail,
+  VALID_SPECIALTIES,
 
   // Validators
   validateRegistration,

@@ -4,8 +4,8 @@
 //   doctor  → see & update status of their own appointments
 //   admin   → full access to all appointments
 
-const express  = require('express');
-const router   = express.Router();
+const express = require('express');
+const router = express.Router();
 const { getPool, sql } = require('../config/db');
 const { authMiddleware, requireRole } = require('../middleware/auth');
 const { validateAppointmentBooking, validateAppointmentStatus, validationError, sanitizeNumber } = require('../middleware/validators');
@@ -40,9 +40,9 @@ router.post('/validate', authMiddleware, requireRole('patient'), async (req, res
 // Returns appointments filtered by the caller's role.
 router.get('/', authMiddleware, async (req, res) => {
   try {
-    const pool    = getPool();
+    const pool = getPool();
     const request = pool.request();
-    let query     = '';
+    let query = '';
 
     if (req.user.role === 'patient') {
       request.input('userId', sql.Int, req.user.id);
@@ -90,13 +90,13 @@ router.post('/', authMiddleware, requireRole('patient'), async (req, res) => {
   const validatedData = validation.data;
 
   try {
-    const pool   = getPool();
+    const pool = getPool();
     const result = await pool.request()
-      .input('doctorId',  sql.Int,      validatedData.doctorId)
-      .input('patientId', sql.Int,      req.user.id)
-      .input('date',      sql.Date,     validatedData.date)
-      .input('time',      sql.NVarChar, validatedData.time)
-      .input('notes',     sql.NVarChar, validatedData.notes)
+      .input('doctorId', sql.Int, validatedData.doctorId)
+      .input('patientId', sql.Int, req.user.id)
+      .input('date', sql.Date, validatedData.date)
+      .input('time', sql.NVarChar, validatedData.time)
+      .input('notes', sql.NVarChar, validatedData.notes)
       .execute('sp_BookAppointment');
 
     const row = result.recordset[0];
@@ -137,9 +137,9 @@ router.patch(
 
     const validatedStatus = validation.data.status;
     try {
-      const pool   = getPool();
+      const pool = getPool();
       const appointmentId = sanitizeNumber(req.params.id);
-      
+
       if (appointmentId === null) {
         return res.status(400).json(validationError('Invalid appointment ID', ['Appointment ID must be a valid integer']));
       }
@@ -163,8 +163,8 @@ router.patch(
       }
 
       const result = await pool.request()
-        .input('appointmentId', sql.Int,      appointmentId)
-        .input('newStatus',     sql.NVarChar, validatedStatus)
+        .input('appointmentId', sql.Int, appointmentId)
+        .input('newStatus', sql.NVarChar, validatedStatus)
         .execute('sp_UpdateAppointmentStatus');
 
       const row = result.recordset[0];
@@ -195,59 +195,59 @@ router.post('/cancel', authMiddleware, requireRole('patient'), async (req, res) 
 
     // 1. Validate Appointment exists and belongs to patient
     const apptCheck = await pool.request()
-        .input('id', sql.Int, appointmentId)
-        .query('SELECT * FROM Appointments WHERE id = @id');
+      .input('id', sql.Int, appointmentId)
+      .query('SELECT * FROM Appointments WHERE id = @id');
 
     if (apptCheck.recordset.length === 0) {
-        return res.status(404).json({ success: false, message: 'Appointment not found' });
+      return res.status(404).json({ success: false, message: 'Appointment not found' });
     }
 
     const appt = apptCheck.recordset[0];
 
     if (appt.patient_id !== patientId) {
-        return res.status(403).json({ success: false, message: 'You can only cancel your own appointments' });
+      return res.status(403).json({ success: false, message: 'You can only cancel your own appointments' });
     }
 
     // 2. Idempotency & Status Check
     if (appt.status === 'cancelled') {
-        return res.json({ success: true, message: 'Appointment is already cancelled', refunded: false });
+      return res.json({ success: true, message: 'Appointment is already cancelled', refunded: false });
     }
     if (appt.status === 'completed' || appt.status === 'rejected') {
-        return res.status(400).json({ success: false, message: `Cannot cancel a ${appt.status} appointment` });
+      return res.status(400).json({ success: false, message: `Cannot cancel a ${appt.status} appointment` });
     }
 
     // 3. Check for Payment
     const paymentCheck = await pool.request()
-        .input('appointmentId', sql.Int, appointmentId)
-        .query('SELECT * FROM Payments WHERE appointment_id = @appointmentId');
+      .input('appointmentId', sql.Int, appointmentId)
+      .query('SELECT * FROM Payments WHERE appointment_id = @appointmentId');
 
     let isRefundEligible = false;
     let paymentRecord = null;
-    
+
     if (paymentCheck.recordset.length > 0) {
-        paymentRecord = paymentCheck.recordset[0];
-        // 4. Refund Eligibility Check
-        if (
-            (paymentRecord.payment_status === 'paid' || paymentRecord.payment_status === 'succeeded') &&
-            paymentRecord.refund_status !== 'refunded'
-        ) {
-            isRefundEligible = true;
-        }
+      paymentRecord = paymentCheck.recordset[0];
+      // 4. Refund Eligibility Check
+      if (
+        (paymentRecord.payment_status === 'paid' || paymentRecord.payment_status === 'succeeded') &&
+        paymentRecord.refund_status !== 'refunded'
+      ) {
+        isRefundEligible = true;
+      }
     }
 
     // 5. Begin SQL transaction & Update Appointment status successfully
     const transaction = new sql.Transaction(pool);
     await transaction.begin();
     try {
-        await transaction.request()
-            .input('id', sql.Int, appointmentId)
-            .query("UPDATE Appointments SET status = 'cancelled' WHERE id = @id");
-        
-        await transaction.commit();
-        appt.status = 'cancelled';
+      await transaction.request()
+        .input('id', sql.Int, appointmentId)
+        .query("UPDATE Appointments SET status = 'cancelled' WHERE id = @id");
+
+      await transaction.commit();
+      appt.status = 'cancelled';
     } catch (txnError) {
-        await transaction.rollback();
-        throw txnError; // Throw to be caught by the outer catch
+      await transaction.rollback();
+      throw txnError; // Throw to be caught by the outer catch
     }
 
     let refunded = false;
@@ -255,26 +255,26 @@ router.post('/cancel', authMiddleware, requireRole('patient'), async (req, res) 
 
     // 7. Execute Stripe refund & Save refund into Refunds table
     if (isRefundEligible) {
-        try {
-            refundResult = await processStripeRefund(paymentRecord, 'requested_by_customer', patientId);
-            refunded = true;
-            paymentRecord.payment_status = 'refunded';
-            paymentRecord.refund_status = refundResult?.refundStatus || 'succeeded';
-        } catch (refundError) {
-            console.error('Stripe refund error after appointment cancelled:', refundError);
-            return res.status(500).json({ 
-                success: false, 
-                message: 'Appointment cancelled, but refund failed. Please contact support.', 
-                appointment: appt 
-            });
-        }
+      try {
+        refundResult = await processStripeRefund(paymentRecord, 'requested_by_customer', patientId);
+        refunded = true;
+        paymentRecord.payment_status = 'refunded';
+        paymentRecord.refund_status = refundResult?.refundStatus || 'succeeded';
+      } catch (refundError) {
+        console.error('Stripe refund error after appointment cancelled:', refundError);
+        return res.status(500).json({
+          success: false,
+          message: 'Appointment cancelled, but refund failed. Please contact support.',
+          appointment: appt
+        });
+      }
     }
 
     res.json({
-        success: true,
-        refunded: refunded,
-        appointment: appt,
-        payment: paymentRecord
+      success: true,
+      refunded: refunded,
+      appointment: appt,
+      payment: paymentRecord
     });
   } catch (error) {
     console.error('Cancellation error:', error);
@@ -355,10 +355,10 @@ router.delete('/:id', authMiddleware, async (req, res) => {
         .input('id', sql.Int, appointmentId)
         .query("UPDATE Appointments SET status = 'admin_deleted' WHERE id = @id");
 
-      const msg = refunded 
-        ? "Appointment deleted successfully. The patient's payment has been refunded." 
+      const msg = refunded
+        ? "Appointment deleted successfully. The patient's payment has been refunded."
         : "Appointment deleted successfully.";
-      
+
       return res.json({ success: true, message: msg });
     }
 

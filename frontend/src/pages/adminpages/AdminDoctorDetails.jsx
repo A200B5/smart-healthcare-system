@@ -234,13 +234,13 @@ function AdminDoctorDetails() {
                             )}
                         </div>
 
-                        {doctor.createdAt && (
+                        {doctor.created_at && (
                             <div className="admin-doctor-details-reg-wrap">
                                 <h3 className="admin-doctor-details-reg-title">Registration Information</h3>
                                 <div className="admin-doctor-details-grid">
                                     <div>
                                         <label className="admin-doctor-details-label">Account Created</label>
-                                        <div className="admin-doctor-details-reg-value">{new Date(doctor.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                                        <div className="admin-doctor-details-reg-value">{new Date(doctor.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                                     </div>
                                     {doctor.verified_at && (
                                         <div>

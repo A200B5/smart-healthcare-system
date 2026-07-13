@@ -47,7 +47,7 @@ export const getDoctors = async () => {
 
 export const getDoctorById = async (doctorId) => {
 	try {
-		const response = await API.get(`/doctors/${doctorId}`)
+		const response = await API.get(`/admin/doctors/${doctorId}`)
 		return response.data
 	} catch (error) {
 		errorHandle(error, "Failed to fetch doctor")

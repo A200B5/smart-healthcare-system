@@ -1,10 +1,9 @@
-import  { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ProfileSkeleton from "../../components/loaders/ProfileSkeleton.jsx";
 
 import PatientNavbar from "../../components/PatientNavbar.jsx";
 import { getDoctorById } from "../../services/doctorService.js";
-// import { bookAppointment } from "../../services/appointmentService.js"; // Moved to checkout
 import { validateAppointment } from "../../services/appointmentService.js";
 import { getAvailableSlots } from "../../services/patientService.js";
 import { toast } from "react-toastify";
@@ -180,7 +179,7 @@ function BookAppointment() {
                     appointmentData: appointmentData
                 }
             });
-            
+
         } catch (error) {
             toast.error(error.message || "Failed to proceed to checkout");
         } finally {
@@ -298,12 +297,11 @@ function BookAppointment() {
                                     </div>
 
                                     <span
-                                        className={`status-badge ${
-                                            isDoctorBusy ? "status-busy" : "status-available"
-                                        }`}
+                                        className={`status-badge ${isDoctorBusy ? "status-busy" : "status-available"
+                                            }`}
                                     >
-                    {isDoctorBusy ? "○ Busy" : "● Available"}
-                  </span>
+                                        {isDoctorBusy ? "○ Busy" : "● Available"}
+                                    </span>
                                 </div>
 
                                 <div className="doctor-stats">
@@ -405,9 +403,8 @@ function BookAppointment() {
                                             <button
                                                 key={slot.time}
                                                 type="button"
-                                                className={`slot-btn ${
-                                                    formData.time === slot.time ? "selected" : ""
-                                                }`}
+                                                className={`slot-btn ${formData.time === slot.time ? "selected" : ""
+                                                    }`}
                                                 onClick={() => !slot.isBooked && handleSelectSlot(slot.time)}
                                                 disabled={slot.isBooked}
                                                 style={{ opacity: slot.isBooked ? 0.5 : 1, cursor: slot.isBooked ? "not-allowed" : "pointer" }}

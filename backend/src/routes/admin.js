@@ -34,6 +34,35 @@ router.get('/pending-doctors', async (req, res) => {
   }
 });
 
+// GET /api/admin/doctors/:doctorId
+router.get('/doctors/:doctorId', async (req, res) => {
+  try {
+    const doctorId = req.params.doctorId;
+    const pool = getPool();
+    const result = await pool.request()
+      .input('doctorId', sql.Int, doctorId)
+      .query(`
+        SELECT 
+          d.*,
+          u.name,
+          u.email,
+          u.created_at
+        FROM Doctors d
+        JOIN Users u ON d.user_id = u.id
+        WHERE d.id = @doctorId
+      `);
+      
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ success: false, message: 'Doctor not found' });
+    }
+    
+    res.json({ success: true, doctor: result.recordset[0] });
+  } catch (err) {
+    console.error('Error fetching doctor details:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 // PUT /api/admin/doctors/:doctorId/approve
 router.put('/doctors/:doctorId/approve', async (req, res) => {
   try {
@@ -225,6 +254,7 @@ router.get('/recent-transactions', async (req, res) => {
         p.currency,
         p.payment_method as paymentMethod,
         p.payment_status as paymentStatus,
+        p.refund_status as refundStatus,
         p.transaction_id as transactionId,
         p.stripe_session_id as stripeSessionId,
         p.paid_at as paidAt,
