@@ -53,6 +53,8 @@ A Modern Full-Stack Healthcare Platform for Patients, Doctors, and Administrator
 
 </p>
 
+<img src="docs/images/gif.gif" alt="Dashboard Demo" width="90%" />
+
 ---
 
 # <img src="frontend/public/favicon-32x32.png"> About MediCare Pro
@@ -921,7 +923,7 @@ The application's public landing page introducing MediCare Pro, its services, an
 
 <p align="center">
 
-<a href="YOUR_YOUTUBE_LINK">
+<a href="https://drive.google.com/file/d/1c9LNbxVMAKHnlfUx0IHnhIEkdOvkJxMn/view?usp=sharing">
 
 <img src="https://img.shields.io/badge/▶️%20Watch%20Demo-YouTube-FF0000?style=for-the-badge&logo=youtube">
 
