@@ -1068,14 +1068,18 @@ The responsive layout ensures consistent user experience across all supported sc
 
 # 👥 Team Contributions
 
-MediCare Pro was developed collaboratively by a four-member team, with each member responsible for a specific domain of the system.
+MediCare Pro was developed collaboratively by a eight-member team, with each member responsible for a specific domain of the system.
 
 | Team Member | Responsibilities |
 |-------------|------------------|
-| **Ahmed Bakr** | Led the Patient & Doctor experience, including dashboards, appointment booking workflow, profile management, UI integration, and overall frontend user experience. |
-| **Ahmed Hany** | Designed and implemented the backend architecture, RESTful APIs, SQL Server database schema, business logic, and stored procedures. |
-| **Ibrahim Mohamed** | Developed the Admin platform, analytics dashboard, revenue tracking, Stripe payment integration, refund workflow, and administrative operations. |
+| **Ahmed Bakr** | Led the Patient & Doctor experience, including dashboards, documentation, presentation, appointment booking workflow, profile management, UI integration, and overall frontend user experience. |
+| **Ahmed Hany** | Express.js server, database connection, middleware, business logic, error handling, and backend architecture. |
+| **Ibrahim Mohamed** | Admin dashboard, analytics, revenue tracking, doctor management, user management, appointments, and reporting. |
 | **Ahmed Sabry** | Built reusable frontend components, UI/UX implementation, responsive layouts, authentication interfaces, and quality assurance. |
+| **Mina Sabir**  | Authentication, registration, JWT, protected routes, role-based authorization, and session management. |
+| **Basant Ali**  | Patient dashboard, doctor search, booking journey, profile management, reviews, and patient experience. |
+| **Mahmoud Amr** | Doctor dashboard, weekly schedule, availability management, doctor profile, and appointment handling. |
+| **Fatima Mohamed** | Appointment workflow, Stripe integration, payment processing, refund workflow, and appointment business rules. |
 
 ---
 
