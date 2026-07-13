@@ -401,74 +401,92 @@ The administrator manages the entire healthcare platform.
 
 ## 📖 Architecture Overview
 
-The application follows a modern three-tier architecture that separates the presentation layer, business logic, and data layer.
+```mermaid
+flowchart TD
 
-```
-                Patient
-                 Doctor
-                 Admin
-                    │
-                    ▼
-          React + Vite Frontend
-                    │
-             Axios + JWT Token
-                    │
-                    ▼
-          Express.js REST API
-                    │
-        ┌───────────┼───────────┐
-        │           │           │
- Authentication   Business   Payments
-    Services      Logic      Services
-        │           │           │
-        └───────────┼───────────┘
-                    │
-                    ▼
-          SQL Server Database
-                    │
-         Stored Procedures
-              Constraints
-               Views
-                    │
-                    ▼
-          Stripe Payment Gateway
+    U["Users<br/>Patient • Doctor • Admin"]
+
+    F["React + Vite Frontend"]
+    A["Axios + JWT Authentication"]
+    API["Express.js REST API"]
+
+    AUTH["Authentication Service"]
+    BL["Business Logic"]
+    PAY["Payment Service"]
+
+    DB[("SQL Server Database")]
+
+    SP["Stored Procedures"]
+    CONS["Constraints"]
+    VIEW["Views"]
+
+    STRIPE["Stripe Payment Gateway"]
+
+    U --> F
+    F --> A
+    A --> API
+
+    API --> AUTH
+    API --> BL
+    API --> PAY
+
+    AUTH --> DB
+    BL --> DB
+    PAY --> DB
+
+    DB --> SP
+    DB --> CONS
+    DB --> VIEW
+
+    PAY -.-> STRIPE
+
+    classDef frontend fill:#1e88e5,color:#fff,stroke:#1565c0
+    classDef backend fill:#00a86b,color:#fff,stroke:#008f5d
+    classDef database fill:#3949ab,color:#fff,stroke:#303f9f
+    classDef payment fill:#f4b400,color:#000,stroke:#d89b00
+
+    class U,F,A frontend
+    class API,AUTH,BL,PAY backend
+    class DB,SP,CONS,VIEW database
+    class STRIPE payment
 ```
 
 ---
 
 # 🔄 System Workflow
 
-```text
-Patient Registration
-        │
-        ▼
-Login (JWT Authentication)
-        │
-        ▼
-Find Doctor
-        │
-        ▼
-Book Appointment
-        │
-        ▼
-Availability Validation
-        │
-        ▼
-Stripe Checkout
-        │
-        ▼
-Payment Verification
-        │
-        ▼
-Appointment Confirmation
-        │
-        ▼
-Doctor Completes Appointment
-        │
-        ▼
-Patient Leaves Review
-```
+```mermaid
+flowchart TD
 
+    REG["Patient Registration"]
+    LOGIN["Login<br/>JWT Authentication"]
+    FIND["Find Doctor"]
+    BOOK["Book Appointment"]
+    VALIDATE["Availability Validation"]
+    CHECKOUT["Stripe Checkout"]
+    VERIFY["Payment Verification"]
+    CONFIRM["Appointment Confirmation"]
+    COMPLETE["Doctor Completes Appointment"]
+    REVIEW["Patient Leaves Review"]
+
+    REG --> LOGIN
+    LOGIN --> FIND
+    FIND --> BOOK
+    BOOK --> VALIDATE
+    VALIDATE --> CHECKOUT
+    CHECKOUT --> VERIFY
+    VERIFY --> CONFIRM
+    CONFIRM --> COMPLETE
+    COMPLETE --> REVIEW
+
+    classDef process fill:#16a085,color:#fff,stroke:#12876f
+    classDef payment fill:#f4b400,color:#000,stroke:#d89b00
+    classDef success fill:#1976d2,color:#fff,stroke:#1565c0
+
+    class REG,LOGIN,FIND,BOOK,VALIDATE,COMPLETE,REVIEW process
+    class CHECKOUT,VERIFY payment
+    class CONFIRM success
+```
 ---
 
 # 🚀 Core Project Highlights
